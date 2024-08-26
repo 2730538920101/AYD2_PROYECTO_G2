@@ -261,15 +261,18 @@ Yo como cliente, necesito pedir un viaje para movilizarme de un punto “A” a 
 **PRIORIDAD:** Media  
 **ESTIMACIÓN:** 8
 
+
 ---
 
 ### ID: HU-0015
-**TÍTULO:** Guardar viaje en el historial  
+**TÍTULO:** Ver historial de viajes frecuentes  
 **DESCRIPCIÓN:**  
-Yo como cliente, luego de pedir un viaje, quiero guardar el viaje en mi lista de viajes frecuentes para poder solicitar este viaje más adelante de una forma más rápida y eficiente.
+Yo como cliente, necesito ver los viajes del historial de viajes para poder hacer mi pedido con mayor rapidez.
 
 **CRITERIOS DE ACEPTACIÓN:**
-1. El viaje debe estar en estado “EN CURSO” para que se pueda guardar el viaje actual en el historial de viajes frecuentes.
+1. Debe tener la opción para volver a solicitar el viaje de forma más rápida.
+2. Esta opción solo debe funcionar si el estado del viaje es “FINALIZADO” ya que solo puede llevarse a cabo un viaje a la vez.
+3. Por medio de una consulta a los últimos 5 - 10 viajes realizados y finalizados por el cliente, se deben mostrar en la vista de viajes frecuentes para volver a solicitar alguno de estos viajes de forma mas rápida. 
 
 **PRIORIDAD:** Baja  
 **ESTIMACIÓN:** 3
@@ -277,33 +280,6 @@ Yo como cliente, luego de pedir un viaje, quiero guardar el viaje en mi lista de
 ---
 
 ### ID: HU-0016
-**TÍTULO:** Ver historial de viajes frecuentes  
-**DESCRIPCIÓN:**  
-Yo como cliente, necesito ver los viajes que he agregado al historial de viajes para poder hacer mi pedido con mayor rapidez.
-
-**CRITERIOS DE ACEPTACIÓN:**
-1. Debe tener la opción para volver a solicitar el viaje de forma más rápida.
-2. Esta opción solo debe funcionar si el estado del viaje es “FINALIZADO” ya que solo puede llevarse a cabo un viaje a la vez.
-
-**PRIORIDAD:** Baja  
-**ESTIMACIÓN:** 3
-
----
-
-### ID: HU-0017
-**TÍTULO:** Eliminar viaje del historial  
-**DESCRIPCIÓN:**  
-Yo como cliente, necesito eliminar los viajes de mi historial de viajes frecuentes, para evitar hacer pedidos que no necesito.
-
-**CRITERIOS DE ACEPTACIÓN:**
-1. El viaje solo puede ser eliminado del historial de viajes en cualquier momento.
-
-**PRIORIDAD:** Baja  
-**ESTIMACIÓN:** 3
-
----
-
-### ID: HU-0018
 **TÍTULO:** Cancelar viaje cliente  
 **DESCRIPCIÓN:**  
 Yo como cliente, necesito la opción de poder cancelar los viajes en curso para que sea reasignado a otro conductor.
@@ -319,7 +295,7 @@ Yo como cliente, necesito la opción de poder cancelar los viajes en curso para 
 
 ---
 
-### ID: HU-0019
+### ID: HU-0017
 **TÍTULO:** Aceptar viaje  
 **DESCRIPCIÓN:**  
 Yo como conductor, necesito tener acceso a las solicitudes de viaje que generan los clientes, para poder seleccionar uno de los viajes y asignármelo.
@@ -334,7 +310,7 @@ Yo como conductor, necesito tener acceso a las solicitudes de viaje que generan 
 
 ---
 
-### ID: HU-0020
+### ID: HU-0018
 **TÍTULO:** Cancelar viaje conductor  
 **DESCRIPCIÓN:**  
 Yo como conductor, necesito la opción de poder cancelar los viajes en curso para que sea reasignado a otro conductor.
@@ -349,7 +325,7 @@ Yo como conductor, necesito la opción de poder cancelar los viajes en curso par
 
 ---
 
-### ID: HU-0021
+### ID: HU-0019
 **TÍTULO:** Modificar información personal usuario conductor  
 **DESCRIPCIÓN:**  
 Yo como conductor, quiero modificar la información de mi registro de usuario para completar los campos opcionales que no se llenaron anteriormente como por ejemplo cambiar el vehículo que estaré utilizando.
@@ -364,7 +340,7 @@ Yo como conductor, quiero modificar la información de mi registro de usuario pa
 
 ---
 
-### ID: HU-0022
+### ID: HU-0020
 **TÍTULO:** Reportar problema usuario conductor  
 **DESCRIPCIÓN:**  
 Yo como conductor, necesito enviar una señal de alerta en caso algo sale mal durante el viaje, dando una descripción de lo sucedido y, si es necesario, incluyendo detalles del cliente al administrador del sistema y al asistente por medio de una central de alertas que tendrá todas las notificaciones. Para mayor seguridad de que las alertas lleguen a los administradores del sistema y puedan tomar acción lo más pronto posible.
@@ -380,7 +356,7 @@ Yo como conductor, necesito enviar una señal de alerta en caso algo sale mal du
 
 ---
 
-### ID: HU-0023
+### ID: HU-0021
 **TÍTULO:** Calificar cliente  
 **DESCRIPCIÓN:**  
 Yo como conductor, después de un viaje, quiero darle una calificación al cliente, usando un sistema simple de estrellas, para que otros usuarios sepan qué tan confiable es.
@@ -394,7 +370,7 @@ Yo como conductor, después de un viaje, quiero darle una calificación al clien
 
 ---
 
-### ID: HU-0024
+### ID: HU-0022
 **TÍTULO:** Ver información cliente  
 **DESCRIPCIÓN:**  
 Yo como conductor, cuando acepto un viaje, necesito ver detalles importantes sobre el cliente, como su nombre, la calificación que tiene y otros detalles que le den confianza al usuario.
@@ -407,7 +383,7 @@ Yo como conductor, cuando acepto un viaje, necesito ver detalles importantes sob
 
 ---
 
-### ID: HU-0025
+### ID: HU-0023
 **TÍTULO:** Finalizar viaje  
 **DESCRIPCIÓN:**  
 Yo como conductor, quiero una opción de finalizar un viaje para poder indicar a los administradores del sistema que el viaje ha terminado y estoy listo para aceptar uno nuevo.
@@ -422,7 +398,7 @@ Yo como conductor, quiero una opción de finalizar un viaje para poder indicar a
 
 ---
 
-### ID: HU-0026
+### ID: HU-0024
 **TÍTULO:** Resumen de ganancias  
 **DESCRIPCIÓN:**  
 Yo como conductor, quiero ver un resumen de mis ganancias, el cual se debe actualizar diariamente en un historial que se reiniciará cada día a medianoche, para poder llevar un control exacto de las ganancias diarias. Además de poder llevar un acumulado total.
@@ -437,7 +413,7 @@ Yo como conductor, quiero ver un resumen de mis ganancias, el cual se debe actua
 
 ---
 
-### ID: HU-0027
+### ID: HU-0025
 **TÍTULO:** Aceptar solicitud de empleo a conductor  
 **DESCRIPCIÓN:**  
 Yo como asistente, quiero ver las solicitudes de empleo de los conductores que han creado una cuenta en la plataforma, para determinar si son aprobadas o rechazadas.
@@ -452,7 +428,7 @@ Yo como asistente, quiero ver las solicitudes de empleo de los conductores que h
 
 ---
 
-### ID: HU-0028
+### ID: HU-0026
 **TÍTULO:** Ver solicitud de cambio de información del conductor  
 **DESCRIPCIÓN:**  
 Yo como asistente, quiero ver las solicitudes de cambios de información de los conductores, para determinar si se aprueba o rechaza la modificación de esta información, especialmente cuando los conductores cambian sus vehículos.
@@ -467,7 +443,7 @@ Yo como asistente, quiero ver las solicitudes de cambios de información de los 
 
 ---
 
-### ID: HU-0029
+### ID: HU-0027
 **TÍTULO:** Generar ofertas para los usuarios  
 **DESCRIPCIÓN:**  
 Yo como asistente, quiero generar ofertas para mis clientes, aplicando los descuentos a las tarifas establecidas, para mejorar la experiencia de los usuarios y realizar más ventas.
@@ -483,7 +459,7 @@ Yo como asistente, quiero generar ofertas para mis clientes, aplicando los descu
 
 ---
 
-### ID: HU-0030
+### ID: HU-0028
 **TÍTULO:** Ver información de conductores  
 **DESCRIPCIÓN:**  
 Yo como asistente, quiero ver la información detallada de los conductores para tomar las decisiones correspondientes a su gestión.
@@ -499,7 +475,7 @@ Yo como asistente, quiero ver la información detallada de los conductores para 
 
 ---
 
-### ID: HU-0031
+### ID: HU-0029
 **TÍTULO:** Dar de baja a conductores  
 **DESCRIPCIÓN:**  
 Yo como asistente, quiero eliminar a los conductores que no cumplan con las políticas de la empresa para evitar nuevas incidencias con los clientes.
@@ -514,7 +490,7 @@ Yo como asistente, quiero eliminar a los conductores que no cumplan con las pol�
 
 ---
 
-### ID: HU-0032
+### ID: HU-0030
 **TÍTULO:** Ver bajas  
 **DESCRIPCIÓN:**  
 Yo como usuario (asistente/administrador), quiero ver los registros de las bajas realizadas de clientes y conductores.
@@ -527,7 +503,7 @@ Yo como usuario (asistente/administrador), quiero ver los registros de las bajas
 
 ---
 
-### ID: HU-0033
+### ID: HU-0031
 **TÍTULO:** Ver información clientes  
 **DESCRIPCIÓN:**  
 Yo como asistente, quiero ver la información que registran los clientes. Para el control de los usuarios en cuestiones de seguridad de la información que registran en la plataforma.
@@ -543,7 +519,7 @@ Yo como asistente, quiero ver la información que registran los clientes. Para e
 
 ---
 
-### ID: HU-0034
+### ID: HU-0032
 **TÍTULO:** Dar de baja a clientes  
 **DESCRIPCIÓN:**  
 Yo como asistente, quiero eliminar a los clientes que no cumplan con las políticas de la empresa para evitar nuevas incidencias con los conductores.
@@ -558,7 +534,7 @@ Yo como asistente, quiero eliminar a los clientes que no cumplan con las políti
 
 ---
 
-### ID: HU-0035
+### ID: HU-0033
 **TÍTULO:** Reporte de vehículos  
 **DESCRIPCIÓN:**  
 Yo como asistente, quiero generar un reporte de los vehículos que poseen los conductores para tener un mejor control y seguridad en el servicio.
@@ -571,7 +547,7 @@ Yo como asistente, quiero generar un reporte de los vehículos que poseen los co
 
 ---
 
-### ID: HU-0036
+### ID: HU-0034
 **TÍTULO:** Ver calificaciones  
 **DESCRIPCIÓN:**  
 Yo como usuario administrador, quiero tener visibilidad de la calificación de los usuarios (cliente/conductor), para controlar la calidad del servicio, basado en los puntos que reciben los conductores de los clientes y los clientes de los conductores.
@@ -584,7 +560,7 @@ Yo como usuario administrador, quiero tener visibilidad de la calificación de l
 
 ---
 
-### ID: HU-0037
+### ID: HU-0035
 **TÍTULO:** Estadísticas de registro  
 **DESCRIPCIÓN:**  
 Como administrador, necesito ver las estadísticas de cuantos registros tengo por cada tipo de usuario (cliente/asistente/conductor) mediante una gráfica. Para definir en qué puntos estamos más vulnerables y sacar diferentes campañas de marketing basado en las decisiones que tomaré al ver esta información.
@@ -597,7 +573,7 @@ Como administrador, necesito ver las estadísticas de cuantos registros tengo po
 
 ---
 
-### ID: HU-0038
+### ID: HU-0036
 **TÍTULO:** Estadísticas de uso  
 **DESCRIPCIÓN:**  
 Yo como administrador, quiero ver gráficos que muestran cuántos viajes se han completado, cuántos se han cancelado, y cuántos están en espera.
@@ -610,7 +586,7 @@ Yo como administrador, quiero ver gráficos que muestran cuántos viajes se han 
 
 ---
 
-### ID: HU-0039
+### ID: HU-0037
 **TÍTULO:** Reporte de ganancia  
 **DESCRIPCIÓN:**  
 Yo como administrador, quiero ver cuánto ha ganado la plataforma, tanto en bruto como en neto, con cada viaje. Para llevar el control exacto de la utilidad de la empresa.
@@ -623,7 +599,7 @@ Yo como administrador, quiero ver cuánto ha ganado la plataforma, tanto en brut
 
 ---
 
-### ID: HU-0040
+### ID: HU-0038
 **TÍTULO:** Dar de baja a asistentes  
 **DESCRIPCIÓN:**  
 Yo como administrador, quiero eliminar usuarios de tipo asistente de la plataforma. Para evitar que tengan acceso a los recursos, una vez se les haya dado de baja del cargo.
@@ -638,7 +614,7 @@ Yo como administrador, quiero eliminar usuarios de tipo asistente de la platafor
 
 ---
 
-### ID: HU-0041
+### ID: HU-0039
 **TÍTULO:** Cargar tarifas fijas  
 **DESCRIPCIÓN:**  
 Yo como administrador, quiero cargar las tarifas establecidas en el sistema, desde un archivo CSV, para tener el control completo de las tarifas que se están manejando con los clientes según los puntos de partida y de llegada que elijan.
