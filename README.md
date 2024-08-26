@@ -1,6 +1,6 @@
-## Plan de Proyecto de Desarrollo de Software para Qnave - Grupo 2
+# Plan de Proyecto de Desarrollo de Software para Qnave - Grupo 2
 
-### Integrantes
+## Integrantes
 
 | Nombre completo                | Carnet    |
 | ------------------------------ | --------- |
@@ -11,7 +11,7 @@
 | Luis Fernando Sánchez Soto     | 201700339 |
 
 
-### Documentacion
+## Documentacion
 
 1. [Requerimientos funcionales](documentacion/requerimientos/RF.md)
 1. [Requerimientos no funcionales](documentacion/requerimientos/RNF.md)
