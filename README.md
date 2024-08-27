@@ -13,8 +13,21 @@
 
 ## Documentacion
 
-1. [Requerimientos funcionales](documentacion/requerimientos/RF.md)
-1. [Requerimientos no funcionales](documentacion/requerimientos/RNF.md)
+1.  [Antecedentes](documentacion/antecedentes/antecedentes.md)
+2.  [Core del negocio](documentacion/core_negocio/core.md)
+3.  [Historias de usuario](documentacion/historias_usuario/hu.md)
+4.  [Requerimientos funcionales](documentacion/requerimientos/RF.md)
+5.  [Requerimientos no funcionales](documentacion/requerimientos/RNF.md)
+6.  [Casos de uso extendidos y de alto nivel](documentacion/casos_de_uso/cu.md)
+7.  [Arquitectura de software](documentacion/arquitectura/arquitectura.md)
+8.  [Diagramas de estados](documentacion/estados/estados.md)
+9.  [Clases y digramas de clases](documentacion/clases/clases.md)
+10.  [Patrones de diseño](documentacion/patrones/patrones.md)
+11. [Diseño de la base de datos](documentacion/base_de_datos/db.md)
+12. [Matriz de requerimientos VS Casos de uso](documentacion/matrices/requerimientos-cdu.md)
+13. [Matriz de requerimientos VS Stakeholders](documentacion/matrices/requerimientos-stakeholders.md)
+14. [Matriz de Stakeholders VS Casos de uso](documentacion/matrices/stakeholders-cdu.md)
+15. [Gestión del proyecto](https://ayd1.atlassian.net/jira/software/projects/AYD2PRO/boards/5?atlOrigin=eyJpIjoiNDM3NjBlZTU1MDdhNGU5ZGEzZDA2OWNjN2M4Y2JiMjAiLCJwIjoiaiJ9)
 
 ## Propuesta de interfaz de usuario
 
