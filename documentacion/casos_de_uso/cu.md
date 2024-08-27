@@ -953,3 +953,13 @@
 ---
 
 
+## Caso de Uso General
+
+---
+
+![CU-050](../diagramas/casos_de_uso/CU-General.png)
+
+---
+
+
+[Volver a la README](../../README.md)
