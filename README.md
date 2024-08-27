@@ -81,7 +81,7 @@
 
 ### Solicitud de empleo conductor
 
-![Solicitud conductor](/documentacion/mockups/conductor/Conductor%20Solicitud.png)
+![Solicitud conductor](/documentacion/mockups/Conductor/Conductor%20Solicitud.png)
 
 ### Actualizar conductores
 
