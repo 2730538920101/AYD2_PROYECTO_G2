@@ -1,3 +1,5 @@
+[REGRESAR](../../README.md)
+
 # Requerimientos funcionales
 
 | Campo                   | Detalle                                                                                      |
@@ -383,3 +385,6 @@
 | Nombre                  | Acceso a Archivos PDF de CV                                                                   |
 | Descripción             | El administrador y los asistentes deben poder acceder y visualizar los archivos PDF de los CV de los conductores directamente desde la plataforma. |
 | Requerimientos previos  | El sistema debe permitir el acceso y visualización de archivos PDF relacionados con el CV de los conductores. |
+
+
+[REGRESAR](../../README.md)

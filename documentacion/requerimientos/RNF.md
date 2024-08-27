@@ -1,3 +1,5 @@
+[REGRESAR](../../README.md)
+
 # Requerimientos no funcionales
 
 | Campo                  | Detalle                                                                                      |
@@ -35,4 +37,4 @@
 | Descripción            | El administrador y los asistentes deben poder acceder y visualizar los archivos PDF de los CV de los conductores directamente desde la plataforma. |
 | Criterios de aceptación| Los archivos PDF se abren y se visualizan correctamente desde la plataforma sin necesidad de descargar los documentos. |
 
-
+[REGRESAR](../../README.md)
