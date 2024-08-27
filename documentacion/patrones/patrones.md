@@ -1,3 +1,5 @@
+[REGRESAR](../../README.md)
+
 #   PATRONES DE DISEÑO IMPLEMENTADOS
 
 ##  Singleton
@@ -30,3 +32,4 @@
 
 ![Observer](../diagramas/patrones/patron_observer.png)
 
+[REGRESAR](../../README.md)

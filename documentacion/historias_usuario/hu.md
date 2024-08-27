@@ -1,3 +1,5 @@
+[REGRESAR](../../README.md)
+
 ### ID: HU-0001
 **TÍTULO:** Registro de clientes  
 **DESCRIPCIÓN:**  
@@ -627,3 +629,6 @@ Yo como administrador, quiero cargar las tarifas establecidas en el sistema, des
 
 **PRIORIDAD:** Media  
 **ESTIMACIÓN:** 5
+
+
+[REGRESAR](../../README.md)

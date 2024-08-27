@@ -1,3 +1,6 @@
+[REGRESAR](../../README.md)
+
+
 # CASOS DE USO EXTENDIDOS Y DE ALTO NIVEL
 
 ## Caso de Uso: Registro de Clientes
@@ -962,4 +965,4 @@
 ---
 
 
-[Volver a la README](../../README.md)
+[REGRESAR](../../README.md)

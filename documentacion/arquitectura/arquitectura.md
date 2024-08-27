@@ -1,3 +1,5 @@
+[REGRESAR](../../README.md)
+
 #   ARQUITECTURA DEL SISTEMA
 
 ##  Diagrama de despliegue de la arquitectura 
@@ -39,3 +41,6 @@
 -   Este diagrama combina el despliegue físico y los componentes lógicos, mostrando cómo están organizados e implementados en el entorno. 
 
 ![Implementacion](../diagramas/arquitectura/implementacion.jpg)
+
+
+[REGRESAR](../../README.md)

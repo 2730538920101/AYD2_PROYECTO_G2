@@ -1,3 +1,5 @@
+[REGRESAR](../../README.md)
+
 ## CORE DEL NEGOCIO
 
 El core del negocio de Qnave se adapta a un entorno de escritorio, centrado en ofrecer un servicio de transporte privado en Guatemala a través de una plataforma tecnológica que interconecta a usuarios y conductores. A continuación, se detalla cómo cada componente interactúa a nivel operativo y de software en este contexto:
@@ -56,3 +58,5 @@ El core del negocio de Qnave se adapta a un entorno de escritorio, centrado en o
 A nivel operativo, todos los componentes del sistema de Qnave están diseñados para funcionar dentro de un entorno de escritorio, lo que ofrece estabilidad y un entorno controlado para el usuario y el conductor. La plataforma gestiona las operaciones de transporte desde la solicitud hasta la facturación, integrando funciones de seguridad y control en tiempo real para asegurar la calidad del servicio. A nivel de software, la comunicación entre los distintos módulos se maneja a través de bases de datos centralizadas y APIs internas que facilitan la integración y el flujo de datos.
 
 Con estos ajustes, el sistema está orientado a ofrecer una solución robusta y segura para las necesidades de transporte privado en Guatemala, utilizando una plataforma de escritorio eficiente y bien estructurada.
+
+[REGRESAR](../../README.md)

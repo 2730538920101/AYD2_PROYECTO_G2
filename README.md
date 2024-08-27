@@ -22,7 +22,7 @@
 7.  [Arquitectura de software](documentacion/arquitectura/arquitectura.md)
 8.  [Diagramas de estados](documentacion/estados/estados.md)
 9.  [Clases y digramas de clases](documentacion/clases/clases.md)
-10.  [Patrones de diseño](documentacion/patrones/patrones.md)
+10. [Patrones de diseño](documentacion/patrones/patrones.md)
 11. [Diseño de la base de datos](documentacion/base_de_datos/db.md)
 12. [Matriz de requerimientos VS Casos de uso](documentacion/matrices/requerimientos-cdu.md)
 13. [Matriz de requerimientos VS Stakeholders](documentacion/matrices/requerimientos-stakeholders.md)

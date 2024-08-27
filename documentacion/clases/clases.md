@@ -1,3 +1,6 @@
+[REGRESAR](../../README.md)
+
+
 #   DIAGRAMAS DE CLASES
 
 ##  Singleton
@@ -20,3 +23,4 @@
 
 ![Observer](../diagramas/clases/clases_observer.png)
 
+[REGRESAR](../../README.md)

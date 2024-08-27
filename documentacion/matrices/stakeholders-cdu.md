@@ -1,3 +1,5 @@
+[REGRESAR](../../README.md)
+
 # Stakeholders vs CDU
 
 ```mermaid
@@ -39,3 +41,4 @@ quadrantChart
 |------------------------|------------------|---------------------|---------------------------------------------------|---------------------------------------|-------------------------|
 | CU 009-010, CU 045-050 | Alto             | Alto                | Monitoreo y evaluación, comunicación transparente | Mala gestión del cambio               | Planificación cuidadosa |
 
+[REGRESAR](../../README.md)

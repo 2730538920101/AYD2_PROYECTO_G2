@@ -1,3 +1,5 @@
+[REGRESAR](../../README.md)
+
 #   DISEÑO DE BASE DE DATOS
 
 ##  Modelo lógico
@@ -11,3 +13,5 @@
 ##  Modelo relacional
 
 ![Relacional](../diagramas/base_de_datos/modelo_relacional.png)
+
+[REGRESAR](../../README.md)

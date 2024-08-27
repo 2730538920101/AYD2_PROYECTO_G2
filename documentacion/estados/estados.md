@@ -1,3 +1,5 @@
+[REGRESAR](../../README.md)
+
 ##  ESTADOS Y TRANSICIONES 
 
 ### ASISTENTE
@@ -16,3 +18,4 @@
 
 ![Estados viaje](../diagramas/estados/estado_viaje.png)
 
+[REGRESAR](../../README.md)
