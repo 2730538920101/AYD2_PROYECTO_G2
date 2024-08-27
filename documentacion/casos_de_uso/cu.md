@@ -38,10 +38,29 @@
 
 ---
 
+## Caso de Uso: Registro de Asistentes
+
+| **ID Caso de Uso:** | CU 003 |
+|---------------------|--------|
+| **Módulo al que pertenece:** | Autenticación y registro |
+| **Actor Principal:** | Administrador |
+| **Precondiciones** | - Ninguna. |
+| **Postcondiciones** | - Se crea la cuenta del asistente en la plataforma. |
+| **Escenario Principal** | 1. El administrador accede al formulario de registro. <br> 2. Completa todos los campos requeridos <br> 3. El sistema valida que todos los campos cumplen con el formato y tipo de dato requerido. <br> 4. Se genera un código de empleado y una contraseña temporal. <br> 5. El asistente recibe las credenciales por correo electrónico. |
+| **Escenario Alternativo** | 1. La validación de los datos falla. <br> 2. El registro es rechazado. <br> |
+| **Requerimientos especiales** | - Validación de datos. <br> - Generación y envío de credenciales. |
+| **Sistema:** | Qnave |
+
+---
+
+![CU-003](../diagramas/casos_de_uso/CU-003.png)
+
+---
+
 
 ## Caso de Uso: Iniciar Sesión
 
-| **ID Caso de Uso:** | CU 003 |
+| **ID Caso de Uso:** | CU 004 |
 |---------------------|--------|
 | **Módulo al que pertenece:** | Autenticación |
 | **Actor Principal:** | Cliente |
@@ -54,13 +73,13 @@
 
 ---
 
-![CU-003](../diagramas/casos_de_uso/CU-003.png)
+![CU-004](../diagramas/casos_de_uso/CU-004.png)
 
 ---
 
 ## Caso de Uso: Recuperar Contraseña
 
-| **ID Caso de Uso:** | CU 004 |
+| **ID Caso de Uso:** | CU 005 |
 |---------------------|--------|
 | **Módulo al que pertenece:** | Autenticación |
 | **Actor Principal:** | Cliente |
@@ -73,13 +92,13 @@
 
 ---
 
-![CU-004](../diagramas/casos_de_uso/CU-004.png)
+![CU-005](../diagramas/casos_de_uso/CU-005.png)
 
 ---
 
 ## Caso de Uso: Iniciar Sesión
 
-| **ID Caso de Uso:** | CU 005 |
+| **ID Caso de Uso:** | CU 006 |
 |---------------------|--------|
 | **Módulo al que pertenece:** | Autenticación |
 | **Actor Principal:** | Conductor |
@@ -92,13 +111,13 @@
 
 ---
 
-![CU-005](../diagramas/casos_de_uso/CU-005.png)
+![CU-006](../diagramas/casos_de_uso/CU-006.png)
 
 ---
 
 ## Caso de Uso: Recuperar Contraseña
 
-| **ID Caso de Uso:** | CU 006 |
+| **ID Caso de Uso:** | CU 007 |
 |---------------------|--------|
 | **Módulo al que pertenece:** | Autenticación |
 | **Actor Principal:** | Conductor |
@@ -111,13 +130,13 @@
 
 ---
 
-![CU-006](../diagramas/casos_de_uso/CU-006.png)
+![CU-007](../diagramas/casos_de_uso/CU-007.png)
 
 ---
 
 ## Caso de Uso: Iniciar Sesión
 
-| **ID Caso de Uso:** | CU 007 |
+| **ID Caso de Uso:** | CU 008 |
 |---------------------|--------|
 | **Módulo al que pertenece:** | Autenticación |
 | **Actor Principal:** | Asistente |
@@ -130,13 +149,13 @@
 
 ---
 
-![CU-007](../diagramas/casos_de_uso/CU-007.png)
+![CU-008](../diagramas/casos_de_uso/CU-008.png)
 
 ---
 
 ## Caso de Uso: Recuperar Contraseña
 
-| **ID Caso de Uso:** | CU 008 |
+| **ID Caso de Uso:** | CU 009 |
 |---------------------|--------|
 | **Módulo al que pertenece:** | Autenticación |
 | **Actor Principal:** | Asistente |
@@ -149,13 +168,13 @@
 
 ---
 
-![CU-008](../diagramas/casos_de_uso/CU-008.png)
+![CU-009](../diagramas/casos_de_uso/CU-009.png)
 
 ---
 
 ## Caso de Uso: Iniciar Sesión
 
-| **ID Caso de Uso:** | CU 009 |
+| **ID Caso de Uso:** | CU 010 |
 |---------------------|--------|
 | **Módulo al que pertenece:** | Autenticación |
 | **Actor Principal:** | Administrador |
@@ -168,13 +187,13 @@
 
 ---
 
-![CU-009](../diagramas/casos_de_uso/CU-009.png)
+![CU-010](../diagramas/casos_de_uso/CU-010.png)
 
 ---
 
 ## Caso de Uso: Verificación Adicional con Archivo
 
-| **ID Caso de Uso:** | CU 010 |
+| **ID Caso de Uso:** | CU 011 |
 |---------------------|--------|
 | **Módulo al que pertenece:** | Autenticación |
 | **Actor Principal:** | Administrador |
@@ -187,13 +206,13 @@
 
 ---
 
-![CU-010](../diagramas/casos_de_uso/CU-010.png)
+![CU-011](../diagramas/casos_de_uso/CU-011.png)
 
 ---
 
 ## Caso de Uso: Bloqueo de Cuenta
 
-| **ID Caso de Uso:** | CU 011 |
+| **ID Caso de Uso:** | CU 012 |
 |---------------------|--------|
 | **Módulo al que pertenece:** | Autenticación |
 | **Actor Principal:** | Sistema |
@@ -206,13 +225,13 @@
 
 ---
 
-![CU-011](../diagramas/casos_de_uso/CU-011.png)
+![CU-012](../diagramas/casos_de_uso/CU-012.png)
 
 ---
 
 ## Caso de Uso: Recuperar Cuenta
 
-| **ID Caso de Uso:** | CU 012 |
+| **ID Caso de Uso:** | CU 013 |
 |---------------------|--------|
 | **Módulo al que pertenece:** | Recuperación de Cuenta |
 | **Actor Principal:** | Usuario |
@@ -220,25 +239,6 @@
 | **Postcondiciones** | - La cuenta del usuario se desbloquea y puede volver a acceder a la plataforma. |
 | **Escenario Principal** | 1. El usuario recibe un correo electrónico con un código de recuperación. <br> 2. El usuario ingresa el código de recuperación en la plataforma. <br> 3. El sistema valida el código de recuperación. <br> 4. Si el código es válido, el sistema desbloquea la cuenta y permite al usuario iniciar sesión. <br> 5. Se notifica al usuario que la cuenta ha sido desbloqueada y puede volver a acceder a la plataforma. |
 | **Escenario Alternativo** | 1. Si el código de recuperación es incorrecto: <br> - Se informa al usuario que el código es inválido y se le da la opción de solicitar un nuevo código. |
-| **Requerimientos especiales** | - El código de recuperación debe ser encriptado antes de su almacenamiento y validación. |
-| **Sistema:** | Qnave |
-
----
-
-![CU-012](../diagramas/casos_de_uso/CU-012.png)
-
----
-
-## Caso de Uso: Solicitar Recuperación de Contraseña
-
-| **ID Caso de Uso:** | CU 013 |
-|---------------------|--------|
-| **Módulo al que pertenece:** | Recuperación de Contraseña |
-| **Actor Principal:** | Usuario |
-| **Precondiciones** | - El usuario ha olvidado su contraseña y solicita recuperación. |
-| **Postcondiciones** | - Se inicia el proceso de recuperación y se envía una notificación al correo electrónico del usuario. |
-| **Escenario Principal** | 1. El usuario selecciona la opción para recuperar la contraseña. <br> 2. El sistema envía una notificación al correo electrónico registrado con los pasos para la recuperación. <br> 3. Se solicita al usuario que responda a la pregunta de seguridad. |
-| **Escenario Alternativo** | 1. Si el correo electrónico no se puede enviar: <br> - Se registra un error en el sistema y se alerta al administrador. |
 | **Requerimientos especiales** | - El código de recuperación debe ser encriptado antes de su almacenamiento y validación. |
 | **Sistema:** | Qnave |
 
@@ -258,7 +258,7 @@
 | **Postcondiciones** | - Se inicia el proceso de recuperación y se envía una notificación al correo electrónico del usuario. |
 | **Escenario Principal** | 1. El usuario selecciona la opción para recuperar la contraseña. <br> 2. El sistema envía una notificación al correo electrónico registrado con los pasos para la recuperación. <br> 3. Se solicita al usuario que responda a la pregunta de seguridad. |
 | **Escenario Alternativo** | 1. Si el correo electrónico no se puede enviar: <br> - Se registra un error en el sistema y se alerta al administrador. |
-| **Requerimientos especiales** | - El correo de notificación debe incluir instrucciones claras para recuperar la contraseña. |
+| **Requerimientos especiales** | - El código de recuperación debe ser encriptado antes de su almacenamiento y validación. |
 | **Sistema:** | Qnave |
 
 ---
@@ -266,6 +266,7 @@
 ![CU-014](../diagramas/casos_de_uso/CU-014.png)
 
 ---
+
 
 ## Caso de Uso: Validar Respuesta de Seguridad
 
