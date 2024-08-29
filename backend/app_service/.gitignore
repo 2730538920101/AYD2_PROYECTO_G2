@@ -1,0 +1,10 @@
+# Entornos virtuales
+.venv*
+.env
+
+# Archivos de configuración 
+**/config.py
+
+# Python bytecode files
+__pycache__/
+*.py[cod]

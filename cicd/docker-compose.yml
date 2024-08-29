@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  jenkins-master:
+    build:
+      context: ./master
+      dockerfile: Dockerfile
+    container_name: jenkins-master
+    ports:
+      - "8080:8080"
+      - "50000:50000" # Puerto para la comunicación con los esclavos
+    volumes:
+      - jenkins_data:/var/jenkins_home
+    environment:
+      - JAVA_OPTS=-Djava.awt.headless=true
+    networks:
+      - jenkins-network
+
+  jenkins-slave:
+    image: jenkins/jnlp-agent:alpine
+    container_name: jenkins-slave
+    depends_on:
+      - jenkins-master
+    environment:
+      - JENKINS_URL=http://jenkins-master:8080
+      - JENKINS_SECRET=<JENKINS_SECRET>
+      - JENKINS_AGENT_NAME=jenkins-slave
+    networks:
+      - jenkins-network
+
+volumes:
+  jenkins_data:
+
+networks:
+  jenkins-network:

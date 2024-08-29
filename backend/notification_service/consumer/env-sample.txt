@@ -1,0 +1,11 @@
+# Configuración para Amazon SQS
+SQS_QUEUE_URL=https://sqs.us-east-1.amazonaws.com/123456789012/your-queue-name
+
+# Configuración del servidor
+PRODUCER_PORT=4100
+
+# Configuración de la base de datos
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=your-password
+DB_DATABASE=PROYECTO_VIAJES
