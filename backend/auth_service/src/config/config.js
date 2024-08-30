@@ -9,7 +9,7 @@ const config = {
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   },
   server: {
-    port: process.env.PORT || 3000,
+    port: process.env.AUTH_SERVICE_PORT || 4000,
   },
 };
 

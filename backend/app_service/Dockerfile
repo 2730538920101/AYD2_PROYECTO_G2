@@ -17,8 +17,7 @@ COPY . /app
 # Instala las dependencias
 RUN pip3 install --no-cache-dir -r requirements.txt
 
-# Expone el puerto en el que correrá la API
-EXPOSE 5000
+
 
 # Comando para correr la API
 CMD ["python3", "run.py"]

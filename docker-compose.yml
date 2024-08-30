@@ -6,12 +6,13 @@ services:
   database:
     build:
       context: ./database
+      dockerfile: Dockerfile
     image: carlosmz87/p1_database:latest
     container_name: p1_database_container
     volumes:
       - p1_data:/var/lib/mysql
     ports:
-      - "3306:3306"
+      - "${DATABASE_PORT}:${DATABASE_PORT}"
     networks:
       - p1_network
     environment:
@@ -20,7 +21,82 @@ services:
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
 
-  
+  # Servicio para la aplicación principal (app_service)
+  app_service:
+    build:
+      context: ./backend/app_service
+      dockerfile: Dockerfile
+    image: carlosmz87/p1_app_service:latest
+    container_name: p1_app_service_container
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    networks:
+      - p1_network
+    environment:
+      - SECRET_KEY=${SECRET_KEY}
+      - APP_PORT=${APP_PORT}
+      - APP_HOST=${APP_HOST}
+    depends_on:
+      - database
+
+  # Servicio para la autenticación (auth_service)
+  auth_service:
+    build:
+      context: ./backend/auth_service
+      dockerfile: Dockerfile
+    image: carlosmz87/p1_auth_service:latest
+    container_name: p1_auth_service_container
+    ports:
+      - "${AUTH_SERVICE_PORT}:${AUTH_SERVICE_PORT}"
+    networks:
+      - p1_network
+    environment:
+      - REGION=${REGION}
+      - COGNITO_USER_POOL_ID=${COGNITO_USER_POOL_ID}
+      - COGNITO_CLIENT_ID=${COGNITO_CLIENT_ID}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AUTH_SERVICE_PORT=${AUTH_SERVICE_PORT}
+    depends_on:
+      - app_service
+
+  # Servicio de notificaciones (producer)
+  notification_producer:
+    build:
+      context: ./backend/notification_service/producer
+      dockerfile: Dockerfile
+    image: carlosmz87/p1_notification_producer:latest
+    container_name: p1_notification_producer_container
+    ports:
+      - "${PRODUCER_PORT}:${PRODUCER_PORT}"
+    networks:
+      - p1_network
+    environment:
+      - SQS_QUEUE_URL=${SQS_QUEUE_URL_PRODUCER}
+      - PRODUCER_PORT=${PRODUCER_PORT}
+    depends_on:
+      - auth_service
+
+  # Servicio de notificaciones (consumer)
+  notification_consumer:
+    build:
+      context: ./backend/notification_service/consumer
+      dockerfile: Dockerfile
+    image: carlosmz87/p1_notification_consumer:latest
+    container_name: p1_notification_consumer_container
+    ports:
+      - "${CONSUMER_PORT}:${CONSUMER_PORT}"
+    networks:
+      - p1_network
+    environment:
+      - SQS_QUEUE_URL=${SQS_QUEUE_URL_CONSUMER}
+      - CONSUMER_PORT=${CONSUMER_PORT}
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_DATABASE=${DB_DATABASE}
+    depends_on:
+      - notification_producer
 
 volumes:
   p1_data:

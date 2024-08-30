@@ -18,5 +18,5 @@ app.use(errorHandler);
 
 
 app.listen(config.server.port, () => {
-  console.log(`Producer service running on port ${config.server.port}`);
+  console.log(`Consumer service running on port ${config.server.port}`);
 });

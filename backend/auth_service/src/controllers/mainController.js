@@ -12,7 +12,7 @@ exports.hello = (req, res, next) => {
   // Método para la ruta de salud ('/health')
   exports.health = (req, res, next) => {
     try {
-      res.status(200).json({ status: 'OK', timestamp: new Date() });
+      res.status(200).json({ status: 'healthy'});
     } catch (error) {
       next(error);
     }

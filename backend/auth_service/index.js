@@ -12,8 +12,8 @@ app.use(cors());
 
 app.use(express.json());
 
-app.use('api/authorization/', mainRoutes);
-app.use('api/authorization/auth/', authRoutes);
+app.use('/api/authorization/', mainRoutes);
+app.use('/api/authorization/auth/', authRoutes);
 
 app.use(errorHandler);
 

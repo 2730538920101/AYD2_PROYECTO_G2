@@ -2,7 +2,6 @@ const express = require('express');
 const cors = require('cors');  // Importar cors
 const config = require('./src/config/config');
 const notificationRoutes = require('./src/routes/notificationRoutes');
-const authRoutes = require('./src/routes/notificationRoutes');
 const mainRoutes = require('./src/routes/mainRoutes');
 const errorHandler = require('./src/utils/errorHandler');
 
