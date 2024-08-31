@@ -7,14 +7,14 @@ services:
     build:
       context: ./database
       dockerfile: Dockerfile
-    image: carlosmz87/p1_database:latest
-    container_name: p1_database_container
+    image: carlosmz87/ayd2_p1_database:latest
+    container_name: ayd2_p1_database_container
     volumes:
-      - p1_data:/var/lib/mysql
+      - ayd2_p1_data:/var/lib/mysql
     ports:
       - "${DATABASE_PORT}:${DATABASE_PORT}"
     networks:
-      - p1_network
+      - ayd2_p1_network
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
@@ -26,12 +26,12 @@ services:
     build:
       context: ./backend/app_service
       dockerfile: Dockerfile
-    image: carlosmz87/p1_app_service:latest
-    container_name: p1_app_service_container
+    image: carlosmz87/ayd2_p1_app_service:latest
+    container_name: ayd2_p1_app_service_container
     ports:
       - "${APP_PORT}:${APP_PORT}"
     networks:
-      - p1_network
+      - ayd2_p1_network
     environment:
       - SECRET_KEY=${SECRET_KEY}
       - APP_PORT=${APP_PORT}
@@ -44,12 +44,12 @@ services:
     build:
       context: ./backend/auth_service
       dockerfile: Dockerfile
-    image: carlosmz87/p1_auth_service:latest
-    container_name: p1_auth_service_container
+    image: carlosmz87/ayd2_p1_auth_service:latest
+    container_name: ayd2_p1_auth_service_container
     ports:
       - "${AUTH_SERVICE_PORT}:${AUTH_SERVICE_PORT}"
     networks:
-      - p1_network
+      - ayd2_p1_network
     environment:
       - REGION=${REGION}
       - COGNITO_USER_POOL_ID=${COGNITO_USER_POOL_ID}
@@ -65,12 +65,12 @@ services:
     build:
       context: ./backend/notification_service/producer
       dockerfile: Dockerfile
-    image: carlosmz87/p1_notification_producer:latest
-    container_name: p1_notification_producer_container
+    image: carlosmz87/ayd2_p1_notification_producer:latest
+    container_name: ayd2_p1_notification_producer_container
     ports:
       - "${PRODUCER_PORT}:${PRODUCER_PORT}"
     networks:
-      - p1_network
+      - ayd2_p1_network
     environment:
       - SQS_QUEUE_URL=${SQS_QUEUE_URL_PRODUCER}
       - PRODUCER_PORT=${PRODUCER_PORT}
@@ -82,12 +82,12 @@ services:
     build:
       context: ./backend/notification_service/consumer
       dockerfile: Dockerfile
-    image: carlosmz87/p1_notification_consumer:latest
-    container_name: p1_notification_consumer_container
+    image: carlosmz87/ayd2_p1_notification_consumer:latest
+    container_name: ayd2_p1_notification_consumer_container
     ports:
       - "${CONSUMER_PORT}:${CONSUMER_PORT}"
     networks:
-      - p1_network
+      - ayd2_p1_network
     environment:
       - SQS_QUEUE_URL=${SQS_QUEUE_URL_CONSUMER}
       - CONSUMER_PORT=${CONSUMER_PORT}
@@ -98,8 +98,28 @@ services:
     depends_on:
       - notification_producer
 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: carlosmz87/ayd2_p1_frontend:latest
+    container_name: ayd2_p1_frontend_container
+    ports:
+      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
+    depends_on:
+      - notification_consumer
+    restart: always
+    networks:
+      - ayd2_p1_network
+    environment:
+      - NEXT_PUBLIC_APP_SERVICE=${NEXT_PUBLIC_APP_SERVICE}
+      - NEXT_PUBLIC_AUTH_SERVICE=${NEXT_PUBLIC_AUTH_SERVICE}
+      - NEXT_PUBLIC_NOTIFICATION_PRODUCER_SERVICE=${NEXT_PUBLIC_NOTIFICATION_PRODUCER_SERVICE}
+      - NEXT_PUBLIC_NOTIFICATION_CONSUMER_SERVICE=${NEXT_PUBLIC_NOTIFICATION_CONSUMER_SERVICE}
+      - NEXT_PUBLIC_APP_VERSION=${NEXT_PUBLIC_APP_VERSION}
+   
 volumes:
-  p1_data:
+  ayd2_p1_data:
 
 networks:
-  p1_network:
+  ayd2_p1_network:
