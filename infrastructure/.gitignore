@@ -1,0 +1,17 @@
+*.tfvars
+*.tfvars.json
+.terraformrc
+terraform.rc
+crash.log
+crash.*.log
+# Local .terraform directories
+**.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+*.lock*
+.terraform
+
+ayd2_p1_bastion_key
+ayd2_p1_bastion_key.pub
