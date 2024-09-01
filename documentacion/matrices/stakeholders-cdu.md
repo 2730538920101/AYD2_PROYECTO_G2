@@ -2,6 +2,54 @@
 
 # Stakeholders vs CDU
 
+| Casos de Uso (CU) | Cliente | Asistente | Conductor | Administrador |
+|-------------------|---------|-----------|-----------|---------------|
+| CU 001            | X       |           |           |               |
+| CU 002            |         |           | X         |               |
+| CU 003            | X       |           |           |               |
+| CU 004            | X       |           |           |               |
+| CU 005            |         |           | X         |               |
+| CU 006            |         |           | X         |               |
+| CU 007            |         | X         |           |               |
+| CU 008            |         | X         |           |               |
+| CU 009            |         |           |           | X             |
+| CU 010            |         |           |           | X             |
+| CU 017            | X       |           |           |               |
+| CU 018            | X       |           |           |               |
+| CU 019            | X       |           |           |               |
+| CU 020            | X       |           |           |               |
+| CU 021            | X       |           |           |               |
+| CU 022            | X       |           |           |               |
+| CU 023            | X       |           |           |               |
+| CU 024            | X       |           |           |               |
+| CU 026            |         |           | X         |               |
+| CU 027            |         |           | X         |               |
+| CU 028            |         |           | X         |               |
+| CU 029            |         |           | X         |               |
+| CU 030            |         |           | X         |               |
+| CU 031            |         |           | X         |               |
+| CU 032            |         |           | X         |               |
+| CU 033            |         | X         |           |               |
+| CU 034            |         | X         |           |               |
+| CU 035            |         | X         |           |               |
+| CU 036            |         | X         |           |               |
+| CU 037            |         | X         |           |               |
+| CU 038            |         | X         |           |               |
+| CU 039            |         | X         |           |               |
+| CU 040            |         | X         |           |               |
+| CU 041            |         | X         |           |               |
+| CU 042            |         | X         |           |               |
+| CU 043            |         | X         |           |               |
+| CU 044            |         | X         |           |               |
+| CU 045            |         |           |           | X             |
+| CU 046            |         |           |           | X             |
+| CU 047            |         |           |           | X             |
+| CU 048            |         |           |           | X             |
+| CU 049            |         |           |           | X             |
+| CU 050            |         |           |           | X             |
+
+---
+
 ```mermaid
 %%{init: {"quadrantChart": {"pointTextPadding":-5 , "pointRadius":0, "pointLabelFontSize":20}}}%%
 quadrantChart
