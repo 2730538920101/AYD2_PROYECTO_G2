@@ -19,11 +19,10 @@ AWS_SECRET_ACCESS_KEY=your-aws-secret-access-key
 AUTH_SERVICE_PORT=4000
 
 # Variables de entorno para PRODUCER
-SQS_QUEUE_URL_PRODUCER=your-queue-url
+SQS_QUEUE_URL=your-queue-url
 PRODUCER_PORT=4100
 
 # Variables de entorno para CONSUMER
-SQS_QUEUE_URL_CONSUMER=""
 CONSUMER_PORT=4200
 DB_HOST=localhost
 DB_USER=root

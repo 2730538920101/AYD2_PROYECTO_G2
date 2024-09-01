@@ -103,3 +103,98 @@ variable "bastion_public_key_path" {
 variable "bastion_private_key_path" {
   description = "Path to the private key file for the Bastion Host"
 }
+
+variable "ecs_cluster_name" {
+  description = "Nombre para elementos del cluster de ECS"
+  default = "ayd2-p1"
+}
+
+variable "ecs_ami_id" {
+  description = "Id de la AMI Optimizada para ECS"
+  default = "ami-093d9f343e2236e99"
+}
+
+variable "app_port" {
+  description = "Puerto en el que se ejecuta el servicio de aplicación"
+  type        = number
+}
+
+variable "app_host" {
+  description = "Host para la aplicación"
+  type        = string
+}
+
+variable "secret_key" {
+  description = "Clave secreta para la aplicación"
+  type        = string
+}
+
+variable "auth_service_port" {
+  description = "Puerto en el que se ejecuta el servicio de autenticación"
+  type        = number
+}
+
+variable "producer_port" {
+  description = "Puerto en el que se ejecuta el productor de notificaciones"
+  type        = number
+}
+
+variable "consumer_port" {
+  description = "Puerto en el que se ejecuta el consumidor de notificaciones"
+  type        = number
+}
+
+variable "frontend_port" {
+  description = "Puerto en el que se ejecuta el frontend"
+  type        = number
+}
+
+variable "next_public_app_service" {
+  description = "URL pública del servicio de aplicación"
+  type        = string
+}
+
+variable "next_public_auth_service" {
+  description = "URL pública del servicio de autenticación"
+  type        = string
+}
+
+variable "next_public_notification_producer_service" {
+  description = "URL pública del servicio productor de notificaciones"
+  type        = string
+}
+
+variable "next_public_notification_consumer_service" {
+  description = "URL pública del servicio consumidor de notificaciones"
+  type        = string
+}
+
+variable "next_public_app_version" {
+  description = "Versión de la aplicación para el frontend"
+  type        = string
+}
+
+variable "sqs_queue_url" {
+  description = "URL de la cola de SQS utilizada"
+  type        = string
+}
+
+variable "db_host" {
+  description = "Host de la base de datos"
+  type        = string
+}
+
+variable "db_user" {
+  description = "Usuario para la base de datos"
+  type        = string
+}
+
+variable "db_password" {
+  description = "Contraseña para la base de datos"
+  type        = string
+}
+
+variable "db_database" {
+  description = "Nombre de la base de datos"
+  type        = string
+}

@@ -9,6 +9,8 @@ queue_name            = "ayd2-p1"
 user_pool_name        = "ayd2-p1"
 rds_name              = "ayd2-p1"
 ec2_name              = "ayd2-p1"
+ecs_cluster_name      = "ayd2-p1"
+ecs_ami_id            = "ami-093d9f343e2236e99"
 rds_dbname            = "nombre de base de datos"
 rds_username          = "username base de datos"
 rds_password          = "password base de datos"
@@ -20,6 +22,23 @@ AWS_REGION            = "us-east-1"
 AWS_ACCESS_KEY        = "" 
 AWS_SECRET_KEY        = ""
 AWS_ACCESS_TOKEN      = ""  
+app_port                    = 5000
+app_host                    = "localhost"
+secret_key                  = "my-secret-key"
+auth_service_port           = 4000
+producer_port               = 4100
+consumer_port               = 4200
+frontend_port               = 3000
+next_public_app_service     = "http://app-service.example.com"
+next_public_auth_service    = "http://auth-service.example.com"
+next_public_notification_producer_service = "http://notification-producer.example.com"
+next_public_notification_consumer_service = "http://notification-consumer.example.com"
+next_public_app_version     = "1.0.0"
+sqs_queue_url               = "https://sqs.us-east-1.amazonaws.com/857738776382/ayd2-p1"
+db_host                    = "database.example.com"
+db_user                    = "proyecto1"
+db_password                = "proyecto1"
+db_database                = "PROYECTO_VIAJES"
 
 
 Login AWS account

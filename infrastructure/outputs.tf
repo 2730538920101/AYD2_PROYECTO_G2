@@ -132,6 +132,11 @@ output "rds_endpoint" {
   value       = aws_db_instance.mysql.endpoint
 }
 
+output "rds_db_name" {
+  description = "Nombre de la base de datos RDS"
+  value       = aws_db_instance.ayd2_p1_instance.db_name
+}
+
 output "bastion_public_ip" {
   description = "The public IP of the Bastion Host"
   value       = aws_instance.bastion.public_ip
@@ -145,4 +150,32 @@ output "bastion_security_group" {
 output "rds_security_group" {
   description = "The Security Group ID of the RDS instance"
   value       = aws_security_group.rds_sg.id
+}
+
+output "ecr_repository_urls" {
+  value = {
+    app_service            = aws_ecr_repository.app_service.repository_url
+    auth_service           = aws_ecr_repository.auth_service.repository_url
+    notification_producer  = aws_ecr_repository.notification_producer.repository_url
+    notification_consumer  = aws_ecr_repository.notification_consumer.repository_url
+    frontend               = aws_ecr_repository.frontend.repository_url
+  }
+}
+
+output "ecs_cluster_name" {
+  value = aws_ecs_cluster.ecs_cluster.name
+}
+
+output "ecs_task_definition_arns" {
+  value = {
+    app_service            = aws_ecs_task_definition.app_service.arn
+    auth_service           = aws_ecs_task_definition.auth_service.arn
+    notification_producer  = aws_ecs_task_definition.notification_producer.arn
+    notification_consumer  = aws_ecs_task_definition.notification_consumer.arn
+    frontend               = aws_ecs_task_definition.frontend.arn
+  }
+}
+
+output "load_balancer_dns" {
+  value = aws_lb.ecs_lb.dns_name
 }

@@ -72,7 +72,7 @@ services:
     networks:
       - ayd2_p1_network
     environment:
-      - SQS_QUEUE_URL=${SQS_QUEUE_URL_PRODUCER}
+      - SQS_QUEUE_URL=${SQS_QUEUE_URL}
       - PRODUCER_PORT=${PRODUCER_PORT}
     depends_on:
       - auth_service
@@ -89,7 +89,7 @@ services:
     networks:
       - ayd2_p1_network
     environment:
-      - SQS_QUEUE_URL=${SQS_QUEUE_URL_CONSUMER}
+      - SQS_QUEUE_URL=${SQS_QUEUE_URL}
       - CONSUMER_PORT=${CONSUMER_PORT}
       - DB_HOST=${DB_HOST}
       - DB_USER=${DB_USER}
