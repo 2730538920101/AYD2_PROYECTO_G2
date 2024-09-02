@@ -1,5 +1,7 @@
 [REGRESAR](../../README.md)
 
+![Requerimientos VS Stakeholders](../diagramas/matrices/requerimientos-stakeholders.svg)
+
 # Stakeholders vs Requerimientos
 
 | ID Requisito | Requisito                                                                       | Descripción del Requisito |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                Stakeholders                  | Necesidad                                                                                   | Estado    |                                                                         
