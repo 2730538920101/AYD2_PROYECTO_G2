@@ -132,10 +132,6 @@ output "rds_endpoint" {
   value       = aws_db_instance.mysql.endpoint
 }
 
-output "rds_db_name" {
-  description = "Nombre de la base de datos RDS"
-  value       = aws_db_instance.ayd2_p1_instance.db_name
-}
 
 output "bastion_public_ip" {
   description = "The public IP of the Bastion Host"
@@ -162,20 +158,5 @@ output "ecr_repository_urls" {
   }
 }
 
-output "ecs_cluster_name" {
-  value = aws_ecs_cluster.ecs_cluster.name
-}
 
-output "ecs_task_definition_arns" {
-  value = {
-    app_service            = aws_ecs_task_definition.app_service.arn
-    auth_service           = aws_ecs_task_definition.auth_service.arn
-    notification_producer  = aws_ecs_task_definition.notification_producer.arn
-    notification_consumer  = aws_ecs_task_definition.notification_consumer.arn
-    frontend               = aws_ecs_task_definition.frontend.arn
-  }
-}
 
-output "load_balancer_dns" {
-  value = aws_lb.ecs_lb.dns_name
-}
