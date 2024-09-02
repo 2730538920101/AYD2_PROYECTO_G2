@@ -148,15 +148,6 @@ output "rds_security_group" {
   value       = aws_security_group.rds_sg.id
 }
 
-output "ecr_repository_urls" {
-  value = {
-    app_service            = aws_ecr_repository.app_service.repository_url
-    auth_service           = aws_ecr_repository.auth_service.repository_url
-    notification_producer  = aws_ecr_repository.notification_producer.repository_url
-    notification_consumer  = aws_ecr_repository.notification_consumer.repository_url
-    frontend               = aws_ecr_repository.frontend.repository_url
-  }
-}
 
 
 

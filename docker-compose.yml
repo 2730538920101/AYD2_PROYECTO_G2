@@ -36,6 +36,12 @@ services:
       - SECRET_KEY=${SECRET_KEY}
       - APP_PORT=${APP_PORT}
       - APP_HOST=${APP_HOST}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}    
+      - DATABASE_PORT=${DATABASE_PORT}
+      - AWS_REGION=${AWS_REGION}
+      - AWS_BUCKET_NAME=${AWS_BUCKET_NAME}
     depends_on:
       - database
 

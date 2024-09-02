@@ -9,6 +9,8 @@ DATABASE_PORT=3306
 SECRET_KEY=""
 APP_PORT=5000
 APP_HOST=""
+AWS_REGION=""
+AWS_BUCKET_NAME=""
 
 # Variables de entorno para AUTH_SERVICE
 REGION=your-aws-region
