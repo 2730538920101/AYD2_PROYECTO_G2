@@ -9,8 +9,6 @@ queue_name            = "ayd2-p1"
 user_pool_name        = "ayd2-p1"
 rds_name              = "ayd2-p1"
 ec2_name              = "ayd2-p1"
-ecs_cluster_name      = "ayd2-p1"
-ecs_ami_id            = "ami-093d9f343e2236e99"
 rds_dbname            = "nombre de base de datos"
 rds_username          = "username base de datos"
 rds_password          = "password base de datos"
@@ -43,4 +41,4 @@ db_database                = "PROYECTO_VIAJES"
 
 Login AWS account
 
-https://d-9067d0cf7d.awsapps.com/start
+https://ayd2-proyecto-devs-login.awsapps.com/start
