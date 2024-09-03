@@ -1,3 +1,4 @@
+from .user import User
 class Administrador(User):
     def _init_(self, usuario, contrasenia, validacion):
         self.usuario = usuario
