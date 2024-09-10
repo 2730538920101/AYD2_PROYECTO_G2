@@ -7,7 +7,7 @@
 | ID                      | RF001                                                                                         |
 | Asignado al modulo      | Registro de Usuario                                                                           |
 | Nombre                  | Registro de Usuario                                                                           |
-| Descripción             | El sistema debe permitir el registro de nuevos usuarios proporcionando la información completa requerida. El proceso de registro incluye la entrada de: Nombre completo, fecha de nacimiento, género, correo electrónico, fotografía del DPI, número de celular, contraseña, confirmación de contraseña, y opcionalmente un metodo de pago. <br/><br/>El sistema debe validar que el correo no se ha registrado previamente.  |
+| Descripción             | El sistema debe permitir el registro de nuevos usuarios proporcionando la información completa requerida. El proceso de registro incluye la entrada de: Nombre completo, fecha de nacimiento, género, correo electrónico, fotografía del DPI, número de celular, contraseña, confirmación de contraseña.  |
 | Requerimientos previos  | El usuario debe contar con una conexión a internet estable y disponer de su información personal. |
 
 | Campo                   | Detalle                                                                                      |
@@ -18,21 +18,21 @@
 | Descripción             | El sistema debe validar que la contraseña y la confirmación de contraseña coincidan antes de permitir el registro. |
 | Requerimientos previos  | El usuario debe ingresar la contraseña y confirmarla correctamente. |
 
-| Campo                   | Detalle                                                                                      |
-|-------------------------|----------------------------------------------------------------------------------------------|
-| ID                      | RF003                                                                                         |
-| Asignado al modulo      | Registro de Usuario                                                                           |
-| Nombre                  | Métodos de Pago Opcionales                                                                    |
-| Descripción             | El sistema debe permitir al usuario optar por no ingresar un método de pago en el momento del registro. El ingreso de métodos de pago será opcional y no impedirá que el usuario complete el registro. |
-| Requerimientos previos  | El usuario debe tener la opción de omitir el ingreso de los métodos de pago durante el registro. |
+| Campo                | Detalle                                                                                                   |
+|----------------------|-----------------------------------------------------------------------------------------------------------|
+| ID                   | RF003                                                                                                   |
+| Asignado al modulo   | Gestión de solicitudes de conductores                                                                     |
+| Nombre               | Visualización de solicitudes de activación de cuenta de conductor                                         |
+| Descripción          | El sistema debe permitir al asistente visualizar una lista de solicitudes de activación de cuenta de conductores. |
+| Requerimientos previos | Usuarios de tipo conductor se hayan registrado. |
 
-| Campo                   | Detalle                                                                                      |
-|-------------------------|----------------------------------------------------------------------------------------------|
-| ID                      | RF004                                                                                         |
-| Asignado al modulo      | Registro de Usuario                                                                           |
-| Nombre                  | Registro de Método de Pago con Tarjeta                                                        |
-| Descripción             | El sistema debe permitir al usuario ingresar un método de pago con tarjeta, incluyendo nombre del propietario, número de tarjeta, CVV y fecha de expiración, validando la cantidad de dígitos de la tarjeta y el código de seguridad, así como su vencimiento. |
-| Requerimientos previos  | El usuario debe tener una tarjeta válida y proporcionar la información correcta para completar el registro de pago. |
+| Campo                | Detalle                                                                                                   |
+|----------------------|-----------------------------------------------------------------------------------------------------------|
+| ID                   | RF004                                                                                                   |
+| Asignado al modulo   | ...                                                                       |
+| Nombre               | Solicitud de activación de cuenta de conductor                                                            |
+| Descripción          | Al realizar el registro del conductor el sistema automaticamente realiza la solicitud de la activación de la cuenta. |
+| Requerimientos previos | Registrar el usuario de tipo conductor. |
 
 | Campo                   | Detalle                                                                                      |
 |-------------------------|----------------------------------------------------------------------------------------------|
@@ -119,7 +119,7 @@
 | ID                     | RF015                                                                                        |
 | Asignado al modulo     | Perfil de usuario                                                                  |
 | Nombre                 | Actualización de datos personales                                                            |
-| Descripción            | El usuario podrá modificar la siguiente información: Nombre completo, fecha de nacimiento, contraseña, celular e información de la tarjeta |
+| Descripción            | El usuario podrá modificar la siguiente información: Nombre completo, fecha de nacimiento, contraseña, celular. |
 | Requerimientos previos | Usuario autenticado.                                                                         |
 
 | Campo                   | Detalle                                                                                      |
@@ -150,8 +150,8 @@
 |------------------------|---------------------------------------------------------------------------------------------|
 | ID                      | RF019                                                                                         |
 | Asignado al modulo      | Viaje                                                                              |
-| Nombre                  | Gestión de Métodos de Pago                                                                   |
-| Descripción             | El usuario debe poder pagar en efectivo o con tarjeta de crédito después del viaje realizado. Si no tiene una tarjeta registrada, el pago se realizara unicamente en efectivo. |
+| Nombre                  | Gestión de Pago                                                                   |
+| Descripción             | El usuario debe poder pagar en efectivo. |
 | Requerimientos previos  | El usuario debe estar en proceso de realizar un pago o intentar completar un viaje sin un método de pago registrado. |
 
 | Campo                   | Detalle                                                                                      |
