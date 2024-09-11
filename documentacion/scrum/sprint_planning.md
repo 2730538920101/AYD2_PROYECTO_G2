@@ -6,7 +6,8 @@
 - Configuración principal de la infrastructura necesaria en AWS para el módulo de autenticación
 
 ## Elementos del Sprint Backlog
-[Enlace al documento que describe el sprint backlog](./sprint1_planning.html)
+# Sprint 1 - Planning
+[Elementos del sprint backlog](https://ayd1.atlassian.net/issues/?jql=project+%3D+%22AYD2PRO%22+AND+sprint+%3D+5+ORDER+BY+created+DESC&atlOrigin=eyJpIjoiNjVkZjg0ZjhiOTFlNDE0MWIzNDRiYWVhYTAxMWRhZWYiLCJwIjoiaiJ9)
 
 ## Duración del Sprint
 - **Fecha de inicio:** 09/09/2024
@@ -24,7 +25,7 @@
 - [Objetivo 3]
 
 ## Elementos del Sprint Backlog
-[Enlace al documento que describe el sprint backlog](./sprint2_planning.html)
+[Elementos del sprint backlog](./sprint2_planning.html)
 
 ## Duración del Sprint
 - **Fecha de inicio:** [Fecha de inicio]
