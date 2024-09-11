@@ -373,8 +373,8 @@ Yo como conductor, cuando acepto un viaje, necesito ver detalles importantes sob
 **CRITERIOS DE ACEPTACIÓN:**
 1. La calificación es el promedio de estrellas que tiene el cliente (aproximado) en el total de los viajes en los que ha sido calificado por los demás usuarios.
 
-**PRIORIDAD:** Baja  
-**ESTIMACIÓN:** 3
+**PRIORIDAD:** Media  
+**ESTIMACIÓN:** 5
 
 ---
 
