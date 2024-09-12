@@ -12,6 +12,7 @@ class Config:
     MYSQL_DATABASE=os.getenv('MYSQL_DATABASE', '')
     MYSQL_USER=os.getenv('MYSQL_USER', '')
     MYSQL_PASSWORD=os.getenv('MYSQL_PASSWORD', '')
+    MYSQL_HOST=os.getenv('MYSQL_HOST','localhost')
     DATABASE_PORT=os.getenv('DATABASE_PORT', 3306)
     AWS_REGION=os.getenv('AWS_REGION', '')
     AWS_BUCKET_NAME=os.getenv('AWS_BUCKET') 
