@@ -20,11 +20,7 @@ COGNITO_IDENTITY_POOL_ID=""
 COGNITO_AWS_ACCESS_KEY_ID=""
 COGNITO_AWS_SECRET_ACCESS_KEY=""
 
-# Variables de entorno para AUTH_SERVICE
-REGION=your-aws-region
 
-
-AUTH_SERVICE_PORT=4000
 
 # Variables de entorno para PRODUCER
 SQS_QUEUE_URL=your-queue-url
