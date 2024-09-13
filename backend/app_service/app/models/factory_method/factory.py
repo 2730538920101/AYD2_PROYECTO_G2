@@ -2,6 +2,7 @@ from .cliente import Cliente
 from .administrador import Administrador
 from .asistente import Asistente
 from .conductor import Conductor
+
 class UserFactory:
     @staticmethod
     def create_user(role, **kwargs):

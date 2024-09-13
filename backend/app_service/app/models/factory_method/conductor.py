@@ -1,7 +1,7 @@
 from .user import User
+
 class Conductor(User):
-    def _init_(self, con_id, nombre, telefono, estado_civil, genero, correo, codigo_empleado, contrasenia, fecha_nacimiento, direccion, numero_dpi, numero_cuenta, fotografia, marca_vehiculo, placa, anio, pregunta, respuesta, estado):
-        self.con_id = con_id
+    def __init__(self, nombre, telefono, estado_civil, genero, correo, codigo_empleado, contrasenia, fecha_nacimiento, direccion, numero_dpi, numero_cuenta, fotografia, marca_vehiculo, placa, anio, pregunta, respuesta, estado):
         self.nombre = nombre
         self.telefono = telefono
         self.estado_civil = estado_civil
@@ -23,7 +23,3 @@ class Conductor(User):
 
     def get_role(self):
         return 'Conductor'
-
-    def save(self):
-        # Lógica para guardar el conductor en la base de datos
-        pass

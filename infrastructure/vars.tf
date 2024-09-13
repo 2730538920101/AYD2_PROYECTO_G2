@@ -1,25 +1,4 @@
-variable "vpc_cidr" {
-  description = "CIDR block for the VPC"
-  default     = "10.0.0.0/16"
-}
 
-variable "public_subnet_cidrs" {
-  description = "List of CIDR blocks for public subnets"
-  type        = list(string)
-  default     = ["10.0.1.0/24", "10.0.2.0/24"]
-}
-
-variable "private_subnet_cidrs" {
-  description = "List of CIDR blocks for private subnets"
-  type        = list(string)
-  default     = ["10.0.3.0/24", "10.0.4.0/24"]
-}
-
-variable "availability_zones" {
-  description = "List of availability zones to deploy resources"
-  type        = list(string)
-  default     = ["us-east-1a", "us-east-1b"]
-}
 
 variable "project_name" {
   description = "Project name to tag resources"
@@ -49,42 +28,14 @@ variable "aws_account_id" {
   type        = string
 }
 
-variable "bucket_name" {
-  description = "Nombre del bucket a utilizar"
-  default = "ayd2-p1"
-}
 
-variable "queue_name"{
-  description = "Nombre de la cola standar de SQS a utilizar"
-  default = "ayd2-p1"
-}
-
-variable "user_pool_name"{
-  description = "Nombre del pool de usuarios de Cognito a utilizar"
-  default = "ayd2-p1"
-}
-
-variable "rds_name" {
-  description = "Nombre del servicio de base de datos RDS con Mysql"
-  default = "ayd2-p1"
-}
 
 variable "ec2_name" {
   description = "Nombre del bastion host de administracion"
   default = "ayd2-p1"
 }
 
-variable "rds_dbname" {
-  description = "Nombre de la base de datos"
-}
 
-variable "rds_username" {
-  description = "Nombre de usuario para el acceso a la base de datos"
-}
-
-variable "rds_password" {
-  description = "Password del usuario para el acceso a la base de datos"
-}
 
 variable "bastion_ami_id" {
   description = "AMI ID for the Bastion Host"
@@ -103,6 +54,29 @@ variable "bastion_public_key_path" {
 variable "bastion_private_key_path" {
   description = "Path to the private key file for the Bastion Host"
 }
+
+variable "rds_username" {
+  description = "Nombre de usuario para el acceso a la base de datos"
+}
+
+variable "rds_password" {
+  description = "Password del usuario para el acceso a la base de datos"
+}
+
+
+variable "rds_name" {
+  description = "Nombre del servicio de base de datos RDS con Mysql"
+  default = "ayd2-p1"
+}
+
+
+variable "rds_dbname" {
+  description = "Nombre de la base de datos"
+}
+
+
+
+
 
 variable "ecs_cluster_name" {
   description = "Nombre para elementos del cluster de ECS"
@@ -198,3 +172,43 @@ variable "db_database" {
   description = "Nombre de la base de datos"
   type        = string
 }
+
+
+
+variable "user_pool_name"{
+  description = "Nombre del pool de usuarios de Cognito a utilizar"
+  default = "ayd2-p1"
+}
+
+variable "bucket_name" {
+  description = "Nombre del bucket a utilizar"
+  default = "ayd2-p1"
+}
+variable "queue_name"{
+  description = "Nombre de la cola standar de SQS a utilizar"
+  default = "ayd2-p1"
+}
+
+variable "vpc_cidr" {
+  description = "CIDR block for the VPC"
+  default     = "10.0.0.0/16"
+}
+
+variable "public_subnet_cidrs" {
+  description = "List of CIDR blocks for public subnets"
+  type        = list(string)
+  default     = ["10.0.1.0/24", "10.0.2.0/24"]
+}
+
+variable "private_subnet_cidrs" {
+  description = "List of CIDR blocks for private subnets"
+  type        = list(string)
+  default     = ["10.0.3.0/24", "10.0.4.0/24"]
+}
+
+variable "availability_zones" {
+  description = "List of availability zones to deploy resources"
+  type        = list(string)
+  default     = ["us-east-1a", "us-east-1b"]
+}
+

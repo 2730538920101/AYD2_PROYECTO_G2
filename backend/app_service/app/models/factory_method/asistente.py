@@ -1,6 +1,7 @@
 from .user import User
+
 class Asistente(User):
-    def _init_(self, nombre, telefono, estado_civil, genero, correo, codigo_usuario, contrasenia, fecha_nacimiento, direccion, numero_dpi, numero_cuenta, papeleria, fotografia, pregunta, respuesta, estado):
+    def __init__(self, nombre, telefono, estado_civil, genero, correo, codigo_usuario, contrasenia, fecha_nacimiento, direccion, numero_dpi, numero_cuenta, papeleria, fotografia, pregunta, respuesta, estado):
         self.nombre = nombre
         self.telefono = telefono
         self.estado_civil = estado_civil
@@ -21,6 +22,3 @@ class Asistente(User):
     def get_role(self):
         return 'Asistente'
 
-    def save(self):
-        # Lógica para guardar el asistente en la base de datos
-        pass

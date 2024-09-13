@@ -2,14 +2,14 @@
 resource "aws_security_group" "rds_sg" {
   name        = "${var.rds_name}-rds-sg"
   description = "Security group for RDS instance"
-  vpc_id      = aws_vpc.main.id
+  vpc_id      = var.vpc_id
 
   # Reglas de entrada (Ingress)
   ingress {
     from_port   = 3306
     to_port     = 3306
     protocol    = "tcp"
-    cidr_blocks = [aws_subnet.public[0].cidr_block]
+    cidr_blocks = [var.public_subnet_cidr_blocks[0]]
   }
 
   # Reglas de salida (Egress)
@@ -25,7 +25,6 @@ resource "aws_security_group" "rds_sg" {
   }
 }
 
-# Crear una instancia RDS de MySQL
 resource "aws_db_instance" "mysql" {
   allocated_storage    = 20
   engine               = "mysql"
@@ -40,7 +39,7 @@ resource "aws_db_instance" "mysql" {
   publicly_accessible  = false
   vpc_security_group_ids = [aws_security_group.rds_sg.id]
   db_subnet_group_name   = aws_db_subnet_group.rds_subnet_group.name
-  availability_zone = aws_subnet.private[0].availability_zone
+  availability_zone = var.private_subnet_availability_zones[0]
   # Backup y mantenimiento
   storage_type            = "gp2"
   backup_retention_period = 30
@@ -51,10 +50,9 @@ resource "aws_db_instance" "mysql" {
   }
 }
 
-# Subnet Group para RDS
 resource "aws_db_subnet_group" "rds_subnet_group" {
   name       = "${var.rds_name}-rds-subnet-group"
-  subnet_ids = aws_subnet.private[*].id
+  subnet_ids = var.private_subnet_ids
 
   tags = {
     Name = "${var.project_name}-rds-subnet-group"

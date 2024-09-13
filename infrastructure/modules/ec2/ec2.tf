@@ -11,7 +11,7 @@ resource "aws_key_pair" "bastion_key_pair" {
 resource "aws_security_group" "bastion_sg" {
   name        = "${var.ec2_name}-bastion-sg"
   description = "Security group for Bastion Host"
-  vpc_id      = aws_vpc.main.id
+  vpc_id      = var.vpc_id
 
   # Reglas de entrada (Ingress)
   ingress {
@@ -33,26 +33,23 @@ resource "aws_security_group" "bastion_sg" {
   }
 }
 
-# Crear una instancia EC2 como Bastion Host
+# Crear la instancia EC2 como Bastion Host
 resource "aws_instance" "bastion" {
   ami                         = var.bastion_ami_id
   instance_type               = "t3.micro"
-  subnet_id                   = aws_subnet.public[0].id
+  subnet_id                   = var.public_subnet_ids[0]
   vpc_security_group_ids      = [aws_security_group.bastion_sg.id]
   key_name                    = aws_key_pair.bastion_key_pair.key_name
   associate_public_ip_address = true
-
-  # Asegurar que el Bastion Host se cree después de la instancia de RDS
-  depends_on = [aws_db_instance.mysql]
 
   # Transferir el script SQL y un script de conexión al Bastion Host
   provisioner "file" {
     content     = <<-EOF
       #!/bin/bash
-      mysql -h ${split(":", aws_db_instance.mysql.endpoint)[0]} \
-            -P ${split(":", aws_db_instance.mysql.endpoint)[1]} \
+      mysql -h ${split(":", var.rds_endpoint)[0]} \
+            -P ${split(":", var.rds_endpoint)[1]} \
             -u ${var.rds_username} \
-            --password=$DB_PASSWORD \
+            --password=${var.rds_password} \
             < /home/ubuntu/db_init.sql
     EOF
     destination = "/home/ubuntu/run_sql.sh"
@@ -83,7 +80,7 @@ resource "aws_instance" "bastion" {
       "sudo apt-get update",
       "sudo apt-get install -y mysql-client",
       "chmod +x /home/ubuntu/run_sql.sh",
-      "DB_PASSWORD='${var.rds_password}' /home/ubuntu/run_sql.sh"
+      "/home/ubuntu/run_sql.sh"
     ]
 
     connection {

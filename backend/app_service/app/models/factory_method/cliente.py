@@ -1,7 +1,7 @@
 from .user import User
+
 class Cliente(User):
-    def _init_(self, cli_id, nombre, fecha_nacimiento, genero, correo, foto_dpi, telefono, contrasenia, pregunta, respuesta, estado):
-        self.cli_id = cli_id
+    def __init__(self, nombre, fecha_nacimiento, genero, correo, foto_dpi, telefono, contrasenia, pregunta, respuesta, estado):
         self.nombre = nombre
         self.fecha_nacimiento = fecha_nacimiento
         self.genero = genero
@@ -15,7 +15,3 @@ class Cliente(User):
 
     def get_role(self):
         return 'Cliente'
-
-    def save(self):
-        # Lógica para guardar el cliente en la base de datos
-        pass
