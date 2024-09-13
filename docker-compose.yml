@@ -53,27 +53,6 @@ services:
     depends_on:
       - database
 
-  # Servicio para la autenticación (auth_service)
-  auth_service:
-    build:
-      context: ./backend/auth_service
-      dockerfile: Dockerfile
-    image: carlosmz87/ayd2_p1_auth_service:latest
-    container_name: ayd2_p1_auth_service_container
-    ports:
-      - "${AUTH_SERVICE_PORT}:${AUTH_SERVICE_PORT}"
-    networks:
-      - ayd2_p1_network
-    environment:
-      - REGION=${REGION}
-      - COGNITO_USER_POOL_ID=${COGNITO_USER_POOL_ID}
-      - COGNITO_CLIENT_ID=${COGNITO_CLIENT_ID}
-      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-      - AUTH_SERVICE_PORT=${AUTH_SERVICE_PORT}
-    depends_on:
-      - app_service
-
   # Servicio de notificaciones (producer)
   notification_producer:
     build:
