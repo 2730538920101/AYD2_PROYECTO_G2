@@ -1,7 +1,7 @@
 from .user import User
 
 class Conductor(User):
-    def __init__(self, nombre, telefono, estado_civil, genero, correo, codigo_empleado, contrasenia, fecha_nacimiento, direccion, numero_dpi, numero_cuenta, fotografia, marca_vehiculo, placa, anio, pregunta, respuesta, estado):
+    def __init__(self, nombre, telefono, estado_civil, genero, correo, codigo_empleado, contrasenia, fecha_nacimiento, direccion, numero_dpi, numero_cuenta, papeleria, fotografia, marca_vehiculo, placa, anio, pregunta, respuesta, estado):
         self.nombre = nombre
         self.telefono = telefono
         self.estado_civil = estado_civil
@@ -13,6 +13,7 @@ class Conductor(User):
         self.direccion = direccion
         self.numero_dpi = numero_dpi
         self.numero_cuenta = numero_cuenta
+        self.papeleria = papeleria
         self.fotografia = fotografia
         self.marca_vehiculo = marca_vehiculo
         self.placa = placa

@@ -1,6 +1,5 @@
-from backend.app_service.app.routes import auth
 from flask import Flask
-from app.routes import main, tarifas, clientes, conductores, administrador, asistentes
+from app.routes import main, tarifas, clientes, conductores, administrador, asistentes, auth
 
 def create_app():
     app = Flask(__name__)

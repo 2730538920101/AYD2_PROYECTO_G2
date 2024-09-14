@@ -49,7 +49,6 @@ def crear_clientes():
             # Encriptar la contraseña usando el EncryptionController
             contrasenia_encriptada = encryption_controller.encrypt(password=datos.get('contrasenia'), action='encrypt')
             print(f"Contraseña encriptada: {contrasenia_encriptada}")
-            
             # Extraer los datos del formulario
             cliente_data = {
                 'nombre': datos.get('nombre'),

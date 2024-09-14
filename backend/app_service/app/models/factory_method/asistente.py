@@ -14,7 +14,6 @@ class Asistente(User):
         self.numero_dpi = numero_dpi
         self.numero_cuenta = numero_cuenta
         self.papeleria = papeleria
-        self.fotografia = fotografia
         self.pregunta = pregunta
         self.respuesta = respuesta
         self.estado = estado
