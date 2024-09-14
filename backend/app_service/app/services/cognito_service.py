@@ -27,11 +27,6 @@ class CognitoService:
         self.user_pool_client_id = Config.COGNITO_USER_POOL_CLIENT_ID
         self.identity_pool_id = Config.COGNITO_IDENTITY_POOL_ID
         
-        # Verificar la configuración cargada
-        print(f"Region: {Config.AWS_REGION}")
-        print(f"User Pool ID: {self.user_pool_id}")
-        print(f"User Pool Client ID: {self.user_pool_client_id}")
-        print(f"Identity Pool ID: {self.identity_pool_id}")
 
     def register_user(self, email: str, password: str, user_type: str) -> dict:
         """Registrar un nuevo usuario en el User Pool de Cognito y asignarlo a un grupo"""
