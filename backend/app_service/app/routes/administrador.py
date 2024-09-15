@@ -18,7 +18,3 @@ encryption_controller = EncryptionController()
 s3_service = S3Service()
 cognito_service = CognitoService()
 
-# Ruta para crear clientes
-@bp.route('/crear', methods=['POST'])
-def crear_administrador():
-    pass

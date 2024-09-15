@@ -155,4 +155,13 @@ class CognitoService:
             print(f"Error changing password: {e}")
             return None
 
+    def user_exists(self, email):
+        try:
+            response = self.client.admin_get_user(
+                UserPoolId=self.user_pool_id,
+                Username=email
+            )
+            return True if response else False
+        except self.client.exceptions.UserNotFoundException:
+            return False
 
