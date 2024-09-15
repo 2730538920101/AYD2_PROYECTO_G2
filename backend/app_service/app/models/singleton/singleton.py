@@ -3,27 +3,27 @@ from mysql.connector import MySQLConnection, Error
 
 class MySQLSingleton:
     _instance = None
-    connection = None
-    cursor = None
-    def _new_(cls, host, user, password, database):
+
+    def __new__(cls, host, user, password, database):
         if cls._instance is None:
-            cls.instance = super(MySQLSingleton, cls).new_(cls)
+            cls._instance = super(MySQLSingleton, cls).__new__(cls)
             cls._instance._initialize(host, user, password, database)
         return cls._instance
 
     def _initialize(self, host, user, password, database):
-        try:
-            self.connection = mysql.connector.connect(
-                host=host,
-                user=user,
-                password=password,
-                database=database
-            )
-            self.cursor = self.connection.cursor()
-        except Error as e:
-            print(f"Error connecting to MySQL Platform: {e}")
-            self.connection = None
-            self.cursor = None
+        if not hasattr(self, 'connection'):  # Verificar si la conexión ya ha sido establecida
+            try:
+                self.connection = mysql.connector.connect(
+                    host=host,
+                    user=user,
+                    password=password,
+                    database=database
+                )
+                self.cursor = self.connection.cursor()
+            except Error as e:
+                print(f"Error connecting to MySQL: {e}")
+                self.connection = None
+                self.cursor = None
 
     def execute_query(self, query, parameters=()):
         if self.connection is None or self.cursor is None:
@@ -49,7 +49,6 @@ class MySQLSingleton:
             raise RuntimeError("Database connection is not initialized.")
         try:
             self.cursor.callproc(procedure_name, parameters)
-            # Fetch results from the procedure if needed
             results = []
             for result_set in self.cursor.stored_results():
                 results.append(result_set.fetchall())
@@ -59,8 +58,7 @@ class MySQLSingleton:
             print(f"Error executing stored procedure: {e}")
             return []
 
-    def _del_(self):
+    def __del__(self):
         if self.connection is not None and self.cursor is not None:
             self.cursor.close()
             self.connection.close()
-

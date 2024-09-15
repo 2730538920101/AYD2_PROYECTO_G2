@@ -38,33 +38,23 @@ services:
       - APP_HOST=${APP_HOST}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}    
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD} 
+      - MYSQL_HOST=${MYSQL_HOST}   
       - DATABASE_PORT=${DATABASE_PORT}
       - AWS_REGION=${AWS_REGION}
       - AWS_BUCKET_NAME=${AWS_BUCKET_NAME}
+      - S3_AWS_ACCESS_KEY_ID=${S3_AWS_ACCESS_KEY_ID}
+      - S3_AWS_SECRET_ACCESS_KEY=${S3_AWS_SECRET_ACCESS_KEY}
+      - COGNITO_USER_POOL_ID=${COGNITO_USER_POOL_ID}
+      - COGNITO_USER_POOL_CLIENT_ID=${COGNITO_USER_POOL_CLIENT_ID}
+      - COGNITO_IDENTITY_POOL_ID=${COGNITO_IDENTITY_POOL_ID}
+      - COGNITO_AWS_ACCESS_KEY_ID=${COGNITO_AWS_ACCESS_KEY_ID}
+      - COGNITO_AWS_SECRET_ACCESS_KEY=${COGNITO_AWS_SECRET_ACCESS_KEY}
+      - ADMIN_EMAIL=${ADMIN_EMAIL}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD} 
+      - ADMIN_VALIDATION=${ADMIN_VALIDATION}
     depends_on:
       - database
-
-  # Servicio para la autenticación (auth_service)
-  auth_service:
-    build:
-      context: ./backend/auth_service
-      dockerfile: Dockerfile
-    image: carlosmz87/ayd2_p1_auth_service:latest
-    container_name: ayd2_p1_auth_service_container
-    ports:
-      - "${AUTH_SERVICE_PORT}:${AUTH_SERVICE_PORT}"
-    networks:
-      - ayd2_p1_network
-    environment:
-      - REGION=${REGION}
-      - COGNITO_USER_POOL_ID=${COGNITO_USER_POOL_ID}
-      - COGNITO_CLIENT_ID=${COGNITO_CLIENT_ID}
-      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-      - AUTH_SERVICE_PORT=${AUTH_SERVICE_PORT}
-    depends_on:
-      - app_service
 
   # Servicio de notificaciones (producer)
   notification_producer:
@@ -81,7 +71,7 @@ services:
       - SQS_QUEUE_URL=${SQS_QUEUE_URL}
       - PRODUCER_PORT=${PRODUCER_PORT}
     depends_on:
-      - auth_service
+      - app_service
 
   # Servicio de notificaciones (consumer)
   notification_consumer:

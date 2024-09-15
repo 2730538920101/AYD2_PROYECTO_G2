@@ -1,6 +1,5 @@
 class User:
     def get_role(self):
-        raise NotImplementedError
+        raise NotImplementedError("Subclasses must implement get_role method.")
 
-    def save(self):
-        raise NotImplementedError
+
