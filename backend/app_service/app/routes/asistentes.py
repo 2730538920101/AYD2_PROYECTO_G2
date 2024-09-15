@@ -47,7 +47,7 @@ def crear_asistente():
             # Encriptar la contraseña
             contrasenia_encriptada = encryption_controller.encrypt(password=datos.get('contrasenia'), action='encrypt')
            # Generar el código de empleado único
-            codigo_empleado = generar_identificador_unico(datos.get('nombre'), datos.get('telefono'), 'C')
+            codigo_empleado = generar_identificador_unico('A', datos.get('numero_dpi'), datos.get('nombre'))
             # Extraer los datos del formulario
             asistente_data = {
                 'nombre': datos.get('nombre'),
@@ -62,7 +62,6 @@ def crear_asistente():
                 'numero_dpi': datos.get('numero_dpi'),
                 'numero_cuenta': datos.get('numero_cuenta'),
                 'papeleria': object_url_papeleria,
-                'fotografia': object_url_papeleria,
                 'pregunta': datos.get('pregunta'),
                 'respuesta': datos.get('respuesta'),
                 'estado': datos.get('estado')
