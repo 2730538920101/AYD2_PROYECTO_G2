@@ -1,4 +1,4 @@
-def generar_identificador_unico(tipo_usuario, telefono, nombre):
+def generar_identificador_unico(tipo_usuario, dpi, nombre):
     """
     Genera un identificador único para un usuario.
 
@@ -8,11 +8,13 @@ def generar_identificador_unico(tipo_usuario, telefono, nombre):
     :return: Identificador único
     """
    
+    # Eliminar espacios al principio y al final del nombre
+    nombre_limpio = nombre.strip()
 
     # Extraer las primeras 3 letras del nombre (en mayúsculas)
-    primeras_letras_nombre = nombre[:3].upper()
+    primeras_letras_nombre = nombre_limpio[:3].upper()
 
     # Crear el identificador único
-    identificador = f"{tipo_usuario}{telefono}{primeras_letras_nombre}"
+    identificador = f"{tipo_usuario}{dpi}{primeras_letras_nombre}"
 
     return identificador

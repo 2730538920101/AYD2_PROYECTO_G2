@@ -55,7 +55,7 @@ def crear_conductor():
             # Encriptar la contraseña
             contrasenia_encriptada = encryption_controller.encrypt(password=datos.get('contrasenia'), action='encrypt')
             # Generar el código de empleado único
-            codigo_empleado = generar_identificador_unico(datos.get('nombre'), datos.get('telefono'), 'C')
+            codigo_empleado = generar_identificador_unico( 'C', datos.get('numero_dpi'),datos.get('nombre'))
             # Extraer los datos del formulario
             conductor_data = {
                 'nombre': datos.get('nombre'),
@@ -76,7 +76,8 @@ def crear_conductor():
                 'anio': datos.get('anio'),
                 'pregunta': datos.get('pregunta'),
                 'respuesta': datos.get('respuesta'),
-                'estado': datos.get('estado')
+                'estado': datos.get('estado'),
+                'estado_informacion': datos.get('estado_informacion')
             }
             conductor = UserFactory.create_user('Conductor', **conductor_data)
 
