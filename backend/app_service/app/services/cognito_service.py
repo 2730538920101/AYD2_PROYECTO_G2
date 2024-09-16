@@ -157,11 +157,40 @@ class CognitoService:
 
     def user_exists(self, email):
         try:
-            response = self.client.admin_get_user(
+            response = self.cognito_client.admin_get_user(
                 UserPoolId=self.user_pool_id,
                 Username=email
             )
             return True if response else False
-        except self.client.exceptions.UserNotFoundException:
+        except self.cognito_client.exceptions.UserNotFoundException:
             return False
 
+    # Nuevo método: Validar el código de verificación enviado al correo
+    def validate_verification_code(self, email: str, confirmation_code: str) -> dict:
+        """Validar el código de verificación enviado al correo después del registro"""
+        try:
+            response = self.cognito_client.confirm_sign_up(
+                ClientId=self.user_pool_client_id,
+                Username=email,
+                ConfirmationCode=confirmation_code
+            )
+            return response
+        except ClientError as e:
+            print(f"Error confirming sign up: {e}")
+            return None
+
+    # Nuevo método: Verificar si el usuario ya confirmó su registro
+    def is_user_confirmed(self, email: str) -> bool:
+        """Verificar si el usuario ha confirmado el registro en Cognito"""
+        try:
+            response = self.cognito_client.admin_get_user(
+                UserPoolId=self.user_pool_id,
+                Username=email
+            )
+            for attr in response['UserAttributes']:
+                if attr['Name'] == 'email_verified' and attr['Value'] == 'true':
+                    return True
+            return False
+        except ClientError as e:
+            print(f"Error checking if user is confirmed: {e}")
+            return False
