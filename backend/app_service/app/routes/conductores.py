@@ -76,7 +76,6 @@ def crear_conductor():
                 'anio': datos.get('anio'),
                 'pregunta': datos.get('pregunta'),
                 'respuesta': datos.get('respuesta'),
-                'estado': datos.get('estado'),
                 'estado_informacion': datos.get('estado_informacion')
             }
             conductor = UserFactory.create_user('Conductor', **conductor_data)
