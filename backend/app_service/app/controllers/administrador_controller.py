@@ -28,6 +28,7 @@ class AdministradorController:
         Insertar un nuevo administrador en la base de datos y registrar en Cognito.
         """
         try:
+            
             # Registrar al administrador en Cognito primero
             cognito_response = self.cognito_service.register_user(
                 administrador.usuario,
@@ -54,8 +55,7 @@ class AdministradorController:
 
                 print("Administrador registrado en la base de datos.")
             else:
-                raise Exception("Error al registrar el administrador en Cognito.")
-        
+                raise Exception("Error al registrar el administrador en Cognito.")        
         except Error as e:
             raise Exception(f"Error al insertar administrador en la base de datos: {e}")
 
@@ -63,7 +63,7 @@ class AdministradorController:
         """
         Inicializar el administrador si no existe en la base de datos.
         """
-        if not self.existe_administrador():
+        if not self.existe_administrador() and not self.cognito_service.user_exists(usuario):
             # Usar la fábrica de usuarios para crear el administrador
             administrador = {
                 'usuario':usuario,
@@ -71,7 +71,7 @@ class AdministradorController:
                 'validacion':validacion
             }
             administrador = UserFactory.create_user('Administrador', **administrador)
-            self.create_administrador(administrador)
-            print("Administrador inicial registrado.")
+            resp = self.create_administrador(administrador)
+            print(resp)
         else:
             print("Administrador ya existe, no se requiere registrar uno nuevo.")
