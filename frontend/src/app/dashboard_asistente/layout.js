@@ -2,14 +2,14 @@
 
 import Sidebar from '@/components/Sidebar';
 import Navbar from '@/components/Navbar';
-import { faBook } from "@fortawesome/free-solid-svg-icons";
+import { faCodePullRequest } from "@fortawesome/free-solid-svg-icons";
 
 export default function Layout({ children }) {
 
   return (
     <>
       <Sidebar routes={[
-        // { title: "Expedientes", link: "/dashboard_usuario/expediente", icon: faBook },
+        { title: "Solicitudes Empleo", link: "/dashboard_asistente/empleo", icon: faCodePullRequest },
       ]} />
       <main className="content">
         <Navbar />
