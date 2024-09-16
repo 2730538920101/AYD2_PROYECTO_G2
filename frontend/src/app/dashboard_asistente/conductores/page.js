@@ -10,19 +10,20 @@ import { handleAxios, handleAxiosMultipart, handleAxiosError, handleAxiosMsg } f
 import { Col, Row, Form, Modal, Button, Ratio, InputGroup } from 'react-bootstrap';
 // Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUserNinja, faFileWord, faEdit, faFilePdf, faFileImage } from "@fortawesome/free-solid-svg-icons";
+import { faUserNinja, faPlaneArrival, faEdit } from "@fortawesome/free-solid-svg-icons";
 // DataTable
 import DataTable from 'react-data-table-component';
 
 const dataTemproal = [
-    { id: 1, usuario: "Juan", origen: "Zona 6", destino: "Zona 7", tarifa: "Q50.00", fecha_i: "8:00", fecha_f: "9:00" }
+    { id: 1, usuario: "Juan", Estado: "Activo" },
+    { id: 2, usuario: "Pedro", Estado: "Inactivo" }
 ];
 
 const usuarioTemproal =
     { id: 1, nombre: "Juan", telefono: "12345678", edad: "45", dpi: "123456789", correo: "prueba@gmail.com", placa: "12345678A", marca: "Mazda", anio: "2024", genero: "M", civi: "Soltero", direccion: "Zona 6" };
 
 
-function SolicitudesEmpleo() {
+function ListaConductores() {
 
     // Obtencion de los viajes para el select
     const [viajes, setViajes] = useState([]);
@@ -78,42 +79,29 @@ function SolicitudesEmpleo() {
             )
         },
         {
-            name: 'CV CONDUCTOR',
-            cell: row => (
-                <>
-                    <Button variant="danger">
-                        <FontAwesomeIcon icon={faFilePdf} />
-                    </Button>
-                </>
-            )
-        },     
-        {
-            name: 'FOTOGRAFIA CONDUCTOR',
+            name: 'VIAJES CONDUCTOR',
             cell: row => (
                 <>
                     <Button variant="primary">
-                        <FontAwesomeIcon icon={faFileImage} />
-                    </Button>
-                </>
-            )
-        },        
-        {
-            name: 'FOTOGRAFIA AUTO',
-            cell: row => (
-                <>
-                    <Button variant="primary">
-                        <FontAwesomeIcon icon={faFileImage} />
+                        <FontAwesomeIcon icon={faPlaneArrival} />
                     </Button>
                 </>
             )
         },
         {
+            name: 'ESTADO CONDUCTOR',
+            selector: row => row.Estado,
+            wrap: true,
+        },
+        {
             name: 'Acciones',
             cell: row => (
                 <>
-                    <Button variant="warning">
+                    <Button variant="warning" >
                         <FontAwesomeIcon icon={faEdit} /> Cambiar estado
                     </Button>
+                    &nbsp;
+
                 </>
             )
         },
@@ -124,7 +112,7 @@ function SolicitudesEmpleo() {
             <Row className="gx-3 gy-4">
                 <Col xs={12} xl={12} className="order-1 order-xl-0">
                     <DataTable
-                        title="Solicitudes de Empleo"
+                        title="Lista Conductores"
                         columns={columnas}
                         data={viajes}
                         pagination
@@ -312,4 +300,4 @@ function SolicitudesEmpleo() {
     );
 }
 
-export default SolicitudesEmpleo;
+export default ListaConductores;
