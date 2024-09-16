@@ -29,7 +29,7 @@ const Login = () => {
       //     router.push("/");
       //   }
       // });
-      crearSession({ nombre: 'admin', rol: 'administrador' });
+      crearSession({ nombre: 'CONDUCTOR', rol: 'CONDUCTOR' });
       router.push("/");
     } catch (error) {
       handleAxiosError(error);
