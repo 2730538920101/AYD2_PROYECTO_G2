@@ -11,8 +11,8 @@ class AsistentesController:
         try:
             # Definir la consulta SQL y los parámetros
             query = """
-            INSERT INTO Asistente (nombre, telefono, estado_civil, genero, correo, codigo_usuario, contrasenia, fecha_nacimiento, direccion, numero_dpi, numero_cuenta, papeleria, pregunta, respuesta, estado)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO Asistente (nombre, telefono, estado_civil, genero, correo, codigo_usuario, contrasenia, fecha_nacimiento, direccion, numero_dpi, numero_cuenta, papeleria, pregunta, respuesta)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             """
             values = (
                 asistente_data.nombre,
@@ -28,8 +28,7 @@ class AsistentesController:
                 asistente_data.numero_cuenta,
                 asistente_data.papeleria,
                 asistente_data.pregunta,
-                asistente_data.respuesta,
-                asistente_data.estado
+                asistente_data.respuesta
             )
 
             # Ejecutar la consulta usando el singleton
