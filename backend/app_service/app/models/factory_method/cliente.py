@@ -1,7 +1,7 @@
 from .user import User
 
 class Cliente(User):
-    def __init__(self, nombre, fecha_nacimiento, genero, correo, foto_dpi, telefono, contrasenia, pregunta, respuesta, estado):
+    def __init__(self, nombre, fecha_nacimiento, genero, correo, foto_dpi, telefono, contrasenia, pregunta, respuesta):
         self.nombre = nombre
         self.fecha_nacimiento = fecha_nacimiento
         self.genero = genero
@@ -11,7 +11,7 @@ class Cliente(User):
         self.contrasenia = contrasenia
         self.pregunta = pregunta
         self.respuesta = respuesta
-        self.estado = estado
+    
 
     def get_role(self):
         return 'Cliente'

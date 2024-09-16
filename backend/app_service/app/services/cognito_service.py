@@ -69,8 +69,9 @@ class CognitoService:
             return None
 
     def authenticate_user(self, email: str, password: str) -> dict:
-        """Autenticar un usuario en el User Pool de Cognito"""
+        """Autenticar un usuario en el User Pool de Cognito y devolver los tokens de autenticación"""
         try:
+            # Autenticar al usuario
             response = self.cognito_client.initiate_auth(
                 ClientId=self.user_pool_client_id,
                 AuthFlow='USER_PASSWORD_AUTH',
@@ -79,10 +80,22 @@ class CognitoService:
                     'PASSWORD': password
                 }
             )
-            return response
+
+            # Obtener los tokens de la respuesta
+            access_token = response['AuthenticationResult']['AccessToken']
+            id_token = response['AuthenticationResult']['IdToken']
+            refresh_token = response['AuthenticationResult']['RefreshToken']
+
+            # Retornar los tokens, el ID Token ya incluye los grupos
+            return {
+                'access_token': access_token,
+                'id_token': id_token,  # Este token incluye los grupos del usuario
+                'refresh_token': refresh_token
+            }
         except ClientError as e:
             print(f"Error authenticating user: {e}")
             return None
+
 
     def recover_account(self, email: str) -> dict:
         """Iniciar el proceso de recuperación de cuenta"""
@@ -165,7 +178,6 @@ class CognitoService:
         except self.cognito_client.exceptions.UserNotFoundException:
             return False
 
-    # Nuevo método: Validar el código de verificación enviado al correo
     def validate_verification_code(self, email: str, confirmation_code: str) -> dict:
         """Validar el código de verificación enviado al correo después del registro"""
         try:
@@ -179,7 +191,6 @@ class CognitoService:
             print(f"Error confirming sign up: {e}")
             return None
 
-    # Nuevo método: Verificar si el usuario ya confirmó su registro
     def is_user_confirmed(self, email: str) -> bool:
         """Verificar si el usuario ha confirmado el registro en Cognito"""
         try:
@@ -194,3 +205,4 @@ class CognitoService:
         except ClientError as e:
             print(f"Error checking if user is confirmed: {e}")
             return False
+    

@@ -11,8 +11,8 @@ class ConductoresController:
         try:
             # Definir la consulta SQL y los parámetros
             query = """
-            INSERT INTO Conductor (nombre, telefono, estado_civil, genero, correo, codigo_empleado, contrasenia, fecha_nacimiento, direccion, numero_dpi, numero_cuenta, papeleria, fotografia, marca_vehiculo, placa, anio, pregunta, respuesta, estado, estado_informacion)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO Conductor (nombre, telefono, estado_civil, genero, correo, codigo_empleado, contrasenia, fecha_nacimiento, direccion, numero_dpi, numero_cuenta, papeleria, fotografia, marca_vehiculo, placa, anio, pregunta, respuesta, estado_informacion)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             """
             values = (
                 conductor_data.nombre,
@@ -33,7 +33,6 @@ class ConductoresController:
                 conductor_data.anio,
                 conductor_data.pregunta,
                 conductor_data.respuesta,
-                conductor_data.estado,
                 conductor_data.estado_informacion
             )
 
