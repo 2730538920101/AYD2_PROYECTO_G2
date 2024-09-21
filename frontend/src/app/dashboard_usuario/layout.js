@@ -2,14 +2,16 @@
 
 import Sidebar from '@/components/Sidebar';
 import Navbar from '@/components/Navbar';
-import { faBook } from "@fortawesome/free-solid-svg-icons";
+import { faUser, faCar, faClockRotateLeft } from "@fortawesome/free-solid-svg-icons";
 
 export default function Layout({ children }) {
 
   return (
     <>
       <Sidebar routes={[
-        // { title: "Expedientes", link: "/dashboard_usuario/expediente", icon: faBook },
+        { title: "Perfil", link: "/dashboard_usuario/modificar", icon: faUser },
+        { title: "Viajes", link: "/dashboard_usuario/", icon: faCar },
+        { title: "Historial", link: "/dashboard_usuario/", icon: faClockRotateLeft }
       ]} />
       <main className="content">
         <Navbar />
