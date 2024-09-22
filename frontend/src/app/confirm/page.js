@@ -6,40 +6,31 @@ import { Row, Col, Button, Form, InputGroup, Container } from 'react-bootstrap';
 import { faEnvelope, faUnlockAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { handleAxiosError, handleSwal, handleAxios } from '@/helpers/axiosConfig';
-import { jwtDecode } from "jwt-decode";
-import { GetRoleFromGroup } from '../../helpers/roles'
 
 const MySwal = handleSwal();
 
-const Login = () => {
+const Confirm = () => {
 
-    const router = useRouter();
-    const handleIniciarSesion = async (e) => {
+  const router = useRouter();
+  const handleConfirmacionDeCuenta = async (e) => {
 
-        e.preventDefault();
-        const formData = new FormData(e.currentTarget);
-
-        try {
-            const res = await handleAxios().post('/auth/login', formData);
-            MySwal.fire({
-                title: 'Hecho',
-                text: "¡Bienvenido!",
-                icon: 'success'
-            }).then(() => {
-                if (res.status === 200) {
-                    crearSession(res.data);
-                    router.push("/");
-                }
-            });
-            const decoded_idtoken = jwtDecode(res.data.auth_result.id_token)
-            console.log(decoded_idtoken)
-            crearSession({ nombre: decoded_idtoken.email, rol: GetRoleFromGroup(decoded_idtoken['cognito:groups'][0]) });
-            localStorage.setItem('accessToken', res.data.auth_result.access_token);
-            router.push("/");
-        } catch (error) {
-            handleAxiosError(error);
-        }
-    };
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    try {
+        const res = await handleAxios().post('/auth/confirm-signup', formData);
+        MySwal.fire({
+            title: 'Hecho',
+            text: "¡Cuenta confirmada!",
+            icon: 'success'
+        }).then(() => {
+            if (res.status === 200) {
+                router.push("/");
+            }
+        })
+    }catch(error) {  
+      handleAxiosError(error);
+    }
+  };
 
   return (
     <main>
@@ -55,9 +46,9 @@ const Login = () => {
                 <div className="text-center text-md-center mb-4 mt-md-0">
 
                   <br />
-                  <h3 className="mb-0">Inicio de Sesión</h3>
+                  <h3 className="mb-0">Confirmar cuenta</h3>
                 </div>
-                <Form className="mt-4" onSubmit={handleIniciarSesion}>
+                <Form className="mt-4" onSubmit={handleConfirmacionDeCuenta}>
                   <Form.Group className="mb-4">
                     <Form.Label>Correo electrónico</Form.Label>
                     <InputGroup>
@@ -69,26 +60,22 @@ const Login = () => {
                   </Form.Group>
                   <Form.Group>
                     <Form.Group className="mb-4">
-                      <Form.Label>Contraseña</Form.Label>
+                      <Form.Label>Código de confirmación</Form.Label>
                       <InputGroup>
                         <InputGroup.Text>
                           <FontAwesomeIcon icon={faUnlockAlt} />
                         </InputGroup.Text>
-                        <Form.Control id="password" name="password" required type="password" placeholder="Contraseña" />
+                        <Form.Control id="confirmation_code" name="confirmation_code" required type="text" placeholder="Código" />
                       </InputGroup>
                     </Form.Group>
                   </Form.Group>
                   <Button variant="primary" type="submit" className="w-100">
-                    Iniciar Sesión
+                    Confirmar cuenta
                   </Button>
                 </Form>
                 <p className="text-left">
                   <br />
-                  <a href="/confirm">Confirmar cuenta</a>
-                  <br />
-                      <a href="/registro_usuario">Registrarse como cliente</a>
-                  <br />
-                      <a href="/crear_conductor">Registrarse como conductor</a>
+                  <a href="/">Regresar</a>
                 </p>
               </div>
             </Col>
@@ -97,6 +84,6 @@ const Login = () => {
       </section>
     </main>
   );
-};
+}
 
-export default Login;
+export default Confirm;
