@@ -156,7 +156,9 @@ class CognitoService:
                 print("Error authenticating user for password change.")
                 return None
 
-            access_token = auth_response['AuthenticationResult']['AccessToken']
+            # Cambiar de 'auth_result' a 'AuthenticationResult'
+            access_token = auth_response['access_token']
+
             # Cambiar la contraseña usando el token de acceso
             response = self.cognito_client.change_password(
                 AccessToken=access_token,
@@ -167,7 +169,7 @@ class CognitoService:
         except ClientError as e:
             print(f"Error changing password: {e}")
             return None
-
+        
     def user_exists(self, email):
         try:
             response = self.cognito_client.admin_get_user(
@@ -206,3 +208,25 @@ class CognitoService:
             print(f"Error checking if user is confirmed: {e}")
             return False
     
+    def get_user_group(self, email: str) -> str:
+        """Obtener el grupo al que pertenece el usuario en el User Pool"""
+        try:
+            # Obtener los grupos a los que pertenece el usuario
+            response = self.cognito_client.admin_list_groups_for_user(
+                UserPoolId=self.user_pool_id,
+                Username=email
+            )
+            groups = response.get('Groups', [])
+            for group in groups:
+                if group['GroupName'] == "AdminGroup":
+                    return "Administrador"  # Retornar el grupo del usuario
+                elif group['GroupName'] == "AssistantGroup":
+                    return "Asistente"
+                elif group['GroupName'] == "DriverGroup":
+                    return "Conductor"
+                elif group['GroupName'] == "ClientGroup":
+                    return "Cliente"
+            return None  # Si no pertenece a ningún grupo
+        except ClientError as e:
+            print(f"Error getting user group: {e}")
+            return None

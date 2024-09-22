@@ -10,9 +10,7 @@ CREATE TABLE Cliente (
     CORREO VARCHAR(200) NOT NULL UNIQUE,
     FOTO_DPI TEXT NOT NULL,
     TELEFONO BIGINT NOT NULL UNIQUE,
-    CONTRASENIA VARCHAR(200) NOT NULL,
-    PREGUNTA VARCHAR(250) NOT NULL,
-    RESPUESTA VARCHAR(250) NOT NULL
+    CONTRASENIA VARCHAR(200) NOT NULL
 );
 
 
@@ -44,8 +42,6 @@ CREATE TABLE Conductor (
     MARCA_VEHICULO VARCHAR(100) NOT NULL,
     PLACA VARCHAR(100) NOT NULL UNIQUE,
     ANIO INT NOT NULL,
-    PREGUNTA VARCHAR(250) NOT NULL,
-    RESPUESTA VARCHAR(250) NOT NULL,
     ESTADO_INFORMACION VARCHAR(100) NOT NULL
 );
 
@@ -137,9 +133,7 @@ CREATE TABLE Asistente (
     DIRECCION VARCHAR(250) NOT NULL,
     NUMERO_DPI BIGINT NOT NULL UNIQUE,
     NUMERO_CUENTA BIGINT UNIQUE,
-    PAPELERIA TEXT,
-    PREGUNTA VARCHAR(250) NOT NULL,
-    RESPUESTA VARCHAR(250) NOT NULL
+    PAPELERIA TEXT
 );
 
 -- Tabla Tarifa
@@ -158,3 +152,63 @@ CREATE TABLE Administrador (
     CONTRASENIA VARCHAR(200) NOT NULL,
     VALIDACION VARCHAR(200) NOT NULL
 );
+
+
+DELIMITER $$
+
+CREATE PROCEDURE ChangePassword(
+    IN p_email VARCHAR(255),
+    IN p_new_password VARCHAR(255),
+    IN p_user_type ENUM('Asistente', 'Conductor', 'Cliente', 'Administrador')
+)
+BEGIN
+    IF p_user_type = 'Administrador' THEN
+        UPDATE Administrador
+        SET CONTRASENIA = p_new_password
+        WHERE USUARIO = p_email;
+    ELSEIF p_user_type = 'Asistente' THEN
+        UPDATE Asistente
+        SET CONTRASENIA = p_new_password
+        WHERE CORREO = p_email;
+    ELSEIF p_user_type = 'Conductor' THEN
+        UPDATE Conductor
+        SET CONTRASENIA = p_new_password
+        WHERE CORREO = p_email;
+    ELSEIF p_user_type = 'Cliente' THEN
+        UPDATE Cliente
+        SET CONTRASENIA = p_new_password
+        WHERE CORREO = p_email;
+    END IF;
+END$$
+
+DELIMITER ;
+
+
+DELIMITER $$
+
+CREATE PROCEDURE GetPassword(
+    IN p_email VARCHAR(255),
+    IN p_user_type ENUM('Asistente', 'Conductor', 'Cliente', 'Administrador'),
+    OUT p_current_password VARCHAR(255)
+)
+BEGIN
+    IF p_user_type = 'Administrador' THEN
+        SELECT CONTRASENIA INTO p_current_password
+        FROM Administrador
+        WHERE USUARIO = p_email;
+    ELSEIF p_user_type = 'Asistente' THEN
+        SELECT CONTRASENIA INTO p_current_password
+        FROM Asistente
+        WHERE CORREO = p_email;
+    ELSEIF p_user_type = 'Conductor' THEN
+        SELECT CONTRASENIA INTO p_current_password
+        FROM Conductor
+        WHERE CORREO = p_email;
+    ELSEIF p_user_type = 'Cliente' THEN
+        SELECT CONTRASENIA INTO p_current_password
+        FROM Cliente
+        WHERE CORREO = p_email;
+    END IF;
+END$$
+
+DELIMITER ;

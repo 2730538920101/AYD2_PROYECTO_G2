@@ -11,8 +11,8 @@ class ClientesController:
         try:
             # Definir la consulta SQL y los parámetros
             query = """
-            INSERT INTO Cliente (nombre, fecha_nacimiento, genero, correo, foto_dpi, telefono, contrasenia, pregunta, respuesta)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO Cliente (nombre, fecha_nacimiento, genero, correo, foto_dpi, telefono, contrasenia)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
             """
             values = (
                 cliente_data.nombre,
@@ -21,9 +21,7 @@ class ClientesController:
                 cliente_data.correo,
                 cliente_data.foto_dpi,
                 cliente_data.telefono,
-                cliente_data.contrasenia,
-                cliente_data.pregunta,
-                cliente_data.respuesta
+                cliente_data.contrasenia
             )
             
             # Ejecutar la consulta usando el singleton

@@ -1,7 +1,7 @@
 from .user import User
 
 class Asistente(User):
-    def __init__(self, nombre, telefono, estado_civil, genero, correo, codigo_usuario, contrasenia, fecha_nacimiento, direccion, numero_dpi, numero_cuenta, papeleria, pregunta, respuesta):
+    def __init__(self, nombre, telefono, estado_civil, genero, correo, codigo_usuario, contrasenia, fecha_nacimiento, direccion, numero_dpi, numero_cuenta, papeleria):
         self.nombre = nombre
         self.telefono = telefono
         self.estado_civil = estado_civil
@@ -14,8 +14,6 @@ class Asistente(User):
         self.numero_dpi = numero_dpi
         self.numero_cuenta = numero_cuenta
         self.papeleria = papeleria
-        self.pregunta = pregunta
-        self.respuesta = respuesta
     def get_role(self):
         return 'Asistente'
 

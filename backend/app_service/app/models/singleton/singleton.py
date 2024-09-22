@@ -59,6 +59,10 @@ class MySQLSingleton:
             return []
 
     def __del__(self):
-        if self.connection is not None and self.cursor is not None:
-            self.cursor.close()
-            self.connection.close()
+        try:
+            if self.cursor is not None:
+                self.cursor.close()
+            if self.connection is not None:
+                self.connection.close()
+        except Exception as e:
+            print(f"Error closing database connection: {e}")

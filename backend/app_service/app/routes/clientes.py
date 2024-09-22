@@ -57,9 +57,7 @@ def crear_clientes():
                 'correo': datos.get('correo'),
                 'foto_dpi': object_url,
                 'telefono': datos.get('telefono'),
-                'contrasenia': contrasenia_encriptada,
-                'pregunta': datos.get('pregunta'),
-                'respuesta': datos.get('respuesta')
+                'contrasenia': contrasenia_encriptada
             }
             cliente = UserFactory.create_user('Cliente', **cliente_data)
             

@@ -61,9 +61,7 @@ def crear_asistente():
                 'direccion': datos.get('direccion'),
                 'numero_dpi': datos.get('numero_dpi'),
                 'numero_cuenta': datos.get('numero_cuenta'),
-                'papeleria': object_url_papeleria,
-                'pregunta': datos.get('pregunta'),
-                'respuesta': datos.get('respuesta')
+                'papeleria': object_url_papeleria
             }
             asistente = UserFactory.create_user('Asistente', **asistente_data)
 
