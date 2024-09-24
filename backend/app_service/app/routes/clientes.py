@@ -19,7 +19,7 @@ s3_service = S3Service()
 cognito_service = CognitoService()
 
 # Ruta para crear clientes
-@bp.route('/crear', methods=['POST'])
+@bp.route('/', methods=['POST'])
 def crear_clientes():
     # Verificar que el request contenga un archivo y datos JSON
     if 'foto_dpi' not in request.files or not request.form:
@@ -76,3 +76,40 @@ def crear_clientes():
             return jsonify({'error': 'La contraseña no coincide con la confirmación'}), 400
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+# Ruta para actualizar clientes
+# TODO: Actualizar la contraseña del lado de cognito
+@bp.route('/', methods=['PUT'])
+def actualizar_cliente():
+    try:
+        
+        # Obtener los datos del cliente desde el cuerpo de la solicitud
+        cliente_data = request.get_json()
+
+        # Verificar que se haya proporcionado el ID del cliente
+        if 'cli_id' not in cliente_data:
+            return jsonify({"error": "El ID del cliente es obligatorio"}), 400
+        
+        # En el caso que venga la contrasenia se encripta
+        if 'contrasenia' in cliente_data:
+            contrasenia_encriptada = encryption_controller.encrypt(password=cliente_data['contrasenia'], action='encrypt')
+            cliente_data['contrasenia'] = contrasenia_encriptada
+
+        # Llamar al método del controlador para actualizar el cliente
+        clientes_controller = ClientesController()
+        clientes_controller.update_cliente(cliente_data)
+
+        return jsonify({"mensaje": "Cliente actualizado con éxito"}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# Ruta para obtener todos los clientes
+@bp.route('/', methods=['GET'])
+def obtener_clientes():
+    try:
+        # Llamar al método del controlador para obtener todos los clientes
+        clientes = clientes_controller.get_clientes()
+        return jsonify(clientes), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
