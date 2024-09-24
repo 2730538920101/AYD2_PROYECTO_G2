@@ -75,3 +75,14 @@ class AdministradorController:
     
         else:
             print("Administrador ya existe, no se requiere registrar uno nuevo.")
+
+    def obtener_validacion(self, usuario):
+        """
+        Obtener el texto de validación del administrador en la base de datos.
+        """
+        query = "SELECT VALIDACION FROM Administrador WHERE USUARIO = %s"
+        try:
+            result = self.db.fetch_one(query, (usuario,))
+            return result[0] if result else None
+        except Error as e:
+            raise Exception(f"Error al obtener el texto de validación: {e}")

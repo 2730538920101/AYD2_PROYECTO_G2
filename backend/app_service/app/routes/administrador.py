@@ -20,6 +20,39 @@ s3_service = S3Service()
 cognito_service = CognitoService()
 auth_service = AuthService()
 
+
+# Ruta para validar el contenido de un archivo
+@bp.route('/validate-file', methods=['POST'])
+@auth_service.is_authorized(['AdminGroup'])
+def validate_file():
+    # Asegurarse de que se recibió un archivo en el formulario
+    if 'file' not in request.files:
+        return jsonify({"error": "No file part"}), 400
+
+    file = request.files['file']
+
+    # Comprobar si el archivo tiene un nombre
+    if file.filename == '':
+        return jsonify({"error": "No selected file"}), 400
+
+    # Leer el contenido del archivo
+    file_content = file.read().decode('utf-8')
+
+    # Obtener el usuario del cuerpo de la solicitud
+    data = request.form
+    usuario = data.get('usuario')
+
+    if not usuario:
+        return jsonify({"error": "User is required"}), 400
+
+    # Validar el contenido del archivo con el texto almacenado
+    validacion_texto = administrador_controller.obtener_validacion(usuario)
+
+    if validacion_texto and file_content.strip() == validacion_texto.strip():
+        return jsonify({"message": "Validation successful"}), 200
+    else:
+        return jsonify({"error": "Validation failed"}), 400
+
 # Ruta para bloquear una cuenta
 @bp.route('/block-account', methods=['POST'])
 @auth_service.is_authorized(['AdminGroup'])
