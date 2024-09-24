@@ -28,14 +28,20 @@ const Login = () => {
             }).then(() => {
                 if (res.status === 200) {
                     crearSession(res.data);
-                    router.push("/");
                 }
             });
             const decoded_idtoken = jwtDecode(res.data.auth_result.id_token)
             console.log(decoded_idtoken)
-            crearSession({ nombre: decoded_idtoken.email, rol: GetRoleFromGroup(decoded_idtoken['cognito:groups'][0]) });
+            const role = GetRoleFromGroup(decoded_idtoken['cognito:groups'][0]);
+            console.log(role)
+            crearSession({ nombre: decoded_idtoken.email, rol: role, auth: false });
             localStorage.setItem('accessToken', res.data.auth_result.access_token);
-            router.push("/");
+            if (role === 'ADMINISTRADOR') {
+                router.push("/login/adminFile");
+            }else{
+                router.push("/");
+            }
+
         } catch (error) {
             handleAxiosError(error);
         }
