@@ -78,6 +78,7 @@ def crear_clientes():
         return jsonify({'error': str(e)}), 500
 
 # Ruta para actualizar clientes
+# TODO: Actualizar la contraseña del lado de cognito
 @bp.route('/', methods=['PUT'])
 def actualizar_cliente():
     try:
@@ -100,5 +101,15 @@ def actualizar_cliente():
 
         return jsonify({"mensaje": "Cliente actualizado con éxito"}), 200
 
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# Ruta para obtener todos los clientes
+@bp.route('/', methods=['GET'])
+def obtener_clientes():
+    try:
+        # Llamar al método del controlador para obtener todos los clientes
+        clientes = clientes_controller.get_clientes()
+        return jsonify(clientes), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500

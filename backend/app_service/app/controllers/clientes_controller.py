@@ -7,6 +7,35 @@ class ClientesController:
         # Conectar a la base de datos usando el singleton
         self.db = MySQLSingleton(Config.MYSQL_HOST, Config.MYSQL_USER, Config.MYSQL_PASSWORD, Config.MYSQL_DATABASE)
 
+    def get_clientes(self):
+        try:
+            # Definir la consulta SQL
+            query = """SELECT CLI_ID, NOMBRE, FECHA_NACIMIENTO, GENERO, CORREO, FOTO_DPI, TELEFONO
+                    FROM Cliente"""
+
+            # Ejecutar la consulta usando el singleton
+            cliente_rows = self.db.fetch_all(query, [])
+
+            # Convertir los resultados a una lista de diccionarios
+            clientes = []
+            for row in cliente_rows:
+                cliente = {
+                    "cli_id": row[0],
+                    "nombre": row[1],
+                    "fecha_nacimiento": row[2],
+                    "genero": row[3],
+                    "correo": row[4],
+                    "foto_dpi": row[5],
+                    "telefono": row[6]
+                }
+                clientes.append(cliente)
+
+            # Retornar los resultados
+            return clientes
+
+        except Error as e:
+            raise Exception(f"Error al obtener clientes: {e}")
+
     def create_cliente(self, cliente_data):
         try:
             # Definir la consulta SQL y los parámetros
