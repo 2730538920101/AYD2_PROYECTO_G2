@@ -34,6 +34,16 @@ class MySQLSingleton:
         except Error as e:
             print(f"Error executing query: {e}")
 
+    def fetch_one(self, query, parameters=()):
+        if self.connection is None or self.cursor is None:
+            raise RuntimeError("Database connection is not initialized.")
+        try:
+            self.cursor.execute(query, parameters)
+            return self.cursor.fetchone()  # Retorna la primera fila
+        except Error as e:
+            print(f"Error fetching data: {e}")
+            return None  # Retorna None si ocurre un error
+
     def fetch_all(self, query, parameters=()):
         if self.connection is None or self.cursor is None:
             raise RuntimeError("Database connection is not initialized.")
