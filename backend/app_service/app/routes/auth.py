@@ -28,7 +28,10 @@ def login():
     if not email or not password:
         return jsonify({"error": "Email and password are required"}), 400
     
-    cognito_user_group_resp = cognito_service.get_user_group(email)
+    validation = auth_controller.validate_user(email)
+    email = validation[0]
+    if email is not None:
+        cognito_user_group_resp = cognito_service.get_user_group(email)
     if not cognito_user_group_resp:
         return jsonify({"error": "User grup undefined"}), 400
     
@@ -58,9 +61,11 @@ def confirm_signup():
 
     if not email or not confirmation_code:
         return jsonify({"error": "Email and confirmation code are required"}), 400
-
-    # Confirmar registro del usuario
-    response = cognito_service.validate_verification_code(email, confirmation_code)
+    validation = auth_controller.validate_user(email)
+    email = validation[0]
+    if email is not None:
+        # Confirmar registro del usuario
+        response = cognito_service.validate_verification_code(email, confirmation_code)
 
     if response:
         return jsonify({"message": "Email confirmed successfully"}), 200
@@ -75,10 +80,11 @@ def check_user_exists():
 
     if not email:
         return jsonify({"error": "Email is required"}), 400
-
-    # Verificar si el usuario existe
-    user_exists = cognito_service.user_exists(email)
-
+    validation = auth_controller.validate_user(email)
+    email = validation[0]
+    if email is not None:
+        # Verificar si el usuario existe
+        user_exists = cognito_service.user_exists(email)
     if user_exists:
         return jsonify({"message": "User exists"}), 200
     else:
@@ -92,9 +98,11 @@ def is_user_confirmed():
 
     if not email:
         return jsonify({"error": "Email is required"}), 400
-
-    # Verificar si el usuario está confirmado
-    is_confirmed = cognito_service.is_user_confirmed(email)
+    validation = auth_controller.validate_user(email)
+    email = validation[0]
+    if email is not None:
+        # Verificar si el usuario está confirmado
+        is_confirmed = cognito_service.is_user_confirmed(email)
 
     if is_confirmed:
         return jsonify({"message": "User is confirmed"}), 200
@@ -109,9 +117,11 @@ def recover_account():
     
     if not email:
         return jsonify({"error": "Email is required"}), 400
-
-    # Iniciar la recuperación de cuenta
-    response = cognito_service.recover_account(email)
+    validation = auth_controller.validate_user(email)
+    email = validation[0]
+    if email is not None:
+        # Iniciar la recuperación de cuenta
+        response = cognito_service.recover_account(email)
     
     if response:
         return jsonify({"message": "Recovery initiated"}), 200
@@ -128,11 +138,13 @@ def confirm_recovery():
 
     if not email or not confirmation_code or not new_password:
         return jsonify({"error": "Email, confirmation code, and new password are required"}), 400
-    
-    # Encriptar la nueva contraseña
-    encrypted_new_password = encryption_controller.encrypt(password=new_password)
-    # Actualizar la contraseña en la base de datos
-    user_type = cognito_service.get_user_group(email)
+    validation = auth_controller.validate_user(email)
+    email = validation[0]
+    if email is not None:
+        # Encriptar la nueva contraseña
+        encrypted_new_password = encryption_controller.encrypt(password=new_password)
+        # Actualizar la contraseña en la base de datos
+        user_type = cognito_service.get_user_group(email)
     if not user_type:
         return jsonify({"error": "UserGroup not defined"}), 400
     db_response = auth_controller.change_password_in_db(email, encrypted_new_password, user_type)
@@ -159,10 +171,11 @@ def change_password():
 
     if not email or not old_password or not new_password or not user_type:
         return jsonify({"error": "Email, old password, new password, and user type are required"}), 400
-
-    # Obtener la contraseña actual desde la base de datos
-    current_hashed_password = auth_controller.get_current_password(email, user_type)
-
+    validation = auth_controller.validate_user(email)
+    email = validation[0]
+    if email is not None:
+        # Obtener la contraseña actual desde la base de datos
+        current_hashed_password = auth_controller.get_current_password(email, user_type)
     # Verificar la contraseña antigua
     if not encryption_controller.verify(password=old_password, hashed_password=current_hashed_password):
         return jsonify({"error": "Old password is incorrect"}), 400

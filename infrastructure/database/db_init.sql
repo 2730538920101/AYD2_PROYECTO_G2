@@ -188,26 +188,81 @@ DELIMITER $$
 
 CREATE PROCEDURE GetPassword(
     IN p_email VARCHAR(255),
-    IN p_user_type ENUM('Asistente', 'Conductor', 'Cliente', 'Administrador'),
-    OUT p_current_password VARCHAR(255)
+    IN p_user_type VARCHAR(50)
 )
 BEGIN
-    IF p_user_type = 'Administrador' THEN
-        SELECT CONTRASENIA INTO p_current_password
-        FROM Administrador
-        WHERE USUARIO = p_email;
-    ELSEIF p_user_type = 'Asistente' THEN
-        SELECT CONTRASENIA INTO p_current_password
-        FROM Asistente
-        WHERE CORREO = p_email;
-    ELSEIF p_user_type = 'Conductor' THEN
-        SELECT CONTRASENIA INTO p_current_password
+    CASE 
+        WHEN p_user_type = 'Cliente' THEN 
+            SELECT CONTRASENIA FROM Cliente WHERE CORREO = p_email;
+        WHEN p_user_type = 'Conductor' THEN 
+            SELECT CONTRASENIA FROM Conductor WHERE CORREO = p_email;
+        WHEN p_user_type = 'Asistente' THEN 
+            SELECT CONTRASENIA FROM Asistente WHERE CORREO = p_email;
+        WHEN p_user_type = 'Administrador' THEN 
+            SELECT CONTRASENIA FROM Administrador WHERE USUARIO = p_email;
+        ELSE 
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Invalid user type';
+    END CASE;
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE ValidateUser(
+    IN p_input VARCHAR(255)
+)
+BEGIN
+    DECLARE v_email VARCHAR(255);
+    
+    SELECT CORREO INTO v_email
+    FROM Cliente
+    WHERE CORREO = p_input;
+
+    IF v_email IS NOT NULL THEN
+        SELECT v_email AS validacion;
+    ELSE
+        SELECT CORREO INTO v_email
         FROM Conductor
-        WHERE CORREO = p_email;
-    ELSEIF p_user_type = 'Cliente' THEN
-        SELECT CONTRASENIA INTO p_current_password
-        FROM Cliente
-        WHERE CORREO = p_email;
+        WHERE CORREO = p_input;
+
+        IF v_email IS NOT NULL THEN
+            SELECT v_email AS validacion;
+        ELSE
+            SELECT CORREO INTO v_email
+            FROM Asistente
+            WHERE CORREO = p_input;
+
+            IF v_email IS NOT NULL THEN
+                SELECT v_email AS validacion;
+            ELSE
+                SELECT USUARIO INTO v_email
+                FROM Administrador
+                WHERE USUARIO = p_input;
+
+                IF v_email IS NOT NULL THEN
+                    SELECT v_email AS validacion;
+                ELSE
+                    SELECT CORREO INTO v_email
+                    FROM Conductor
+                    WHERE CODIGO_EMPLEADO = p_input;
+
+                    IF v_email IS NOT NULL THEN
+                        SELECT v_email AS validacion;
+                    ELSE
+                        SELECT CORREO INTO v_email
+                        FROM Asistente
+                        WHERE CODIGO_USUARIO = p_input;
+
+                        IF v_email IS NOT NULL THEN
+                            SELECT v_email AS validacion;
+                        ELSE
+                            SELECT NULL AS validacion;
+                        END IF;
+                    END IF;
+                END IF;
+            END IF;
+        END IF;
     END IF;
 END$$
 
