@@ -23,9 +23,49 @@ class ClientesController:
                 cliente_data.telefono,
                 cliente_data.contrasenia
             )
-            
+
             # Ejecutar la consulta usando el singleton
             self.db.execute_query(query, values)
 
         except Error as e:
             raise Exception(f"Error al insertar cliente: {e}")
+
+    def update_cliente(self, cliente_data):
+        try:
+            # Crear una lista de campos para actualizar
+            update_fields = []
+            update_values = []
+
+            # Verificar si cada campo de cliente_data no es None y agregarlo a la lista
+            if cliente_data['nombre']:
+                update_fields.append("nombre = %s")
+                update_values.append(cliente_data['nombre'])
+            if cliente_data['fecha_nacimiento']:
+                update_fields.append("fecha_nacimiento = %s")
+                update_values.append(cliente_data['fecha_nacimiento'])
+            if cliente_data['telefono']:
+                update_fields.append("telefono = %s")
+                update_values.append(cliente_data['telefono'])
+            if cliente_data['contrasenia']:
+                update_fields.append("contrasenia = %s")
+                update_values.append(cliente_data['contrasenia'])
+
+            # Si no se proporcionan campos para actualizar, lanzar una excepción
+            if not update_fields:
+                raise Exception("No se proporcionaron campos para actualizar")
+
+            # Definir la consulta SQL dinámica
+            query = f"""
+            UPDATE Cliente
+            SET {', '.join(update_fields)}
+            WHERE CLI_ID = %s
+            """
+
+            # Agregar el ID del cliente al final de la lista de valores
+            update_values.append(cliente_data['cli_id'])
+
+            # Ejecutar la consulta usando el singleton
+            self.db.execute_query(query, update_values)
+
+        except Error as e:
+            raise Exception(f"Error al actualizar cliente: {e}")
