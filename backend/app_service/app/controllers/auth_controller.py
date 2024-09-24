@@ -50,3 +50,24 @@ class AuthController:
         except Exception as e:
             print(f"Error retrieving current password from database: {e}")
             return None
+        
+    def validate_user(self, input_value: str) -> str:
+        """
+        Valida si el usuario existe en las tablas Cliente, Conductor, Asistente o Administrador,
+        usando el procedimiento almacenado ValidateUser.
+        """
+        try:
+            # Llama al procedimiento almacenado ValidateUser
+            result = self.db.execute_stored_procedure('ValidateUser', (input_value,))
+
+            # Como el procedimiento devuelve un resultado, obtenemos la primera fila
+            if result and result[0]:
+                validation = result[0][0]  # Accede al valor de validación
+                print(f"Validation result: {validation}")
+                return validation
+            else:
+                print(f"No user found for input: {input_value}")
+                return None
+        except Exception as e:
+            print(f"Error validating user in database: {e}")
+            return None

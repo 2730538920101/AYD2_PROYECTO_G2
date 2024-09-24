@@ -71,7 +71,7 @@ class AdministradorController:
                 'validacion':validacion
             }
             administrador = UserFactory.create_user('Administrador', **administrador)
-            resp = self.create_administrador(administrador)
-            print(resp)
+            self.create_administrador(administrador)
+    
         else:
             print("Administrador ya existe, no se requiere registrar uno nuevo.")

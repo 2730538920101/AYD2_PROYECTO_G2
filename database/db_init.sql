@@ -206,3 +206,64 @@ BEGIN
 END$$
 
 DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE ValidateUser(
+    IN p_input VARCHAR(255)
+)
+BEGIN
+    DECLARE v_email VARCHAR(255);
+    
+    SELECT CORREO INTO v_email
+    FROM Cliente
+    WHERE CORREO = p_input;
+
+    IF v_email IS NOT NULL THEN
+        SELECT v_email AS validacion;
+    ELSE
+        SELECT CORREO INTO v_email
+        FROM Conductor
+        WHERE CORREO = p_input;
+
+        IF v_email IS NOT NULL THEN
+            SELECT v_email AS validacion;
+        ELSE
+            SELECT CORREO INTO v_email
+            FROM Asistente
+            WHERE CORREO = p_input;
+
+            IF v_email IS NOT NULL THEN
+                SELECT v_email AS validacion;
+            ELSE
+                SELECT USUARIO INTO v_email
+                FROM Administrador
+                WHERE USUARIO = p_input;
+
+                IF v_email IS NOT NULL THEN
+                    SELECT v_email AS validacion;
+                ELSE
+                    SELECT CORREO INTO v_email
+                    FROM Conductor
+                    WHERE CODIGO_EMPLEADO = p_input;
+
+                    IF v_email IS NOT NULL THEN
+                        SELECT v_email AS validacion;
+                    ELSE
+                        SELECT CORREO INTO v_email
+                        FROM Asistente
+                        WHERE CODIGO_USUARIO = p_input;
+
+                        IF v_email IS NOT NULL THEN
+                            SELECT v_email AS validacion;
+                        ELSE
+                            SELECT NULL AS validacion;
+                        END IF;
+                    END IF;
+                END IF;
+            END IF;
+        END IF;
+    END IF;
+END$$
+
+DELIMITER ;
