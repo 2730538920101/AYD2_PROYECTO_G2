@@ -2,14 +2,17 @@
 
 import { useRouter } from 'next/navigation';
 import { Row, Col, Button, Form, InputGroup, Container } from 'react-bootstrap';
-import { faUser, faCakeCandles, faPersonHalfDress, faAt, faIdCard, faPhone, faKey, faQuestion, faReply, faFileContract } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faCakeCandles,  faIdCard, faPhone, faKey}  from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { handleAxiosError, handleSwal, handleAxiosMultipart } from '@/helpers/axiosConfig';
+import { handleAxiosError, handleSwal, handleAxiosMultipart, handleAxiosJWT } from '@/helpers/axiosConfig';
+import { FindCliente } from '@/helpers/findCliente';
+import Cookies from 'js-cookie';
+import { useState, useEffect } from 'react';
 
 const check = (event) => {
     var input = document.getElementById('contrasenia2');
     if (!input) return
-    if (input.value != document.getElementById('contrasenia').value) {
+    if (input.defaultValue != document.getElementById('contrasenia').value) {
         input.setCustomValidity('Las contraseñas no son iguales');
     } else {
         input.setCustomValidity('');
@@ -19,14 +22,23 @@ const check = (event) => {
 const MySwal = handleSwal();
 
 const RegisterUser = () => {
-
     const router = useRouter();
+    let [cliente, setCliente] = useState(null);
+    useEffect(() => {
+        async function fetchData() {
+            let cookies = Cookies.get('auth');
+            const { nombre } = JSON.parse(cookies);
+            const data = await FindCliente(nombre);
+            setCliente(data);
+        }
+        fetchData()
+    }, [])
+
     const handleActualizacionUsuario = async (e) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
-        /*
         try {
-            const res = await handleAxiosMultipart().post('', formData);
+            const res = await handleAxiosJWT().put('clientes', formData);
             console.log(res)
             MySwal.fire({
                 title: "Actualización exitosa",
@@ -39,9 +51,12 @@ const RegisterUser = () => {
             console.log(error)
             handleAxiosError(error);
         }
-        */
     };
 
+    console.log(cliente)
+    if (!cliente) return <div>Loading...</div>
+    const date = new Date(Date.parse(cliente.fecha_nacimiento));
+    const dateVal = date.toLocaleDateString('en-CA');
     return (
 <main>
     <section className="d-flex align-items-center my-5 mt-lg-6 mb-lg-5">
@@ -54,13 +69,23 @@ const RegisterUser = () => {
                         <h3 className="mb-0">Actualizar datos</h3>
                     </div>
                     <Form className="mt-4" onSubmit={handleActualizacionUsuario}>
+
+                        <Form.Group className="mb-4">
+                            <Form.Label>ID</Form.Label>
+                            <InputGroup>
+                                <InputGroup.Text>
+                                    <FontAwesomeIcon icon={faIdCard} />
+                                </InputGroup.Text>
+                                <Form.Control id="cli_id" name="cli_id"  type="text" value={cliente.cli_id} readOnly/>
+                            </InputGroup>
+                        </Form.Group>
                         <Form.Group className="mb-4">
                             <Form.Label>Nombre Completo</Form.Label>
                             <InputGroup>
                                 <InputGroup.Text>
                                     <FontAwesomeIcon icon={faUser} />
                                 </InputGroup.Text>
-                                <Form.Control id="nombre" name="nombre" autoFocus  type="text" placeholder="Nombre Apellido" />
+                                <Form.Control id="nombre" name="nombre" autoFocus  type="text" placeholder="Nombre Apellido" defaultValue={cliente.nombre}/>
                             </InputGroup>
                         </Form.Group>
                         <Form.Group className="mb-4">
@@ -69,7 +94,7 @@ const RegisterUser = () => {
                                 <InputGroup.Text>
                                     <FontAwesomeIcon icon={faCakeCandles} />
                                 </InputGroup.Text>
-                                <Form.Control id="fecha_nacimiento" name="fecha_nacimiento"  type="date" />
+                                <Form.Control id="fecha_nacimiento" name="fecha_nacimiento"  type="date" defaultValue={dateVal}/>
                             </InputGroup>
                         </Form.Group>
                         <Form.Group className="mb-4">
@@ -78,7 +103,7 @@ const RegisterUser = () => {
                                 <InputGroup.Text>
                                     <FontAwesomeIcon icon={faPhone} />
                                 </InputGroup.Text>
-                                <Form.Control id="telefono" name="telefono"  type="text" pattern="[1-9][0-9]{7,}" placeholder="88888888" />
+                                <Form.Control id="telefono" name="telefono"  type="text" pattern="[1-9][0-9]{7,}" placeholder="88888888" defaultValue={cliente.telefono}/>
                             </InputGroup>
                         </Form.Group>
                         <Form.Group className="mb-4">
@@ -87,16 +112,7 @@ const RegisterUser = () => {
                                 <InputGroup.Text>
                                     <FontAwesomeIcon icon={faKey} />
                                 </InputGroup.Text>
-                                <Form.Control id="contrasenia" name="contrasenia"  onInput={check} type="password" />
-                            </InputGroup>
-                        </Form.Group>
-                        <Form.Group className="mb-4">
-                            <Form.Label>Repetir Contraseña</Form.Label>
-                            <InputGroup>
-                                <InputGroup.Text>
-                                    <FontAwesomeIcon icon={faKey} />
-                                </InputGroup.Text>
-                                <Form.Control id="contrasenia2" name="contrasenia2"  onInput={check} type="password" />
+                                <Form.Control id="contraseniaWIP" name="contraseniaWIP"  onInput={check} type="password" placeholder='Inhabilitado temporalmente' disabled />
                             </InputGroup>
                         </Form.Group>
                         <Button variant="primary" type="submit" className="w-100">
