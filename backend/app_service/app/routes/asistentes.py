@@ -7,7 +7,6 @@ from ..services.s3_service import S3Service
 from ..services.cognito_service import CognitoService
 from ..models.factory_method.factory import UserFactory
 from ..utils.funciones import generar_identificador_unico
-from config import Config
 
 # Definir el Blueprint
 bp = Blueprint('asistentes', __name__)
@@ -17,6 +16,16 @@ asistentes_controller = AsistentesController()
 encryption_controller = EncryptionController()
 s3_service = S3Service()
 cognito_service = CognitoService()
+
+# Ruta para obtener todos los asistentes
+@bp.route('/', methods=['GET'])
+def obtener_asistentes():
+    try:
+        # Llamar al método del controlador para obtener todos los asistentes
+        asistentes = asistentes_controller.get_asistentes()
+        return jsonify(asistentes), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 # Ruta para crear asistentes
 @bp.route('/crear', methods=['POST'])
