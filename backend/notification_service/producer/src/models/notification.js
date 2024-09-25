@@ -1,16 +1,21 @@
 class Notification {
-    constructor(type, message) {
-      this.type = type;
-      this.message = message;
-    }
-  
-    toJSON() {
-      return {
-        type: this.type,
-        message: this.message,
-      };
-    }
+  constructor(type, message, viajeId, adjunto, fechaHora = new Date()) {
+    this.type = type;
+    this.message = message;
+    this.viajeId = viajeId;
+    this.adjunto = adjunto;
+    this.fechaHora = fechaHora;
   }
-  
-  module.exports = Notification;
-  
+
+  toJSON() {
+    return {
+      type: this.type,
+      message: this.message,
+      viajeId: this.viajeId,
+      adjunto: this.adjunto,
+      fechaHora: this.fechaHora,
+    };
+  }
+}
+
+module.exports = Notification;

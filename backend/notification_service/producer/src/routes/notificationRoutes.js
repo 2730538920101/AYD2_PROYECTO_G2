@@ -1,8 +1,13 @@
 const express = require('express');
-const { sendNotification } = require('../controllers/notificationProducer');
+const multer = require('multer');
+const notificationController = require('../controllers/notificationProducer');
 
 const router = express.Router();
 
-router.post('/send', sendNotification);
+// Configurar multer
+const storage = multer.memoryStorage(); // Usar memoria para la carga de archivos
+const upload = multer({ storage });
+
+router.post('/send', upload.single('adjunto'), notificationController.sendNotification);
 
 module.exports = router;
