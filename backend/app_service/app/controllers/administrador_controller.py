@@ -1,5 +1,4 @@
 from ..models.singleton.singleton import MySQLSingleton
-from config import Config
 from mysql.connector import Error
 from ..controllers.encryption_controller import EncryptionController
 from ..services.cognito_service import CognitoService  # Importar el servicio de Cognito
@@ -8,7 +7,7 @@ from ..models.factory_method.factory import UserFactory  # Importar la fábrica 
 class AdministradorController:
     def __init__(self):
         # Conectar a la base de datos usando el singleton
-        self.db = MySQLSingleton(Config.MYSQL_HOST, Config.MYSQL_USER, Config.MYSQL_PASSWORD, Config.MYSQL_DATABASE)
+        self.db = MySQLSingleton()
         self.cognito_service = CognitoService()  # Inicializar el servicio de Cognito
 
     def existe_administrador(self):
@@ -28,6 +27,7 @@ class AdministradorController:
         Insertar un nuevo administrador en la base de datos y registrar en Cognito.
         """
         try:
+            
             # Registrar al administrador en Cognito primero
             cognito_response = self.cognito_service.register_user(
                 administrador.usuario,
@@ -54,8 +54,7 @@ class AdministradorController:
 
                 print("Administrador registrado en la base de datos.")
             else:
-                raise Exception("Error al registrar el administrador en Cognito.")
-        
+                raise Exception("Error al registrar el administrador en Cognito.")        
         except Error as e:
             raise Exception(f"Error al insertar administrador en la base de datos: {e}")
 
@@ -63,7 +62,7 @@ class AdministradorController:
         """
         Inicializar el administrador si no existe en la base de datos.
         """
-        if not self.existe_administrador():
+        if not self.existe_administrador() and not self.cognito_service.user_exists(usuario):
             # Usar la fábrica de usuarios para crear el administrador
             administrador = {
                 'usuario':usuario,
@@ -72,6 +71,17 @@ class AdministradorController:
             }
             administrador = UserFactory.create_user('Administrador', **administrador)
             self.create_administrador(administrador)
-            print("Administrador inicial registrado.")
+    
         else:
             print("Administrador ya existe, no se requiere registrar uno nuevo.")
+
+    def obtener_validacion(self, usuario):
+        """
+        Obtener el texto de validación del administrador en la base de datos.
+        """
+        query = "SELECT VALIDACION FROM Administrador WHERE USUARIO = %s"
+        try:
+            result = self.db.fetch_one(query, (usuario,))
+            return result[0] if result else None
+        except Error as e:
+            raise Exception(f"Error al obtener el texto de validación: {e}")

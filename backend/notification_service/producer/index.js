@@ -8,14 +8,14 @@ const errorHandler = require('./src/utils/errorHandler');
 const app = express();
 // Configurar CORS para aceptar cualquier origen
 app.use(cors());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json()); // Para manejar JSON si lo necesitas
 
-app.use(express.json());
-app.use('/api/notifications/', mainRoutes);
-app.use('/api/notifications/notify/', notificationRoutes);
+app.use('/api/producer/', mainRoutes);
+app.use('/api/producer/notify/', notificationRoutes);
 
 // Middleware de manejo de errores
 app.use(errorHandler);
-
 
 app.listen(config.server.port, () => {
   console.log(`Producer service running on port ${config.server.port}`);

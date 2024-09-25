@@ -1,5 +1,4 @@
 import json
-from config import Config
 from mysql.connector import Error
 from ..models.adapter.adapter import CSVToJSONAdapter
 from ..models.singleton.singleton import MySQLSingleton
@@ -9,7 +8,7 @@ class TarifaController:
         # Inicializa el adaptador para convertir CSV a JSON
         self.adapter = CSVToJSONAdapter(csv_reader)
         # Conecta a la base de datos usando el singleton
-        self.db = MySQLSingleton(Config.MYSQL_HOST, Config.MYSQL_USER, Config.MYSQL_PASSWORD, Config.MYSQL_DATABASE)
+        self.db = MySQLSingleton()
 
     def actualizar_tarifas(self, csv_stream):
         try:

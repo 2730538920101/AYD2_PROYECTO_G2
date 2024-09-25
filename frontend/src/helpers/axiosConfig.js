@@ -28,24 +28,34 @@ export const handleAxiosMsg = (response, icon_response = "success") => {
 
 export const handleAxiosError = (error) => {
 
+    console.log(error)
     // Se verifica si error.response.data.message es un array
-    if (Array.isArray(error.response.data.message)) {
-        let messages = "";
-        error.response.data.message.forEach((message) => {
-            messages += message.msg + "<br>";
-        });
-        return MySwal.fire({
+    if (error.response){
+        if (Array.isArray(error.response.data.message)) {
+            let messages = "";
+            error.response.data.message.forEach((message) => {
+                messages += message.msg + "<br>";
+            });
+            return MySwal.fire({
+                title: 'Aviso',
+                html: messages,
+                icon: 'warning'
+            });
+        }
+
+        MySwal.fire({
             title: 'Aviso',
-            html: messages,
+            html: error.response.data.message,
             icon: 'warning'
         });
-    }
+    }else{
+        MySwal.fire({
+            title: 'Aviso',
+            html: error,
+            icon: 'warning'
+        });
 
-    MySwal.fire({
-        title: 'Aviso',
-        html: error.response.data.message,
-        icon: 'warning'
-    });
+    }
 };
 
 export const handleSwal = () => {
@@ -63,5 +73,65 @@ export const handleAxiosMultipart = () => {
     axios.defaults.baseURL = process.env.NEXT_PUBLIC_API;
     axios.defaults.headers.common['Accept'] = 'application/json';
     axios.defaults.headers.common['Content-Type'] = 'multipart/form-data';
+    return axios;
+};
+
+export const handleAxiosJWT = () => {
+    axios.defaults.baseURL = process.env.NEXT_PUBLIC_API;
+    axios.defaults.headers.common['Accept'] = 'application/json';
+    axios.defaults.headers.common['Content-Type'] = 'application/json';
+    axios.interceptors.request.use(
+        (config) => {
+            const access_token = localStorage.getItem('accessToken');
+            if (access_token) {
+                config.headers.Authorization = `Bearer ${access_token}`;
+            }
+            return config
+        },
+        (error) => {
+            return Promise.reject(error);
+        }
+
+    );
+    
+    axios.interceptors.response.use(
+        (response) => {
+            return response;
+        },
+        (error) => {
+            // NOTE: Aquí se implementaría el refresh del token, de ser necesario
+            return Promise.reject(error);
+        }
+    );
+    return axios;
+}
+
+export const handleAxiosMultipartJWT = () => {
+    axios.defaults.baseURL = process.env.NEXT_PUBLIC_API;
+    axios.defaults.headers.common['Accept'] = 'application/json';
+    axios.defaults.headers.common['Content-Type'] = 'multipart/form-data';
+    axios.interceptors.request.use(
+        (config) => {
+            const access_token = localStorage.getItem('accessToken');
+            if (access_token) {
+                config.headers.Authorization = `Bearer ${access_token}`;
+            }
+            return config
+        },
+        (error) => {
+            return Promise.reject(error);
+        }
+
+    );
+    
+    axios.interceptors.response.use(
+        (response) => {
+            return response;
+        },
+        (error) => {
+            // NOTE: Aquí se implementaría el refresh del token, de ser necesario
+            return Promise.reject(error);
+        }
+    );
     return axios;
 }

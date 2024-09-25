@@ -25,7 +25,7 @@ const RegisterUser = () => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         try {
-            const res = await handleAxiosMultipart().post('clientes/crear', formData);
+            const res = await handleAxiosMultipart().post('clientes', formData);
             console.log(res)
             MySwal.fire({
                 title: "Registro Exitoso",

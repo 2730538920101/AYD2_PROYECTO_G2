@@ -1,13 +1,14 @@
 import mysql.connector
+from config import Config
 from mysql.connector import MySQLConnection, Error
 
 class MySQLSingleton:
     _instance = None
 
-    def __new__(cls, host, user, password, database):
+    def __new__(cls):
         if cls._instance is None:
             cls._instance = super(MySQLSingleton, cls).__new__(cls)
-            cls._instance._initialize(host, user, password, database)
+            cls._instance._initialize(Config.MYSQL_HOST, Config.MYSQL_USER, Config.MYSQL_PASSWORD, Config.MYSQL_DATABASE)
         return cls._instance
 
     def _initialize(self, host, user, password, database):
@@ -34,6 +35,16 @@ class MySQLSingleton:
         except Error as e:
             print(f"Error executing query: {e}")
 
+    def fetch_one(self, query, parameters=()):
+        if self.connection is None or self.cursor is None:
+            raise RuntimeError("Database connection is not initialized.")
+        try:
+            self.cursor.execute(query, parameters)
+            return self.cursor.fetchone()  # Retorna la primera fila
+        except Error as e:
+            print(f"Error fetching data: {e}")
+            return None  # Retorna None si ocurre un error
+
     def fetch_all(self, query, parameters=()):
         if self.connection is None or self.cursor is None:
             raise RuntimeError("Database connection is not initialized.")
@@ -59,6 +70,10 @@ class MySQLSingleton:
             return []
 
     def __del__(self):
-        if self.connection is not None and self.cursor is not None:
-            self.cursor.close()
-            self.connection.close()
+        try:
+            if self.cursor is not None:
+                self.cursor.close()
+            if self.connection is not None:
+                self.connection.close()
+        except Exception as e:
+            print(f"Error closing database connection: {e}")
