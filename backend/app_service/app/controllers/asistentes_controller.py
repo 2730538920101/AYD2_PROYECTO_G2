@@ -66,3 +66,46 @@ class AsistentesController:
 
         except Error as e:
             raise Exception(f"Error al insertar asistente: {e}")
+
+    def update_asistente(self, asistente_data):
+        try:
+            # Crear una lista de campos para actualizar
+            update_fields = []
+            update_values = []
+
+            # Verificar si cada campo de asistente_data no es None y agregarlo a la lista
+            if 'nombre' in asistente_data:
+                update_fields.append("nombre = %s")
+                update_values.append(asistente_data['nombre'])
+            if 'telefono' in asistente_data:
+                update_fields.append("telefono = %s")
+                update_values.append(asistente_data['telefono'])
+            if 'estado_civil' in asistente_data:
+                update_fields.append("estado_civil = %s")
+                update_values.append(asistente_data['estado_civil'])
+            if 'fecha_nacimiento' in asistente_data:
+                update_fields.append("fecha_nacimiento = %s")
+                update_values.append(asistente_data['fecha_nacimiento'])
+            if 'direccion' in asistente_data:
+                update_fields.append("direccion = %s")
+                update_values.append(asistente_data['direccion'])
+
+            # Si no se proporcionan campos para actualizar, lanzar una excepción
+            if not update_fields:
+                raise Exception("No se proporcionaron campos para actualizar")
+
+            # Definir la consulta SQL dinámica
+            query = f"""
+            UPDATE Asistente
+            SET {', '.join(update_fields)}
+            WHERE ASISTENTE_ID = %s
+            """
+
+            # Agregar el ID del asistente al final de la lista de valores
+            update_values.append(asistente_data['asistente_id'])
+
+            # Ejecutar la consulta usando el singleton
+            self.db.execute_query(query, update_values)
+
+        except Error as e:
+            raise Exception(f"Error al actualizar asistente: {e}")

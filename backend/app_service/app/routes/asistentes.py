@@ -88,3 +88,23 @@ def crear_asistente():
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+# Ruta para actualizar asistentes
+@bp.route('/', methods=['PUT'])
+def actualizar_asistente():
+    try:
+
+        # Obtener los datos del asistente desde el cuerpo de la solicitud
+        asistente_data = request.get_json()
+
+        # Verificar que se haya proporcionado el ID del asistente
+        if 'asistente_id' not in asistente_data:
+            return jsonify({"error": "El ID del asistente es obligatorio"}), 400
+
+        # Llamar al método del controlador para actualizar el asistente
+        asistentes_controller.update_asistente(asistente_data)
+
+        return jsonify({"mensaje": "Asistente actualizado con éxito"}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
