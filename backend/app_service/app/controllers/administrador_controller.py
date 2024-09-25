@@ -1,5 +1,4 @@
 from ..models.singleton.singleton import MySQLSingleton
-from config import Config
 from mysql.connector import Error
 from ..controllers.encryption_controller import EncryptionController
 from ..services.cognito_service import CognitoService  # Importar el servicio de Cognito
@@ -8,7 +7,7 @@ from ..models.factory_method.factory import UserFactory  # Importar la fábrica 
 class AdministradorController:
     def __init__(self):
         # Conectar a la base de datos usando el singleton
-        self.db = MySQLSingleton(Config.MYSQL_HOST, Config.MYSQL_USER, Config.MYSQL_PASSWORD, Config.MYSQL_DATABASE)
+        self.db = MySQLSingleton()
         self.cognito_service = CognitoService()  # Inicializar el servicio de Cognito
 
     def existe_administrador(self):

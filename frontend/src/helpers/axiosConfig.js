@@ -30,23 +30,32 @@ export const handleAxiosError = (error) => {
 
     console.log(error)
     // Se verifica si error.response.data.message es un array
-    if (Array.isArray(error.response.data.message)) {
-        let messages = "";
-        error.response.data.message.forEach((message) => {
-            messages += message.msg + "<br>";
-        });
-        return MySwal.fire({
+    if (error.response){
+        if (Array.isArray(error.response.data.message)) {
+            let messages = "";
+            error.response.data.message.forEach((message) => {
+                messages += message.msg + "<br>";
+            });
+            return MySwal.fire({
+                title: 'Aviso',
+                html: messages,
+                icon: 'warning'
+            });
+        }
+
+        MySwal.fire({
             title: 'Aviso',
-            html: messages,
+            html: error.response.data.message,
             icon: 'warning'
         });
-    }
+    }else{
+        MySwal.fire({
+            title: 'Aviso',
+            html: error,
+            icon: 'warning'
+        });
 
-    MySwal.fire({
-        title: 'Aviso',
-        html: error.response.data.message,
-        icon: 'warning'
-    });
+    }
 };
 
 export const handleSwal = () => {

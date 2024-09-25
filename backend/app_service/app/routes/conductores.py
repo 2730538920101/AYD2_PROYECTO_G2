@@ -19,6 +19,16 @@ encryption_controller = EncryptionController()
 s3_service = S3Service()
 cognito_service = CognitoService()
 
+# Ruta para obtener todos los conductores
+@bp.route('/', methods=['GET'])
+def obtener_conductores():
+    try:
+        # Llamar al método del controlador para obtener todos los conductores
+        conductores = conductores_controller.get_conductores()
+        return jsonify(conductores), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 # Ruta para crear conductores
 @bp.route('/crear', methods=['POST'])
 def crear_conductor():

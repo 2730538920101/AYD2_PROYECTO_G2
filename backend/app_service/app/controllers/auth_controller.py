@@ -5,7 +5,7 @@ from config import Config
 class AuthController:
     def __init__(self):
         # Conectar a la base de datos usando el singleton
-        self.db = MySQLSingleton(Config.MYSQL_HOST, Config.MYSQL_USER, Config.MYSQL_PASSWORD, Config.MYSQL_DATABASE)
+        self.db = MySQLSingleton()
         self.cognito_service = CognitoService()
 
     def change_password_in_db(self, email: str, new_password: str, user_type: str) -> bool:

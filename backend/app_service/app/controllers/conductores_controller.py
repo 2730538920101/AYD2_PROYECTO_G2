@@ -1,11 +1,51 @@
 from ..models.singleton.singleton import MySQLSingleton
-from config import Config
 from mysql.connector import Error
 
 class ConductoresController:
     def __init__(self):
         # Conectar a la base de datos usando el singleton
-        self.db = MySQLSingleton(Config.MYSQL_HOST, Config.MYSQL_USER, Config.MYSQL_PASSWORD, Config.MYSQL_DATABASE)
+        self.db = MySQLSingleton()
+
+    def get_conductores(self):
+        try:
+            # Definir la consulta SQL
+            query = """ SELECT
+                            CON_ID, NOMBRE, TELEFONO, ESTADO_CIVIL, GENERO, CORREO, CODIGO_EMPLEADO,
+                            FECHA_NACIMIENTO, DIRECCION, NUMERO_DPI, PAPELERIA, FOTOGRAFIA, MARCA_VEHICULO,
+                            PLACA, ANIO, ESTADO_INFORMACION
+                        FROM Conductor"""
+
+            # Ejecutar la consulta usando el singleton
+            conductor_rows = self.db.fetch_all(query, [])
+
+            # Convertir los resultados a una lista de diccionarios
+            conductores = []
+            for row in conductor_rows:
+                conductor = {
+                    "con_id": row[0],
+                    "nombre": row[1],
+                    "telefono": row[2],
+                    "estado_civil": row[3],
+                    "genero": row[4],
+                    "correo": row[5],
+                    "codigo_empleado": row[6],
+                    "fecha_nacimiento": row[7].strftime("%d/%m/%Y"),
+                    "direccion": row[8],
+                    "numero_dpi": row[9],
+                    "papeleria": row[10],
+                    "fotografia": row[11],
+                    "marca_vehiculo": row[12],
+                    "placa": row[13],
+                    "anio": row[14],
+                    "estado_informacion": row[15]
+                }
+                conductores.append(conductor)
+
+            # Retornar los resultados
+            return conductores
+
+        except Error as e:
+            raise Exception(f"Error al obtener conductores: {e}")
 
     def create_conductor(self, conductor_data):
         try:

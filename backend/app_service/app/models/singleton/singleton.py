@@ -1,13 +1,14 @@
 import mysql.connector
+from config import Config
 from mysql.connector import MySQLConnection, Error
 
 class MySQLSingleton:
     _instance = None
 
-    def __new__(cls, host, user, password, database):
+    def __new__(cls):
         if cls._instance is None:
             cls._instance = super(MySQLSingleton, cls).__new__(cls)
-            cls._instance._initialize(host, user, password, database)
+            cls._instance._initialize(Config.MYSQL_HOST, Config.MYSQL_USER, Config.MYSQL_PASSWORD, Config.MYSQL_DATABASE)
         return cls._instance
 
     def _initialize(self, host, user, password, database):
