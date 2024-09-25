@@ -1,11 +1,10 @@
 from ..models.singleton.singleton import MySQLSingleton
-from config import Config
 from mysql.connector import Error
 
 class ClientesController:
     def __init__(self):
         # Conectar a la base de datos usando el singleton
-        self.db = MySQLSingleton(Config.MYSQL_HOST, Config.MYSQL_USER, Config.MYSQL_PASSWORD, Config.MYSQL_DATABASE)
+        self.db = MySQLSingleton()
 
     def get_clientes(self):
         try:
@@ -66,16 +65,16 @@ class ClientesController:
             update_values = []
 
             # Verificar si cada campo de cliente_data no es None y agregarlo a la lista
-            if cliente_data['nombre']:
+            if 'nombre' in cliente_data:
                 update_fields.append("nombre = %s")
                 update_values.append(cliente_data['nombre'])
-            if cliente_data['fecha_nacimiento']:
+            if 'fecha_nacimiento' in cliente_data:
                 update_fields.append("fecha_nacimiento = %s")
                 update_values.append(cliente_data['fecha_nacimiento'])
-            if cliente_data['telefono']:
+            if 'telefono' in cliente_data:
                 update_fields.append("telefono = %s")
                 update_values.append(cliente_data['telefono'])
-            if cliente_data['contrasenia']:
+            if 'contrasenia' in cliente_data:
                 update_fields.append("contrasenia = %s")
                 update_values.append(cliente_data['contrasenia'])
 
