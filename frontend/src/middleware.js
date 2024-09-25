@@ -15,7 +15,7 @@ export function middleware(request) {
     console.log(rol);
 
     // Si el usuario logueado quiere acceder a otra ruta que no sea su dashboard o subrutas de este (segun su rol), se redirige al dashboard que le corresponde
-    if (!auth && !request.nextUrl.pathname.startsWith('/login/adminFile')) {
+    if (!auth && rol === "ADMINISTRADO"  && !request.nextUrl.pathname.startsWith('/login/adminFile')) {
       return NextResponse.redirect(new URL('/login/adminFile', request.url));
     } else if (rol.toUpperCase() == "ADMINISTRADOR" && !request.nextUrl.pathname.startsWith('/dashboard_administrador')) {
       return NextResponse.redirect(new URL('/dashboard_administrador', request.url));
