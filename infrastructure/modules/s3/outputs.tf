@@ -38,3 +38,18 @@ output "s3_object_documento_cv_asistentes" {
   description = "Ruta completa del objeto documento_cv_asistentes"
   value       = aws_s3_object.documento_cv_asistentes.key
 }
+
+output "S3_object_fotos_dpi_clientes" {
+  description = "Ruta completa del objeto fotos_dpi_clientes"
+  value = aws_s3_object.fotos_dpi_clientes
+}
+
+output "SE_object_fotos_alertas_clientes" {
+  description = "Ruta completa del objeto fotos_alertas_clientes"
+  value = aws_s3_object.fotos_alertas_clientes
+}
+
+output "SE_object_fotos_alertas_conductres" {
+  description = "Ruta completa del objeto fotos_alertas_conductores"
+  value = aws_s3_object.fotos_alertas_conductores
+}
