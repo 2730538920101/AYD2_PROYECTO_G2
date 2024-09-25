@@ -99,11 +99,6 @@ def actualizar_cliente():
         if 'cli_id' not in cliente_data:
             return jsonify({"error": "El ID del cliente es obligatorio"}), 400
 
-        # En el caso que venga la contrasenia se encripta
-        if 'contrasenia' in cliente_data:
-            contrasenia_encriptada = encryption_controller.encrypt(password=cliente_data['contrasenia'], action='encrypt')
-            cliente_data['contrasenia'] = contrasenia_encriptada
-
         # Llamar al método del controlador para actualizar el cliente
         clientes_controller = ClientesController()
         clientes_controller.update_cliente(cliente_data)

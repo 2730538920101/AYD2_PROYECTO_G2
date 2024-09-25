@@ -74,9 +74,6 @@ class ClientesController:
             if 'telefono' in cliente_data:
                 update_fields.append("telefono = %s")
                 update_values.append(cliente_data['telefono'])
-            if 'contrasenia' in cliente_data:
-                update_fields.append("contrasenia = %s")
-                update_values.append(cliente_data['contrasenia'])
 
             # Si no se proporcionan campos para actualizar, lanzar una excepción
             if not update_fields:
