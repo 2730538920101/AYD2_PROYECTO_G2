@@ -10,8 +10,8 @@ const app = express();
 app.use(cors());
 
 app.use(express.json());
-app.use('/api/consume/', mainRoutes);
-app.use('/api/consume/notifications/', CheckRoutes);
+app.use('/api/consumer/', mainRoutes);
+app.use('/api/consumer/notifications/', CheckRoutes);
 
 // Middleware de manejo de errores
 app.use(errorHandler);
