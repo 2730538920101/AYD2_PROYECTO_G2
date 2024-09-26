@@ -202,6 +202,21 @@ class ViajeController:
 
         except Error as e:
             raise Exception(f"Error al cancelar viaje: {e}")
+    
+    #* Método para modificar el estado del viaje a "EN CURSO" (conductor)
+    def iniciar_viaje(self, viaje_id):
+        try:
+            # Definir la consulta SQL para actualizar el estado del viaje
+            query = """
+            UPDATE Viaje
+            SET ESTADO = 'EN CURSO'
+            WHERE VIA_ID = %s
+            """
+            # Ejecutar la consulta usando el singleton
+            self.db.execute_query(query, (viaje_id,))
+
+        except Error as e:
+            raise Exception(f"Error al iniciar viaje: {e}")
 
 
     

@@ -103,3 +103,18 @@ def cancelar_viaje():
         return jsonify({'message': 'Viaje cancelado exitosamente'}), 200
     except Exception as e:
         return jsonify({'error': str(e)}),
+
+#* Ruta para modificar el estado del viaje a "EN CURSO" (conductor)
+@bp.route('/en_curso', methods=['PUT'])
+def en_curso():
+    try:
+        # Obtener el ID del viaje a modificar
+        viaje_id = request.json.get('viaje_id', None)
+        if not viaje_id:
+            return jsonify({'error': 'Falta el ID del viaje'}), 400
+
+        # Llamar al método del controlador para modificar el estado del viaje
+        viaje_controller.iniciar_viaje(viaje_id)
+        return jsonify({'message': 'Viaje en curso'}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
