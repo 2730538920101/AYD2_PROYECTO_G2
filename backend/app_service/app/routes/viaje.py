@@ -66,3 +66,22 @@ def get_viajes_frecuentes(cliente_id):
         return jsonify(viajes_frecuentes), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+#* Ruta para aceptar un viaje (conductor)
+@bp.route('/aceptar', methods=['PUT'])
+def aceptar_viaje():
+    try:
+        # Obtener el ID del viaje a aceptar
+        viaje_id = request.json.get('viaje_id', None)
+        if not viaje_id:
+            return jsonify({'error': 'Falta el ID del viaje'}), 400
+        # Obtener el ID del conductor
+        conductor_id = request.json.get('conductor_id', None)
+        if not conductor_id:
+            return jsonify({'error': 'Falta el ID del conductor'}), 400
+
+        # Llamar al método del controlador para aceptar el viaje
+        viaje_controller.aceptar_viaje(viaje_id, conductor_id)
+        return jsonify({'message': 'Viaje aceptado exitosamente'}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500

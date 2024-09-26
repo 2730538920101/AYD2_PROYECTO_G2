@@ -147,5 +147,23 @@ class ViajeController:
             raise Exception(f"Error al obtener historial de viajes frecuentes: {e}")
     
 
+    #* Método para aceptar un viaje (conductor)
+    def aceptar_viaje(self, viaje_id, conductor_id):
+        try:
+            # Definir la consulta SQL para actualizar el conductor asignado y el estado
+            query = """
+            UPDATE Viaje
+            SET CONDUCTOR_CON_ID = %s, ESTADO = 'ACEPTADO'
+            WHERE VIA_ID = %s
+            """
+            values = (conductor_id, viaje_id)
+
+            # Ejecutar la consulta usando el singleton
+            self.db.execute_query(query, values)
+
+        except Error as e:
+            raise Exception(f"Error al aceptar viaje: {e}")
+
+
 
     
