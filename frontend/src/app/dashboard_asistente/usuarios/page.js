@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import Select from 'react-select';
 // Axios
 import { handleAxios, handleAxiosMultipart, handleAxiosError, handleAxiosMsg } from '@/helpers/axiosConfig';
+import axios from 'axios'; // Asegúrate de importar Axios
 // Bootstrap
 import { Col, Row, Form, Modal, Button, Ratio, InputGroup } from 'react-bootstrap';
 // Font Awesome
@@ -14,39 +15,37 @@ import { faUserNinja, faPlaneArrival, faEdit } from "@fortawesome/free-solid-svg
 // DataTable
 import DataTable from 'react-data-table-component';
 
-const dataTemproal = [
-    { id: 1, usuario: "Juan", Estado: "Activo" },
-    { id: 2, usuario: "Pedro", Estado: "Inactivo" }
-];
-
-const usuarioTemproal =
-    { id: 1, nombre: "Juan", fecha_nac: "12/05/2024", genero: "M", correo: "prueba@gmail.com", telefono: "12345678" };
-
-
 function ListaUsuarios() {
 
-    // Obtencion de los viajes para el select
-    const [viajes, setViajes] = useState([]);
-    const obtenerViajes = async () => {
+    // Estado para almacenar los conductores
+    const [conductores, setConductores] = useState([]);
+
+    // Función para obtener los conductores de la API
+    const obtenerConductores = async () => {
         try {
-            /*const response = await handleAxios().get('/cliente/listar');
+            const response = await axios.get('http://localhost:5000/api/clientes');
             const data = response.data;
-      
-            // Se formatea la data para que pueda almacenarse para utilizarse en un select
-            const temporal = data.map(cliente => {
-              return {
-                label: `${cliente.CUI} - ${cliente.NOMBRE} ${cliente.APELLIDO}`,
-                value: cliente.CUI
-              }
-            });*/
-            setViajes(dataTemproal);
+
+            // Formatear los datos de la API para que coincidan con las columnas de la tabla
+            const conductoresFormateados = data.map(conductor => ({
+                id: conductor.cli_id,
+                usuario: conductor.nombre,
+                Estado: "Activo", // Puedes modificar esto si la API tiene algún campo de estado
+                correo: conductor.correo,
+                fecha_nac: conductor.fecha_nacimiento,
+                genero: conductor.genero,
+                telefono: conductor.telefono
+            }));
+
+            setConductores(conductoresFormateados);
         } catch (error) {
+            console.error("Error al obtener los conductores:", error);
             handleAxiosError(error);
         }
-    }
+    };
 
     useEffect(() => {
-        obtenerViajes();
+        obtenerConductores();
     }, []);
 
     const [showUser, setShowUser] = useState(false);
@@ -55,12 +54,12 @@ function ListaUsuarios() {
     const handleCloseUser = () => {
         setUser({});
         setShowUser(false);
-    }
+    };
 
     const handleShowUser = (rowUser) => {
-        setUser(usuarioTemproal);
+        setUser(rowUser); // Aquí se pasa el conductor seleccionado al modal
         setShowUser(true); // Activa el modal
-    }
+    };
 
     const columnas = [
         {
@@ -71,21 +70,17 @@ function ListaUsuarios() {
         {
             name: 'DETALLE USUARIO',
             cell: row => (
-                <>
-                    <Button variant="warning" onClick={() => handleShowUser(row)}>
-                        <FontAwesomeIcon icon={faUserNinja} />
-                    </Button>
-                </>
+                <Button variant="warning" onClick={() => handleShowUser(row)}>
+                    <FontAwesomeIcon icon={faUserNinja} />
+                </Button>
             )
         },
         {
             name: 'VIAJES USUARIO',
             cell: row => (
-                <>
-                    <Button variant="primary">
-                        <FontAwesomeIcon icon={faPlaneArrival} />
-                    </Button>
-                </>
+                <Button variant="primary">
+                    <FontAwesomeIcon icon={faPlaneArrival} />
+                </Button>
             )
         },
         {
@@ -96,13 +91,9 @@ function ListaUsuarios() {
         {
             name: 'Acciones',
             cell: row => (
-                <>
-                    <Button variant="warning" >
-                        <FontAwesomeIcon icon={faEdit} /> Cambiar estado
-                    </Button>
-                    &nbsp;
-
-                </>
+                <Button variant="warning">
+                    <FontAwesomeIcon icon={faEdit} /> Cambiar estado
+                </Button>
             )
         },
     ];
@@ -114,7 +105,7 @@ function ListaUsuarios() {
                     <DataTable
                         title="Lista Usuarios"
                         columns={columnas}
-                        data={viajes}
+                        data={conductores} // Se usa el estado 'conductores'
                         pagination
                     />
                 </Col>
@@ -137,7 +128,7 @@ function ListaUsuarios() {
                                         type="text"
                                         placeholder="Nombre"
                                         autoComplete="off"
-                                        defaultValue={userr.nombre}
+                                        defaultValue={userr.usuario}
                                         readOnly
                                     />
                                 </Form.Group>
