@@ -135,17 +135,39 @@ class ViajeController:
     #* Método para obtener los viajes frecuentes de un cliente
     def get_historial_viajes_frecuentes(self, cli_id, num_viajes):
         try:
-            # Definir la consulta para llamar al procedimiento almacenado
-            query = "CALL VerHistorialViajesFrecuentes(%s, %s);"
+            # Definir la consulta SQL para obtener los viajes finalizados del cliente
+            query = """
+            SELECT VIA_ID, ESTADO, FECHA_INICIO, FECHA_FIN, ORIGEN, DESTINO, TOTAL
+            FROM Viaje
+            WHERE CLI_ID = %s
+            AND ESTADO = 'FINALIZADO'
+            ORDER BY FECHA_FIN DESC
+            LIMIT %s;
+            """
             values = (cli_id, num_viajes)
 
             # Ejecutar la consulta usando el singleton
             viajes_frecuentes = self.db.fetch_all(query, values)
 
-            return viajes_frecuentes
+            # Formatear los resultados en una lista de diccionarios (opcional)
+            viajes = []
+            for row in viajes_frecuentes:
+                viaje = {
+                    "via_id": row[0],
+                    "estado": row[1],
+                    "fecha_inicio": row[2],
+                    "fecha_fin": row[3],
+                    "origen": row[4],
+                    "destino": row[5],
+                    "total": row[6]
+                }
+                viajes.append(viaje)
+
+            return viajes
 
         except Error as e:
             raise Exception(f"Error al obtener historial de viajes frecuentes: {e}")
+
     
 
     #* Método para aceptar un viaje (conductor)
