@@ -1,5 +1,6 @@
 from ..models.singleton.singleton import MySQLSingleton
 from mysql.connector import Error
+from datetime import datetime
 
 class ViajeController:
     def __init__(self):
@@ -164,6 +165,43 @@ class ViajeController:
         except Error as e:
             raise Exception(f"Error al aceptar viaje: {e}")
 
+    
+    #* Método para cancelar un viaje (cliente)
+    def cancelar_viaje(self, viaje_id, razon_cancelacion):
+        try:
+            # Verificar el estado del viaje antes de cancelar
+            query_estado = "SELECT ESTADO FROM Viaje WHERE VIA_ID = %s"
+            estado_viaje = self.db.fetch_one(query_estado, (viaje_id,))
+
+            if not estado_viaje:
+                raise Exception("El viaje no existe.")
+
+            estado = estado_viaje[0]
+
+            if estado not in ['PENDIENTE', 'ACEPTADO']:
+                raise Exception("Solo se pueden cancelar viajes en estado PENDIENTE o ACEPTADO.")
+
+            # Insertar la razón de la cancelación en la tabla Cancelado
+            query_cancelar = """
+            INSERT INTO Cancelado (VIAJE_VIA_ID, TIPO_CANCELACION, MENSAJE, FECHA_HORA)
+            VALUES (%s, %s, %s, %s)
+            """
+            values_cancelar = (viaje_id, 'Cancelación por cliente', razon_cancelacion, datetime.now())
+            
+            # Ejecutar la consulta para registrar la cancelación
+            self.db.execute_query(query_cancelar, values_cancelar)
+
+            # Actualizar el estado del viaje a "CANCELADO"
+            query_update = """
+            UPDATE Viaje
+            SET ESTADO = 'CANCELADO'
+            WHERE VIA_ID = %s
+            """
+            #TODO: 6. El viaje es enviado a la lista de espera para ser reasignado a un nuevo conductor.
+            self.db.execute_query(query_update, (viaje_id,))
+
+        except Error as e:
+            raise Exception(f"Error al cancelar viaje: {e}")
 
 
     

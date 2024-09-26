@@ -3,7 +3,7 @@ from ..controllers.viaje_controller import ViajeController
 
 # Definir el Blueprint
 bp = Blueprint('viajes', __name__)
-
+NUMERO_VIAJES_FRECUENTES = 5
 # Inicializar el controlador
 viaje_controller = ViajeController()
 
@@ -62,7 +62,7 @@ def get_viajes_pendientes():
 def get_viajes_frecuentes(cliente_id):
     try:
         # Llamar al método del controlador para obtener los viajes frecuentes
-        viajes_frecuentes = viaje_controller.get_historial_viajes_frecuentes(cliente_id)
+        viajes_frecuentes = viaje_controller.get_historial_viajes_frecuentes(cliente_id, NUMERO_VIAJES_FRECUENTES)
         return jsonify(viajes_frecuentes), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -85,3 +85,21 @@ def aceptar_viaje():
         return jsonify({'message': 'Viaje aceptado exitosamente'}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+#* Ruta para cancelar un viaje (cliente)
+@bp.route('/cancelar', methods=['PUT'])
+def cancelar_viaje():
+    try:
+        # Obtener el ID del viaje a cancelar
+        viaje_id = request.json.get('viaje_id', None)
+        if not viaje_id:
+            return jsonify({'error': 'Falta el ID del viaje'}), 400
+        razon_cancelacion = request.json.get('razon_cancelacion', None)
+        if not razon_cancelacion:
+            return jsonify({'error': 'Falta la razón de la cancelación'}), 400
+
+        # Llamar al método del controlador para cancelar el viaje
+        viaje_controller.cancelar_viaje(viaje_id, razon_cancelacion)
+        return jsonify({'message': 'Viaje cancelado exitosamente'}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}),
