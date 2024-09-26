@@ -62,12 +62,13 @@ class MySQLSingleton:
         if self.connection is None:
             raise RuntimeError("Database connection is not initialized.")
         try:
-            self.connection.cursor().callproc(procedure_name, parameters)
-            results = []
-            for result_set in self.connection.cursor().stored_results():
-                results.append(result_set.fetchall())
-            self.connection.commit()
-            return results
+            with self.connection.cursor() as cursor:
+                cursor.callproc(procedure_name, parameters)
+                results = []
+                for result_set in cursor.stored_results():
+                    results.append(result_set.fetchall())
+                self.connection.commit()
+                return results
         except Error as e:
             print(f"Error executing stored procedure: {e}")
             return []
