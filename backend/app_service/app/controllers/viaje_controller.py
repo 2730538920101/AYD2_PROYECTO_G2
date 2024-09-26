@@ -218,5 +218,21 @@ class ViajeController:
         except Error as e:
             raise Exception(f"Error al iniciar viaje: {e}")
 
+        
+    #* Método para finalizar un viaje (conductor)
+    def finalizar_viaje(self, viaje_id):
+        try:
+            # Definir la consulta SQL para actualizar el estado del viaje
+            query = """
+            UPDATE Viaje
+            SET ESTADO = 'FINALIZADO', FECHA_FIN = %s
+            WHERE VIA_ID = %s
+            """
+            # Ejecutar la consulta usando el singleton
+            self.db.execute_query(query, (datetime.now(), viaje_id))
+
+        except Error as e:
+            raise Exception(f"Error al finalizar viaje: {e}")
+
 
     

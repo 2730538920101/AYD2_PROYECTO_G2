@@ -3,7 +3,7 @@ from ..controllers.viaje_controller import ViajeController
 
 # Definir el Blueprint
 bp = Blueprint('viajes', __name__)
-NUMERO_VIAJES_FRECUENTES = 5
+NUMERO_VIAJES_FRECUENTES = 1
 # Inicializar el controlador
 viaje_controller = ViajeController()
 
@@ -116,5 +116,20 @@ def en_curso():
         # Llamar al método del controlador para modificar el estado del viaje
         viaje_controller.iniciar_viaje(viaje_id)
         return jsonify({'message': 'Viaje en curso'}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
+#* Ruta para modificar el estado del viaje a "FINALIZADO" (conductor)
+@bp.route('/finalizar', methods=['PUT'])
+def finalizar():
+    try:
+        # Obtener el ID del viaje a modificar
+        viaje_id = request.json.get('viaje_id', None)
+        if not viaje_id:
+            return jsonify({'error': 'Falta el ID del viaje'}), 400
+
+        # Llamar al método del controlador para modificar el estado del viaje
+        viaje_controller.finalizar_viaje(viaje_id)
+        return jsonify({'message': 'Viaje finalizado'}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
