@@ -1,9 +1,15 @@
-const AWS = require('aws-sdk');
+const { SQSClient, ReceiveMessageCommand, DeleteMessageCommand } = require('@aws-sdk/client-sqs');
 const config = require('../config/config');
 
-class SQSClient {
+class SQSService {
   constructor() {
-    this.sqs = new AWS.SQS();
+    this.client = new SQSClient({
+      region: config.sqs.region,
+      credentials: {
+        accessKeyId: config.sqs.accessKeyId,
+        secretAccessKey: config.sqs.secretAccessKey,
+      },
+    });
     this.queueUrl = config.sqs.queueUrl;
   }
 
@@ -11,9 +17,17 @@ class SQSClient {
     const params = {
       QueueUrl: this.queueUrl,
       MaxNumberOfMessages: 10,
+      WaitTimeSeconds: 20, // Long polling para minimizar el número de solicitudes
     };
-    const data = await this.sqs.receiveMessage(params).promise();
-    return data.Messages || [];
+
+    try {
+      const command = new ReceiveMessageCommand(params);
+      const data = await this.client.send(command);
+      return data.Messages || [];
+    } catch (error) {
+      console.error('Error receiving message from SQS:', error);
+      throw new Error('Error receiving message from SQS');
+    }
   }
 
   async deleteMessage(receiptHandle) {
@@ -21,8 +35,16 @@ class SQSClient {
       QueueUrl: this.queueUrl,
       ReceiptHandle: receiptHandle,
     };
-    return this.sqs.deleteMessage(params).promise();
+
+    try {
+      const command = new DeleteMessageCommand(params);
+      await this.client.send(command);
+      console.log('Message deleted from SQS');
+    } catch (error) {
+      console.error('Error deleting message from SQS:', error);
+      throw new Error('Error deleting message from SQS');
+    }
   }
 }
 
-module.exports = new SQSClient();
+module.exports = new SQSService();
