@@ -45,7 +45,7 @@ export const handleAxiosError = (error) => {
 
         MySwal.fire({
             title: 'Aviso',
-            html: error.response.data.message,
+            html: error.response.data.error,
             icon: 'warning'
         });
     }else{
