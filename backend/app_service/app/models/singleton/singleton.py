@@ -1,6 +1,6 @@
 import mysql.connector
 from config import Config
-from mysql.connector import MySQLConnection, Error
+from mysql.connector import Error
 
 class MySQLSingleton:
     _instance = None
@@ -20,48 +20,51 @@ class MySQLSingleton:
                     password=password,
                     database=database
                 )
-                self.cursor = self.connection.cursor()
             except Error as e:
                 print(f"Error connecting to MySQL: {e}")
                 self.connection = None
-                self.cursor = None
 
     def execute_query(self, query, parameters=()):
-        if self.connection is None or self.cursor is None:
+        if self.connection is None:
             raise RuntimeError("Database connection is not initialized.")
         try:
-            self.cursor.execute(query, parameters)
-            self.connection.commit()
+            with self.connection.cursor() as cursor:
+                cursor.execute(query, parameters)
+                self.connection.commit()
         except Error as e:
-            print(f"Error executing query: {e}")
+            raise RuntimeError(e)
 
     def fetch_one(self, query, parameters=()):
-        if self.connection is None or self.cursor is None:
+        if self.connection is None:
             raise RuntimeError("Database connection is not initialized.")
         try:
-            self.cursor.execute(query, parameters)
-            return self.cursor.fetchone()  # Retorna la primera fila
+            with self.connection.cursor() as cursor:
+                cursor.execute(query, parameters)
+                data = cursor.fetchone()
+                return data # Retorna la primera fila
         except Error as e:
             print(f"Error fetching data: {e}")
             return None  # Retorna None si ocurre un error
 
     def fetch_all(self, query, parameters=()):
-        if self.connection is None or self.cursor is None:
+        if self.connection is None:
             raise RuntimeError("Database connection is not initialized.")
         try:
-            self.cursor.execute(query, parameters)
-            return self.cursor.fetchall()
+            with self.connection.cursor() as cursor:
+                cursor.execute(query, parameters)
+                data = cursor.fetchall()
+                return data # Retorna todas las filas
         except Error as e:
             print(f"Error fetching data: {e}")
             return []
 
     def execute_stored_procedure(self, procedure_name, parameters=()):
-        if self.connection is None or self.cursor is None:
+        if self.connection is None:
             raise RuntimeError("Database connection is not initialized.")
         try:
-            self.cursor.callproc(procedure_name, parameters)
+            self.connection.cursor.callproc(procedure_name, parameters)
             results = []
-            for result_set in self.cursor.stored_results():
+            for result_set in self.connection.cursor.stored_results():
                 results.append(result_set.fetchall())
             self.connection.commit()
             return results
@@ -71,8 +74,6 @@ class MySQLSingleton:
 
     def __del__(self):
         try:
-            if self.cursor is not None:
-                self.cursor.close()
             if self.connection is not None:
                 self.connection.close()
         except Exception as e:
