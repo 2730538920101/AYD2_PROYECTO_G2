@@ -96,22 +96,21 @@ class ClientesController:
             }
             cliente = UserFactory.create_user('Cliente', **cliente_data)
 
-            # Definir el query para insertar un cliente
-            query = """
-            INSERT INTO Cliente (nombre, fecha_nacimiento, genero, correo, foto_dpi, telefono, contrasenia)
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
-            """
-            values = (
-                cliente.nombre,
-                cliente.fecha_nacimiento,
-                cliente.genero,
-                cliente.correo,
-                cliente.foto_dpi,
-                cliente.telefono,
-                cliente.contrasenia
-            )
-
             try:
+                # Definir el query para insertar un cliente
+                query = """
+                INSERT INTO Cliente (nombre, fecha_nacimiento, genero, correo, foto_dpi, telefono, contrasenia)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+                """
+                values = (
+                    cliente.nombre,
+                    cliente.fecha_nacimiento,
+                    cliente.genero,
+                    cliente.correo,
+                    cliente.foto_dpi,
+                    cliente.telefono,
+                    cliente.contrasenia
+                )
                 # Ejecutar la consulta
                 self.db.execute_query(query, values)
             except Exception as e:
