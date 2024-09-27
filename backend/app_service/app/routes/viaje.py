@@ -143,3 +143,13 @@ def get_viajes_conductor(conductor_id):
         return jsonify(viajes_conductor), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+#* Ruta para obtener los viajes de un cliente
+@bp.route('/cliente/<int:cliente_id>', methods=['GET'])
+def get_viajes_cliente(cliente_id):
+    try:
+        # Llamar al método del controlador para obtener los viajes de un cliente
+        viajes_cliente = viaje_controller.get_viajes_cliente(cliente_id)
+        return jsonify(viajes_cliente), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
