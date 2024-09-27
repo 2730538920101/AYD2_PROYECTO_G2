@@ -10,7 +10,7 @@ export default function Layout({ children }) {
       <Sidebar routes={[
         { title: "Perfil", link: "/dashboard_usuario/modificar", icon: faUser },
         { title: "Viajes", link: "/dashboard_usuario/viajes", icon: faCar },
-        { title: "Historial", link: "/dashboard_usuario/", icon: faClockRotateLeft }
+        { title: "Historial", link: "/dashboard_usuario/historial", icon: faClockRotateLeft }
       ]} />
       <main className="content">
         <Navbar />
