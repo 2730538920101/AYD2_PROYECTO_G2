@@ -127,7 +127,7 @@ const Viajes = () => {
             <ListGroupItem><strong>Conductor:</strong> Aún no asignado</ListGroupItem>
         )}
         </ListGroup>
-        <Button onClick={handleShow} >Reportar problema con viaje actual</Button>
+        <Button onClick={handleShow} >Cancelar viaje actual</Button>
         </Card>
         </div>
     ) : (
@@ -178,12 +178,12 @@ const Viajes = () => {
 
     <Modal show={showModal} onHide={handleClose}>
         <Modal.Header closeButton>
-            <Modal.Title>Reportar problema</Modal.Title>
+            <Modal.Title>Cancelación de viaje</Modal.Title>
         </Modal.Header>
         <Modal.Body>
             <Form onSubmit={handleSubmitModal}>
                 <Form.Group className="mb-4">
-                    <Form.Label>Describa el problema:</Form.Label>
+                    <Form.Label>Describa la razón de la cancelación:</Form.Label>
                     <Form.Control
                         as="textarea"
                         name="razon_cancelacion"
@@ -193,10 +193,10 @@ const Viajes = () => {
                     />
                 </Form.Group>
                 <Button variant="secondary" onClick={handleClose}>
-                    Cancelar
+                    Salir
                 </Button>
                 <Button type='submit' variant="primary">
-                    Enviar reporte
+                    Cancelar Viaje
                 </Button>
             </Form>
         </Modal.Body>
