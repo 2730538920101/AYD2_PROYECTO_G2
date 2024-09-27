@@ -164,3 +164,31 @@ class ClientesController:
 
         # Ejecutar la consulta usando el singleton
         self.db.execute_query(query, update_values)
+
+    #*Metodo para obtener un cliente por su ID
+    def get_cliente_by_id(self, cliente_id):
+        # Definir la consulta SQL
+        query = """SELECT CLI_ID, NOMBRE, FECHA_NACIMIENTO, GENERO, CORREO, FOTO_DPI, TELEFONO
+                FROM Cliente
+                WHERE CLI_ID = %s"""
+
+        # Ejecutar la consulta usando el singleton
+        cliente_row = self.db.fetch_one(query, [cliente_id])
+
+        # Verificar si se encontró un cliente con el ID proporcionado
+        if cliente_row is None:
+            raise BadRequestError(f"No se encontró un cliente con el ID {cliente_id}.")
+
+        # Convertir los resultados a un diccionario
+        cliente = {
+            "cli_id": cliente_row[0],
+            "nombre": cliente_row[1],
+            "fecha_nacimiento": cliente_row[2],
+            "genero": cliente_row[3],
+            "correo": cliente_row[4],
+            "foto_dpi": cliente_row[5],
+            "telefono": cliente_row[6]
+        }
+
+        # Retornar el cliente encontrado
+        return cliente

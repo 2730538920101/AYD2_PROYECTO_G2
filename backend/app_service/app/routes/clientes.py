@@ -48,3 +48,13 @@ def actualizar_cliente():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+# Ruta para obtener un cliente por su ID   
+@bp.route('/<int:cli_id>', methods=['GET'])
+def obtener_cliente(cli_id):
+    try:
+        # Llamar al método del controlador para obtener un cliente por su ID
+        cliente = clientes_controller.get_cliente_by_id(cli_id)
+        return jsonify(cliente), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
