@@ -47,11 +47,11 @@ def verificar_historial_cliente(cliente_id):
         return jsonify({'error': str(e)}), 500
 
 # Ruta para obtener los viajes pendientes (sin conductor asignado)
-@bp.route('/pendientes', methods=['GET'])
-def get_viajes_pendientes():
+@bp.route('/pendientes/<int:cliente_id>', methods=['GET'])
+def get_viajes_pendientes(cliente_id):
     try:
         # Llamar al método del controlador para obtener los viajes pendientes
-        viajes_pendientes = viaje_controller.get_viajes_pendientes()
+        viajes_pendientes = viaje_controller.get_viajes_pendientes(cliente_id)
         return jsonify(viajes_pendientes), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
