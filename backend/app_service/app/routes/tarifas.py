@@ -35,3 +35,13 @@ def actualizar_tarifa():
         return jsonify(result), 200 if 'message' in result else 500
     else:
         return jsonify({"error": "Invalid file format, only CSV is allowed"}), 400
+
+# Ruta para obtener todas las tarifas
+@bp.route('/', methods=['GET'])
+def obtener_tarifas():
+    try:
+        # Llamar al método del controlador para obtener todas las tarifas
+        tarifas = TarifaController.get_tarifas()
+        return jsonify(tarifas), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
