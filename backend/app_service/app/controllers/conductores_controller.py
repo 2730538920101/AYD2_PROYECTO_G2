@@ -79,3 +79,43 @@ class ConductoresController:
 
         except Error as e:
             raise Exception(f"Error al insertar conductor: {e}")
+
+    #*Metodo para obtener un conductor por su ID
+    def get_conductor_by_id(self, con_id):
+        try:
+            # Definir la consulta SQL
+            query = """ SELECT
+                            CON_ID, NOMBRE, TELEFONO, ESTADO_CIVIL, GENERO, CORREO, CODIGO_EMPLEADO,
+                            FECHA_NACIMIENTO, DIRECCION, NUMERO_DPI, PAPELERIA, FOTOGRAFIA, MARCA_VEHICULO,
+                            PLACA, ANIO, ESTADO_INFORMACION
+                        FROM Conductor
+                        WHERE CON_ID = %s"""
+
+            # Ejecutar la consulta usando el singleton
+            conductor_row = self.db.fetch_one(query, [con_id])
+
+            # Convertir los resultados a un diccionario
+            conductor = {
+                "con_id": conductor_row[0],
+                "nombre": conductor_row[1],
+                "telefono": conductor_row[2],
+                "estado_civil": conductor_row[3],
+                "genero": conductor_row[4],
+                "correo": conductor_row[5],
+                "codigo_empleado": conductor_row[6],
+                "fecha_nacimiento": conductor_row[7].strftime("%d/%m/%Y"),
+                "direccion": conductor_row[8],
+                "numero_dpi": conductor_row[9],
+                "papeleria": conductor_row[10],
+                "fotografia": conductor_row[11],
+                "marca_vehiculo": conductor_row[12],
+                "placa": conductor_row[13],
+                "anio": conductor_row[14],
+                "estado_informacion": conductor_row[15]
+            }
+
+            # Retornar los resultados
+            return conductor
+
+        except Error as e:
+            raise Exception(f"Error al obtener conductor: {e}")
