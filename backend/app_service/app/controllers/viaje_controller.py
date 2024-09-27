@@ -103,16 +103,19 @@ class ViajeController:
         
     
     #* Método para obtener los viajes pendientes (sin conductor asignado)
-    def get_viajes_pendientes(self):
+    def get_viajes_pendientes(self, cliente_id):
         try:
-            # Definir la consulta SQL para viajes sin conductor asignado
+            # Definir la consulta SQL para obtener los viajes pendientes junto con los datos del cliente
             query = """
-            SELECT VIA_ID, ESTADO, FECHA_INICIO, ORIGEN, DESTINO, TOTAL
-            FROM Viaje
-            WHERE CONDUCTOR_CON_ID IS NULL
+            SELECT v.VIA_ID, v.ESTADO, v.FECHA_INICIO, v.ORIGEN, v.DESTINO, v.TOTAL,
+                c.CLI_ID, c.NOMBRE, c.FECHA_NACIMIENTO, c.GENERO, c.CORREO, c.TELEFONO
+            FROM Viaje v
+            JOIN Cliente c ON v.CLI_ID = c.CLI_ID
+            WHERE v.CONDUCTOR_CON_ID IS NULL AND c.CLI_ID = :cliente_id
             """
+            
             # Ejecutar la consulta con el ID del cliente
-            viajes_pendientes = self.db.fetch_all(query)
+            viajes_pendientes = self.db.fetch_all(query, {"cliente_id": cliente_id})
             
             # Formatear los resultados en una lista de diccionarios
             viajes = []
@@ -123,7 +126,15 @@ class ViajeController:
                     "fecha_inicio": row[2],
                     "origen": row[3],
                     "destino": row[4],
-                    "total": row[5]
+                    "total": row[5],
+                    "cliente": {
+                        "cli_id": row[6],
+                        "nombre": row[7],
+                        "fecha_nacimiento": row[8],
+                        "genero": row[9],
+                        "correo": row[10],
+                        "telefono": row[11]
+                    }
                 }
                 viajes.append(viaje)
 
@@ -131,6 +142,7 @@ class ViajeController:
 
         except Error as e:
             raise Exception(f"Error al obtener viajes pendientes: {e}")
+
     
     #* Método para obtener los viajes frecuentes de un cliente
     def get_historial_viajes_frecuentes(self, cli_id, num_viajes):
