@@ -102,3 +102,14 @@ def crear_conductor():
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+
+#* Ruta para obtener un conductor por su ID
+@bp.route('/<int:con_id>', methods=['GET'])
+def obtener_conductor_por_id(con_id):
+    try:
+        # Llamar al método del controlador para obtener un conductor por su ID
+        conductor = conductores_controller.get_conductor_by_id(con_id)
+        return jsonify(conductor), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500

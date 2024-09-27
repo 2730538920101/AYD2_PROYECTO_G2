@@ -133,3 +133,13 @@ def finalizar():
         return jsonify({'message': 'Viaje finalizado'}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+#* Ruta para obtener los viajes de un conductor
+@bp.route('/conductor/<int:conductor_id>', methods=['GET'])
+def get_viajes_conductor(conductor_id):
+    try:
+        # Llamar al método del controlador para obtener los viajes de un conductor
+        viajes_conductor = viaje_controller.get_viajes_conductor(conductor_id)
+        return jsonify(viajes_conductor), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
