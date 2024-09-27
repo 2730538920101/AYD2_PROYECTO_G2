@@ -119,3 +119,48 @@ class ConductoresController:
 
         except Error as e:
             raise Exception(f"Error al obtener conductor: {e}")
+        
+    #* Metodo para actualizar un conductor
+    def update_conductor(self, conductor_data):
+        try:
+            # Definir la consulta SQL y los parámetros
+            query = """
+            UPDATE Conductor
+            SET nombre = %s, telefono = %s, estado_civil = %s, genero = %s, correo = %s, fecha_nacimiento = %s, direccion = %s, numero_dpi = %s, numero_cuenta = %s, papeleria = %s, fotografia = %s, marca_vehiculo = %s, placa = %s, anio = %s, estado_informacion = %s
+            WHERE CON_ID = %s
+            """
+            values = (
+                conductor_data.nombre,
+                conductor_data.telefono,
+                conductor_data.estado_civil,
+                conductor_data.genero,
+                conductor_data.correo,
+                conductor_data.fecha_nacimiento,
+                conductor_data.direccion,
+                conductor_data.numero_dpi,
+                conductor_data.numero_cuenta,
+                conductor_data.papeleria,
+                conductor_data.fotografia,
+                conductor_data.marca_vehiculo,
+                conductor_data.placa,
+                conductor_data.anio,
+                conductor_data.estado_informacion,
+                conductor_data.con_id
+            )  
+            # Ejecutar la consulta usando el singleton
+            self.db.execute_query(query, values)
+        except Error as e:
+            raise Exception(f"Error al actualizar conductor: {e}")
+        
+    #* Metodo para saber si un conductor existe
+    def exists_conductor(self, con_id):
+        try:
+            # Definir la consulta SQL
+            query = "SELECT CON_ID FROM Conductor WHERE CON_ID = %s"
+            # Ejecutar la consulta
+            result = self.db.fetch_one(query, [con_id])
+            # Retornar True si el conductor existe
+            return result is not None
+        except Error as e:
+            raise Exception(f"Error al verificar la existencia del conductor: {e}")
+        
