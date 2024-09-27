@@ -73,3 +73,13 @@ resource "aws_s3_object" "fotos_dpi_clientes" {
   bucket = aws_s3_bucket.ayd2_p1_bucket.bucket
   key    = "fotos_dpi_clientes/"
 }
+
+resource "aws_s3_object" "fotos_alertas_clientes" {
+  bucket = aws_s3_bucket.ayd2_p1_bucket.bucket
+  key    = "fotos_alertas_clientes/"
+}
+
+resource "aws_s3_object" "fotos_alertas_conductores" {
+  bucket = aws_s3_bucket.ayd2_p1_bucket.bucket
+  key    = "fotos_alertas_conductores/"
+}

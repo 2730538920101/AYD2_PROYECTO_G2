@@ -5,63 +5,69 @@ import { useState, useEffect } from "react";
 // Select
 import Select from 'react-select';
 // Axios
-import { handleAxios, handleAxiosMultipart, handleAxiosError, handleAxiosMsg } from '@/helpers/axiosConfig';
+import { handleAxios, handleAxiosError } from '@/helpers/axiosConfig';
 // Bootstrap
-import { Col, Row, Form, Modal, Button, Ratio, InputGroup } from 'react-bootstrap';
+import { Col, Row, Form, Modal, Button } from 'react-bootstrap';
 // Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserNinja, faPlaneArrival, faEdit } from "@fortawesome/free-solid-svg-icons";
 // DataTable
 import DataTable from 'react-data-table-component';
 
-const dataTemproal = [
-    { id: 1, usuario: "Juan", Estado: "Activo" },
-    { id: 2, usuario: "Pedro", Estado: "Inactivo" }
-];
-
-const usuarioTemproal =
-    { id: 1, nombre: "Juan", telefono: "12345678", edad: "45", dpi: "123456789", correo: "prueba@gmail.com", placa: "12345678A", marca: "Mazda", anio: "2024", genero: "M", civi: "Soltero", direccion: "Zona 6" };
-
-
 function ListaConductores() {
 
-    // Obtencion de los viajes para el select
-    const [viajes, setViajes] = useState([]);
-    const obtenerViajes = async () => {
+    // Estado para almacenar los conductores obtenidos de la API
+    const [conductores, setConductores] = useState([]);
+
+    // Estado para el modal
+    const [showUser, setShowUser] = useState(false);
+    const [userr, setUser] = useState({});
+
+    // Función para obtener los conductores desde la API
+    const obtenerConductores = async () => {
         try {
-            /*const response = await handleAxios().get('/cliente/listar');
+            const response = await handleAxios().get('conductores');
             const data = response.data;
-      
-            // Se formatea la data para que pueda almacenarse para utilizarse en un select
-            const temporal = data.map(cliente => {
-              return {
-                label: `${cliente.CUI} - ${cliente.NOMBRE} ${cliente.APELLIDO}`,
-                value: cliente.CUI
-              }
-            });*/
-            setViajes(dataTemproal);
+            
+            // Mapear la respuesta para ajustarla al formato esperado en la tabla
+            const conductoresFormateados = data.map(conductor => ({
+                id: conductor.con_id,
+                usuario: conductor.nombre,
+                Estado: conductor.estado_informacion,
+                telefono: conductor.telefono,
+                correo: conductor.correo,
+                dpi: conductor.numero_dpi,
+                placa: conductor.placa,
+                marca: conductor.marca_vehiculo,
+                anio: conductor.anio,
+                genero: conductor.genero,
+                civi: conductor.estado_civil,
+                direccion: conductor.direccion,
+            }));
+
+            setConductores(conductoresFormateados);
         } catch (error) {
             handleAxiosError(error);
         }
     }
 
+    // Ejecutar la función de obtener conductores al montar el componente
     useEffect(() => {
-        obtenerViajes();
+        obtenerConductores();
     }, []);
 
-    const [showUser, setShowUser] = useState(false);
-    const [userr, setUser] = useState({});
-
+    // Funciones para controlar el modal de detalle del conductor
     const handleCloseUser = () => {
         setUser({});
         setShowUser(false);
     }
 
     const handleShowUser = (rowUser) => {
-        setUser(usuarioTemproal);
-        setShowUser(true); // Activa el modal
+        setUser(rowUser);
+        setShowUser(true);
     }
 
+    // Definición de columnas para la tabla
     const columnas = [
         {
             name: 'NOMBRE CONDUCTOR',
@@ -97,11 +103,10 @@ function ListaConductores() {
             name: 'Acciones',
             cell: row => (
                 <>
-                    <Button variant="warning" >
+                    <Button variant="warning">
                         <FontAwesomeIcon icon={faEdit} /> Cambiar estado
                     </Button>
                     &nbsp;
-
                 </>
             )
         },
@@ -114,7 +119,7 @@ function ListaConductores() {
                     <DataTable
                         title="Lista Conductores"
                         columns={columnas}
-                        data={viajes}
+                        data={conductores}
                         pagination
                     />
                 </Col>
@@ -137,7 +142,7 @@ function ListaConductores() {
                                         type="text"
                                         placeholder="Nombre"
                                         autoComplete="off"
-                                        defaultValue={userr.nombre}
+                                        defaultValue={userr.usuario}
                                         readOnly
                                     />
                                 </Form.Group>
@@ -160,13 +165,13 @@ function ListaConductores() {
                         <Row>
                             <Col xs={12} md={6}>
                                 <Form.Group className="mb-3">
-                                    <Form.Label htmlFor="CLIENTE_EDAD">Edad</Form.Label>
+                                    <Form.Label htmlFor="CLIENTE_CORREO">Correo</Form.Label>
                                     <Form.Control
-                                        id="CLIENTE_EDAD"
-                                        name="CLIENTE_EDAD"
+                                        id="CLIENTE_CORREO"
+                                        name="CLIENTE_CORREO"
                                         type="text"
                                         autoComplete="off"
-                                        defaultValue={userr.edad}
+                                        defaultValue={userr.correo}
                                         readOnly
                                     />
                                 </Form.Group>
@@ -189,19 +194,6 @@ function ListaConductores() {
                         <Row>
                             <Col xs={12} md={6}>
                                 <Form.Group className="mb-3">
-                                    <Form.Label htmlFor="CLIENTE_CORREO">Correo</Form.Label>
-                                    <Form.Control
-                                        id="CLIENTE_CORREO"
-                                        name="CLIENTE_CORREO"
-                                        type="text"
-                                        autoComplete="off"
-                                        defaultValue={userr.correo}
-                                        readOnly
-                                    />
-                                </Form.Group>
-                            </Col>
-                            <Col xs={12} md={6}>
-                                <Form.Group className="mb-3">
                                     <Form.Label htmlFor="CLIENTE_PLACA">Placa</Form.Label>
                                     <Form.Control
                                         id="CLIENTE_PLACA"
@@ -213,9 +205,6 @@ function ListaConductores() {
                                     />
                                 </Form.Group>
                             </Col>
-                        </Row>
-
-                        <Row>
                             <Col xs={12} md={6}>
                                 <Form.Group className="mb-3">
                                     <Form.Label htmlFor="CLIENTE_MARCA">Marca del Vehículo</Form.Label>
@@ -229,6 +218,9 @@ function ListaConductores() {
                                     />
                                 </Form.Group>
                             </Col>
+                        </Row>
+
+                        <Row>
                             <Col xs={12} md={6}>
                                 <Form.Group className="mb-3">
                                     <Form.Label htmlFor="CLIENTE_ANIO">Año del Vehículo</Form.Label>
@@ -242,9 +234,6 @@ function ListaConductores() {
                                     />
                                 </Form.Group>
                             </Col>
-                        </Row>
-
-                        <Row>
                             <Col xs={12} md={6}>
                                 <Form.Group className="mb-3">
                                     <Form.Label htmlFor="CLIENTE_GENERO">Género</Form.Label>
@@ -258,6 +247,9 @@ function ListaConductores() {
                                     />
                                 </Form.Group>
                             </Col>
+                        </Row>
+
+                        <Row>
                             <Col xs={12} md={6}>
                                 <Form.Group className="mb-3">
                                     <Form.Label htmlFor="CLIENTE_CIVIL">Estado Civil</Form.Label>
@@ -271,9 +263,6 @@ function ListaConductores() {
                                     />
                                 </Form.Group>
                             </Col>
-                        </Row>
-
-                        <Row>
                             <Col xs={12}>
                                 <Form.Group className="mb-3">
                                     <Form.Label htmlFor="CLIENTE_DIRECCION">Dirección</Form.Label>

@@ -33,6 +33,7 @@ const Login = () => {
             const decoded_idtoken = jwtDecode(res.data.auth_result.id_token)
             console.log(decoded_idtoken)
             const role = GetRoleFromGroup(decoded_idtoken['cognito:groups'][0]);
+            //const role ="ASISTENTE"
             console.log(role)
             crearSession({ nombre: decoded_idtoken.email, rol: role, auth: false });
             localStorage.setItem('accessToken', res.data.auth_result.access_token);

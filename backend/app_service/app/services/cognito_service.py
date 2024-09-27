@@ -3,30 +3,30 @@ from botocore.exceptions import ClientError, NoCredentialsError, PartialCredenti
 from config import Config
 
 class CognitoService:
+
     def __init__(self):
         try:
             # Inicializar los clientes de Cognito con manejo de credenciales
             self.cognito_client = boto3.client(
-                'cognito-idp', 
-                region_name=Config.AWS_REGION, 
-                aws_access_key_id=Config.COGNITO_AWS_ACCESS_KEY_ID, 
+                'cognito-idp',
+                region_name=Config.AWS_REGION,
+                aws_access_key_id=Config.COGNITO_AWS_ACCESS_KEY_ID,
                 aws_secret_access_key=Config.COGNITO_AWS_SECRET_ACCESS_KEY
             )
             self.identity_client = boto3.client(
-                'cognito-identity', 
-                region_name=Config.AWS_REGION, 
-                aws_access_key_id=Config.COGNITO_AWS_ACCESS_KEY_ID, 
+                'cognito-identity',
+                region_name=Config.AWS_REGION,
+                aws_access_key_id=Config.COGNITO_AWS_ACCESS_KEY_ID,
                 aws_secret_access_key=Config.COGNITO_AWS_SECRET_ACCESS_KEY
             )
         except (NoCredentialsError, PartialCredentialsError) as e:
             print(f"Credenciales no encontradas o incompletas: {e}")
             raise
-        
+
         # Configuración de variables de entorno
         self.user_pool_id = Config.COGNITO_USER_POOL_ID
         self.user_pool_client_id = Config.COGNITO_USER_POOL_CLIENT_ID
         self.identity_pool_id = Config.COGNITO_IDENTITY_POOL_ID
-        
 
     def register_user(self, email: str, password: str, user_type: str) -> dict:
         """Registrar un nuevo usuario en el User Pool de Cognito y asignarlo a un grupo"""
@@ -37,7 +37,7 @@ class CognitoService:
                 Password=password,
                 UserAttributes=[{'Name': 'email', 'Value': email}]
             )
-            
+
             # Mapear los tipos de usuario a grupos
             if user_type == "Administrador":
                 user_type = "AdminGroup"
@@ -47,13 +47,12 @@ class CognitoService:
                 user_type = "DriverGroup"
             elif user_type == "Asistente":
                 user_type = "AssistantGroup"
-                
+
             # Asignar el usuario al grupo correspondiente
             self.add_user_to_group(email, user_type)
             return response
         except ClientError as e:
-            print(f"Error registering user: {e}")
-            return None
+            raise RuntimeError(e)
 
     def add_user_to_group(self, username: str, groupname: str) -> dict:
         """Asignar un usuario a un grupo en el User Pool"""
@@ -95,7 +94,6 @@ class CognitoService:
         except ClientError as e:
             print(f"Error authenticating user: {e}")
             return None
-
 
     def recover_account(self, email: str) -> dict:
         """Iniciar el proceso de recuperación de cuenta"""
@@ -169,7 +167,7 @@ class CognitoService:
         except ClientError as e:
             print(f"Error changing password: {e}")
             return None
-        
+
     def user_exists(self, email):
         try:
             response = self.cognito_client.admin_get_user(
@@ -207,7 +205,7 @@ class CognitoService:
         except ClientError as e:
             print(f"Error checking if user is confirmed: {e}")
             return False
-    
+
     def get_user_group(self, email: str) -> str:
         """Obtener el grupo al que pertenece el usuario en el User Pool"""
         try:

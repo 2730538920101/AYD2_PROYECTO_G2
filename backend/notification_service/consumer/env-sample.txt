@@ -1,11 +1,13 @@
 # Configuración para Amazon SQS
-SQS_QUEUE_URL=https://sqs.us-east-1.amazonaws.com/123456789012/your-queue-name
-
+SQS_QUEUE_URL=
+SQS_AWS_ACCESS_KEY_ID=
+SQS_AWS_SECRET_ACCESS_KEY=
+AWS_REGION=
 # Configuración del servidor
-PRODUCER_PORT=4100
+CONSUMER_PORT=4200
 
 # Configuración de la base de datos
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=your-password
-DB_DATABASE=PROYECTO_VIAJES
+DB_HOST=
+DB_USER=
+DB_PASSWORD=
+DB_DATABASE=

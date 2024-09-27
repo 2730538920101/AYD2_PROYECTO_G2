@@ -1,9 +1,16 @@
-const AWS = require('aws-sdk');
+const { SQSClient, SendMessageCommand } = require('@aws-sdk/client-sqs');
 const config = require('../config/config');
 
-class SQSClient {
+
+class SQSService {
   constructor() {
-    this.sqs = new AWS.SQS();
+    this.client = new SQSClient({ 
+      region: config.sqs.region,
+      credentials: {
+        accessKeyId: config.sqs.accessKeyId,
+        secretAccessKey: config.sqs.secretAccessKey, 
+      }
+    });
     this.queueUrl = config.sqs.queueUrl;
   }
 
@@ -12,8 +19,16 @@ class SQSClient {
       QueueUrl: this.queueUrl,
       MessageBody: JSON.stringify(messageBody),
     };
-    return this.sqs.sendMessage(params).promise();
+
+    try {
+      const command = new SendMessageCommand(params);
+      const data = await this.client.send(command);
+      return data;
+    } catch (error) {
+      console.error('Error sending message to SQS:', error.message);
+      throw new Error('Failed to send message to SQS');
+    }
   }
 }
 
-module.exports = new SQSClient();
+module.exports = new SQSService();
