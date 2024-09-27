@@ -269,4 +269,66 @@ class ViajeController:
             raise Exception(f"Error al finalizar viaje: {e}")
 
 
+    #* Método para obtener los viajes de un conductor
+    def get_viajes_conductor(self, conductor_id):
+        try:
+            # Definir la consulta SQL para obtener los viajes de un conductor
+            query = """
+            SELECT VIA_ID, CLI_ID, ESTADO, FECHA_INICIO, FECHA_FIN, ORIGEN, DESTINO, TOTAL
+            FROM Viaje
+            WHERE CONDUCTOR_CON_ID = %s
+            """
+            # Ejecutar la consulta usando el singleton
+            viajes_conductor = self.db.fetch_all(query, (conductor_id,))
+
+            # Formatear los resultados en una lista de diccionarios
+            viajes = []
+            for row in viajes_conductor:
+                viaje = {
+                    "via_id": row[0],
+                    "cli_id": row[1],
+                    "estado": row[2],
+                    "fecha_inicio": row[3],
+                    "fecha_fin": row[4],
+                    "origen": row[5],
+                    "destino": row[6],
+                    "total": row[7]
+                }
+                viajes.append(viaje)
+
+            return viajes
+
+        except Error as e:
+            raise Exception(f"Error al obtener viajes de conductor: {e}")
     
+    #* Metodo para listar los viajes de un cliente
+    def get_viajes_cliente(self, cli_id):
+        try:
+            # Definir la consulta SQL para obtener los viajes de un cliente
+            query = """
+            SELECT VIA_ID, CONDUCTOR_CON_ID, ESTADO, FECHA_INICIO, FECHA_FIN, ORIGEN, DESTINO, TOTAL
+            FROM Viaje
+            WHERE CLI_ID = %s
+            """
+            # Ejecutar la consulta usando el singleton
+            viajes_cliente = self.db.fetch_all(query, (cli_id,))
+
+            # Formatear los resultados en una lista de diccionarios
+            viajes = []
+            for row in viajes_cliente:
+                viaje = {
+                    "via_id": row[0],
+                    "conductor_con_id": row[1],
+                    "estado": row[2],
+                    "fecha_inicio": row[3],
+                    "fecha_fin": row[4],
+                    "origen": row[5],
+                    "destino": row[6],
+                    "total": row[7]
+                }
+                viajes.append(viaje)
+
+            return viajes
+
+        except Error as e:
+            raise Exception(f"Error al obtener viajes de cliente: {e}")
