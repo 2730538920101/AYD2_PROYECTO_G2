@@ -17,7 +17,6 @@ const Viajes = () => {
     let [CurrentViaje, setCurrentViaje] = useState(null);
     let [Cliente, setCliente] = useState(null);
     const [showModal, setShowModal] = useState(false);
-    const [problema, setProblema] = useState('');
 
     const handleShow = () => setShowModal(true);
     const handleClose = () => setShowModal(false);
@@ -32,7 +31,7 @@ const Viajes = () => {
             for (let i = 0; i < viajes.data.length; i++) {
 
                 console.log(viajes.data[i],"viaje")
-                if (viajes.data[i].estado === 'EN CURSO' || viajes.data[i].estado === 'PENDIENTE') {
+                if (viajes.data[i].estado === 'EN CURSO' || viajes.data[i].estado === 'PENDIENTE' || viajes.data[i].estado === 'ACEPTADO') {
                     setCurrentViaje(viajes.data[i])
                     break;
                 }
@@ -119,7 +118,11 @@ const Viajes = () => {
         </ListGroupItem>
         <ListGroupItem><strong>Total del viaje:</strong> Q{CurrentViaje.total}</ListGroupItem>
         {CurrentViaje.conductor_con_id ? (
-            <ListGroupItem><strong>Conductor ID:</strong> {CurrentViaje.conductor_con_id}</ListGroupItem>
+            <ListGroupItem>
+            <strong>Conductor ID: </strong> 
+                {CurrentViaje.conductor_con_id}<span> </span>
+            <Button size="xs" href={`/dashboard_usuario/piloto/${CurrentViaje.conductor_con_id}`}>Ver</Button>
+            </ListGroupItem>
         ) : (
             <ListGroupItem><strong>Conductor:</strong> Aún no asignado</ListGroupItem>
         )}

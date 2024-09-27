@@ -1,103 +1,65 @@
 'use client';
 import { useParams } from 'next/navigation'
-import { Row, Col, Form, InputGroup, Container } from 'react-bootstrap';
-import { faUser, faHashtag, faRankingStar, faCar, faPhone, faCamera, faBirthdayCake, faPersonHalfDress } from '@fortawesome/free-solid-svg-icons';
+import { Row, Col, Container, Card, ListGroup, ListGroupItem } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { handleAxiosError, handleSwal, handleAxiosMultipart } from '@/helpers/axiosConfig';
+import { faUser, faHashtag, faCar, faCarRear, faPhone, faIdCard, faBirthdayCake, faPersonHalfDress, faEnvelope, faRing, faFile, faClipboardQuestion } from '@fortawesome/free-solid-svg-icons';
+import { handleAxios } from '@/helpers/axiosConfig';
+import { useState, useEffect } from 'react';
  
 export default function Piloto() {
     const params = useParams();
-    return(
-        <main>
+    let [Piloto, setPiloto] = useState(null);
 
-        <section className="d-flex align-items-center my-5 mt-lg-6 mb-lg-5">
-            <Container>
-                <p className="text-center"></p>
-                <Row className="justify-content-center form-bg-image" style={{ backgroundImage: `url(/signin.svg)` }}>
-                <Col xs="{12}" className="d-flex align-items-center justify-content-center">
-                    <div className="bg-white shadow-soft border rounded border-light p-4 p-lg-5 w-100 fmxw-500">
-                        <div className="text-center text-md-center mb-4 mt-md-0">
-                            <h3 className="mb-0">Piloto {params.slug}</h3>
-                        </div>
-                        <Form className="mt-4">
-                            <Form.Group className="mb-4">
-                                <Form.Label>Nombre Completo</Form.Label>
-                                <InputGroup>
-                                    <InputGroup.Text>
-                                        <FontAwesomeIcon icon={faUser} />
-                                    </InputGroup.Text>
-                                    <Form.Control id="nombre" name="nombre" disabled type="text" placeholder="Nombre Apellido" />
-                                </InputGroup>
-                            </Form.Group>
-                            <Form.Group className="mb-4">
-                                <Form.Label>Teléfono</Form.Label>
-                                <InputGroup>
-                                    <InputGroup.Text>
-                                        <FontAwesomeIcon icon={faPhone} />
-                                    </InputGroup.Text>
-                                    <Form.Control id="telefono" name="telefono" disabled type="text" placeholder="(123) 456-7890" />
-                                </InputGroup>
-                            </Form.Group>
-                            <Form.Group className="mb-4">
-                                <Form.Label>Fotografía</Form.Label>
-                                <InputGroup>
-                                    <InputGroup.Text>
-                                        <FontAwesomeIcon icon={faCamera} />
-                                    </InputGroup.Text>
-                                    <Form.Control id="fotografia" name="fotografia" disabled type="text" placeholder="URL de la fotografía" />
-                                </InputGroup>
-                            </Form.Group>
-                            <Form.Group className="mb-4">
-                                <Form.Label>Edad</Form.Label>
-                                <InputGroup>
-                                    <InputGroup.Text>
-                                        <FontAwesomeIcon icon={faBirthdayCake} />
-                                    </InputGroup.Text>
-                                    <Form.Control id="edad" name="edad" disabled type="text" placeholder="30" />
-                                </InputGroup>
-                            </Form.Group>
-                            <Form.Group className="mb-4">
-                                <Form.Label>Género</Form.Label>
-                                <InputGroup>
-                                    <InputGroup.Text>
-                                        <FontAwesomeIcon icon={faPersonHalfDress} />
-                                    </InputGroup.Text>
-                                    <Form.Control id="genero" name="genero" disabled type="text" placeholder="Masculino" />
-                                </InputGroup>
-                            </Form.Group>
-                            <Form.Group className="mb-4">
-                                <Form.Label>Placa</Form.Label>
-                                <InputGroup>
-                                    <InputGroup.Text>
-                                        <FontAwesomeIcon icon={faHashtag} />
-                                    </InputGroup.Text>
-                                    <Form.Control id="placa" name="placa" disabled type="text" placeholder="ABC123DE" />
-                                </InputGroup>
-                            </Form.Group>
-                            <Form.Group className="mb-4">
-                                <Form.Label>Marca del Vehículo</Form.Label>
-                                <InputGroup>
-                                    <InputGroup.Text>
-                                        <FontAwesomeIcon icon={faCar} />
-                                    </InputGroup.Text>
-                                    <Form.Control id="marcaVehiculo" name="marcaVehiculo" disabled type="text" placeholder="Toyota" />
-                                </InputGroup>
-                            </Form.Group>
-                            <Form.Group className="mb-4">
-                                <Form.Label>Calificación</Form.Label>
-                                <InputGroup>
-                                    <InputGroup.Text>
-                                        <FontAwesomeIcon icon={faRankingStar} />
-                                    </InputGroup.Text>
-                                    <Form.Control id="calificacion" name="calificacion" disabled type="text" placeholder="3.14" />
-                                </InputGroup>
-                            </Form.Group>
-                        </Form>
-                    </div>
-            </Col>
-            </Row>
-            </Container>
-        </section>
-        </main>
+    useEffect(() => {
+        async function fetchData() {
+            console.log(params.slug)
+            try{
+                const conductor = await handleAxios().get(`/conductores/${params.slug}`);
+                setPiloto(conductor.data)
+            }catch(e){
+                console.log(e)
+            }
+        }
+        fetchData()
+    }, [])
+
+    if (!Piloto) return <div>Loading...</div>
+    console.log(Piloto)
+
+    return(
+<main>
+<section className="d-flex align-items-center my-5 mt-lg-6 mb-lg-5">
+    <Container>
+    <Row className="justify-content-center form-bg-image">
+    <Col xs="{12}" className="d-flex align-items-center justify-content-center">
+         <Card style={{ width: '40rem', margin: 'auto' }}>
+            <Card.Header><strong>Información del Conductor</strong></Card.Header>
+            <Card.Body>
+                <div className="text-center">
+                    <Card.Img variant="top" src={Piloto.fotografia} style={{ width: '200px', borderRadius: '50%' }} />
+                </div>
+                <Card.Title className="text-center mt-3"><FontAwesomeIcon icon={faUser} /> {Piloto.nombre}</Card.Title>
+                <ListGroup className="list-group-flush">
+                    <ListGroupItem><FontAwesomeIcon icon={faHashtag} /> <strong>Código Empleado:</strong> {Piloto.codigo_empleado}</ListGroupItem>
+                    <ListGroupItem><FontAwesomeIcon icon={faIdCard} /> <strong>DPI:</strong> {Piloto.numero_dpi}</ListGroupItem>
+                    <ListGroupItem><FontAwesomeIcon icon={faPhone} /> <strong>Teléfono:</strong> {Piloto.telefono}</ListGroupItem>
+                    <ListGroupItem><FontAwesomeIcon icon={faEnvelope} /> <strong>Correo Electrónico:</strong> {Piloto.correo}</ListGroupItem>
+                    <ListGroupItem><FontAwesomeIcon icon={faRing} /> <strong>Estado Civil:</strong> {Piloto.estado_civil}</ListGroupItem>
+                    <ListGroupItem><FontAwesomeIcon icon={faPersonHalfDress} /> <strong>Género:</strong> {Piloto.genero === 'M' ? 'Masculino' : 'Femenino'}</ListGroupItem>
+                    <ListGroupItem><FontAwesomeIcon icon={faBirthdayCake} /> <strong>Fecha de Nacimiento:</strong> {Piloto.fecha_nacimiento}</ListGroupItem>
+                    <ListGroupItem><FontAwesomeIcon icon={faCar} /> <strong>Marca del Vehículo:</strong> {Piloto.marca_vehiculo}</ListGroupItem>
+                    <ListGroupItem><FontAwesomeIcon icon={faCarRear} /> <strong>Placa del Vehículo:</strong> {Piloto.placa}</ListGroupItem>
+                    <ListGroupItem>
+                        <FontAwesomeIcon icon={faFile} /> <strong>Documentación:</strong> <a href={Piloto.papeleria} target="_blank" rel="noopener noreferrer">Ver Documento</a>
+                    </ListGroupItem>
+                    <ListGroupItem><FontAwesomeIcon icon={faClipboardQuestion} /> <strong>Estado de Información:</strong> {Piloto.estado_informacion}</ListGroupItem>
+                </ListGroup>
+            </Card.Body>
+        </Card>
+    </Col>
+    </Row>
+    </Container>
+</section>
+</main>
     );
 }
