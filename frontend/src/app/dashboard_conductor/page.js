@@ -3,7 +3,7 @@
 // React
 import { useState, useEffect } from "react";
 // Axios
-import { handleAxios, handleSwal, handleAxiosError } from '@/helpers/axiosConfig';
+import { handleAxios, handleSwal, handleAxiosError,handleAxiosMultipart } from '@/helpers/axiosConfig';
 // Bootstrap
 import { Col, Row, Form, Modal, Button } from 'react-bootstrap';
 // Font Awesome
@@ -136,7 +136,7 @@ function DashboardConductor() {
 
   // Función para mostrar el modal de cancelación con el ID del viaje
   const handleShowCancel = (row) => {
-    if(row.estado==='EN CURSO'){
+    if (row.estado === 'EN CURSO') {
       MySwal.fire({
         title: "Viaje En Curso",
         text: `No es posible cancelar`,
@@ -149,22 +149,41 @@ function DashboardConductor() {
     setShowCancel(true);
   };
 
-  // Función para reportar un viaje
-  const reportarViaje = async (viajeId) => {
+  
+
+  const [showModalReport, setShowModalReport] = useState(false);
+
+  // Funciones para manejar la apertura y cierre del modal
+  const handleShowReport = () => setShowModalReport(true);
+  const handleCloseReport = () => setShowModalReport(false);
+
+  // Función para manejar el envío del formulario
+  const handleSubmitModalReport = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    formData.append('viajeid', e.via_id);
+    formData.append('type', "Conductor");
     try {
-      const response = await handleAxios().put(`viaje/reportar`, { viaje_id: viajeId });
+      console.log("formData", formData)
+      let ax = handleAxiosMultipart()
+      ax.defaults.baseURL = process.env.NEXT_PUBLIC_NOTIFICATION_PRODUCER_SERVICE;
+      console.log(ax.defaults.baseURL)
+      const resp = await ax.post('/producer/notify/send', formData)
+      console.log(resp)
       MySwal.fire({
-        title: "Viaje Reportado",
-        text: `El viaje ha sido reportado`,
-        icon: "info",
+        title: "Reporte enviado",
+        text: "Tu reporte ha sido enviado",
+        icon: "success",
+      }).then(() => {
+        handleCloseReport();
       });
 
-      // Refrescar los datos
-      obtenerViajesAceptados(Conductor.con_id);
     } catch (error) {
+      console.log(error)
       handleAxiosError(error);
     }
   };
+
 
   useEffect(() => {
     async function fetchData() {
@@ -310,7 +329,7 @@ function DashboardConductor() {
       cell: row => (
         <>
           <Button variant="primary" onClick={() => cambiarEstadoViaje(row.id, row.estado)}>
-            <FontAwesomeIcon icon={faExchangeAlt} /> Cambiar Estado
+            <FontAwesomeIcon icon={faExchangeAlt} /> Estado
           </Button>
         </>
       )
@@ -319,7 +338,7 @@ function DashboardConductor() {
       name: 'Cancelar',
       cell: row => (
         <>
-          <Button variant="danger" onClick={() => handleShowCancel(row)}>
+          <Button variant="warning" onClick={() => handleShowCancel(row)}>
             <FontAwesomeIcon icon={faBan} /> Cancelar
           </Button>
         </>
@@ -329,7 +348,7 @@ function DashboardConductor() {
       name: 'Reportar',
       cell: row => (
         <>
-          <Button variant="warning" onClick={() => reportarViaje(row.id)}>
+          <Button variant="danger" onClick={handleShowReport}>
             <FontAwesomeIcon icon={faExclamationTriangle} /> Reportar
           </Button>
         </>
@@ -350,7 +369,7 @@ function DashboardConductor() {
 
       <Row className="gx-3 gy-4">
         <DataTable
-          title="Viajes Aceptados"
+          title="Viajes Activos"
           columns={columnasViajesAceptados}
           data={viajesAceptados}
           pagination
@@ -418,7 +437,6 @@ function DashboardConductor() {
         </Form>
       </Modal>
 
-      // Modal que se encarga de mostrar la opción de cancelación
       <Modal show={showCancel} size="lg" onHide={handleCloseCancel}>
         <Form onSubmit={(e) => {
           e.preventDefault(); // Evitar el comportamiento predeterminado del formulario
@@ -455,6 +473,38 @@ function DashboardConductor() {
           </Modal.Footer>
         </Form>
       </Modal>
+
+      <Modal show={showModalReport} onHide={handleCloseReport}>
+        <Modal.Header closeButton>
+          <Modal.Title>Reportar un problema</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={handleSubmitModalReport}>
+            <Form.Group className="mb-4">
+              <Form.Label>Descripción del problema:</Form.Label>
+              <Form.Control
+                as="textarea"
+                name="message"
+                id="message"
+                rows={3}
+                placeholder="Ingrese los detalles del problema"
+                required
+              />
+            </Form.Group>
+            <Form.Group className="mb-4">
+              <Form.Label>Imagen Adjunta</Form.Label>
+              <Form.Control name="adjunto" id="adjunto" type='file' accept='image/*' required />
+            </Form.Group>
+            <Button type='submit' variant="primary">
+              Reportar Problema
+            </Button>
+            <Button variant="secondary" onClick={handleCloseReport}>
+              Salir
+            </Button>
+          </Form>
+        </Modal.Body>
+      </Modal>
+
     </>
   );
 }

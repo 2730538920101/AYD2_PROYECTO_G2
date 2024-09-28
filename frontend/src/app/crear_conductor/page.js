@@ -33,7 +33,7 @@ const Registro = () => {
     }
 
     try {
-      const res = await handleAxiosMultipart().post('conductores/crear', formData);
+      const res = await handleAxiosMultipart().post('conductores', formData);
             console.log(res)
             MySwal.fire({
                 title: "Registro Exitoso",
@@ -221,6 +221,8 @@ const Registro = () => {
 
                   {/* Estado Información (campo oculto) */}
                   <Form.Control id="estado_informacion" name="estado_informacion" type="hidden" value="PENDIENTE" />
+
+                  <Form.Control id="numero_cuenta" name="numero_cuenta" type="hidden" value="0000000000" />
 
                   <Button variant="primary" type="submit" className="w-100">
                     Solicitar
