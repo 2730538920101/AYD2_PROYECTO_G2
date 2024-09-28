@@ -5,25 +5,30 @@ import { useState, useEffect } from "react";
 // Select
 import Select from 'react-select';
 // Axios
-import { handleAxios, handleAxiosMultipart, handleAxiosError, handleAxiosMsg } from '@/helpers/axiosConfig';
+import { handleAxios, handleAxiosMultipart, handleAxiosError, handleAxiosMsg, handleSwal } from '@/helpers/axiosConfig';
 import axios from 'axios'; // Asegúrate de importar Axios
 // Bootstrap
-import { Col, Row, Form, Modal, Button, Ratio, InputGroup } from 'react-bootstrap';
+import { Col, Row, Form, Modal, Button, Ratio, InputGroup, Image } from 'react-bootstrap';
 // Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUserNinja, faPlaneArrival, faEdit } from "@fortawesome/free-solid-svg-icons";
+import { faUserNinja, faPlaneArrival, faDeleteLeft } from "@fortawesome/free-solid-svg-icons";
 // DataTable
 import DataTable from 'react-data-table-component';
 
+import { useRouter } from 'next/navigation';
+
+const MySwal = handleSwal();
+
 function ListaUsuarios() {
 
+    const router = useRouter();
     // Estado para almacenar los conductores
     const [conductores, setConductores] = useState([]);
 
     // Función para obtener los conductores de la API
     const obtenerConductores = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/api/clientes');
+            const response = await handleAxios().get('clientes');
             const data = response.data;
 
             // Formatear los datos de la API para que coincidan con las columnas de la tabla
@@ -34,7 +39,8 @@ function ListaUsuarios() {
                 correo: conductor.correo,
                 fecha_nac: conductor.fecha_nacimiento,
                 genero: conductor.genero,
-                telefono: conductor.telefono
+                telefono: conductor.telefono,
+                foto_dpi: conductor.foto_dpi // Añadir foto DPI
             }));
 
             setConductores(conductoresFormateados);
@@ -48,6 +54,21 @@ function ListaUsuarios() {
         obtenerConductores();
     }, []);
 
+    // Función para dar de baja un conductor
+    const handleDarDeBaja = async (correo) => {
+        try {
+            const response = await handleAxios().post('asistentes/block-account', { email: correo });
+            MySwal.fire({
+                title: "Bloqueo",
+                text: "Usuario Bloqueado",
+                icon: "success",
+            });
+            obtenerConductores();
+        } catch (error) {
+            handleAxiosError(error);
+        }
+    }
+
     const [showUser, setShowUser] = useState(false);
     const [userr, setUser] = useState({});
 
@@ -59,6 +80,12 @@ function ListaUsuarios() {
     const handleShowUser = (rowUser) => {
         setUser(rowUser); // Aquí se pasa el conductor seleccionado al modal
         setShowUser(true); // Activa el modal
+    };
+
+    // Función para manejar la redirección al componente de viajes del conductor
+    const handleViajesUsuario = (id_usuario) => {
+        localStorage.setItem("id", id_usuario);
+        router.push(`/dashboard_asistente/ListaViajesCliente`); // Redirigir a la ruta de viajes con el id del conductor
     };
 
     const columnas = [
@@ -78,7 +105,7 @@ function ListaUsuarios() {
         {
             name: 'VIAJES USUARIO',
             cell: row => (
-                <Button variant="primary">
+                <Button variant="primary" onClick={() => handleViajesUsuario(row.id)}>
                     <FontAwesomeIcon icon={faPlaneArrival} />
                 </Button>
             )
@@ -91,9 +118,12 @@ function ListaUsuarios() {
         {
             name: 'Acciones',
             cell: row => (
-                <Button variant="warning">
-                    <FontAwesomeIcon icon={faEdit} /> Cambiar estado
-                </Button>
+                <>
+                    <Button variant="danger" onClick={() => handleDarDeBaja(row.correo)}>
+                        <FontAwesomeIcon icon={faDeleteLeft} /> Dar de Baja
+                    </Button>
+                    &nbsp;
+                </>
             )
         },
     ];
@@ -119,6 +149,16 @@ function ListaUsuarios() {
                     </Modal.Header>
                     <Modal.Body>
                         <Row>
+                            <Col xs={12} className="text-center mb-4">
+                                <Image
+                                    src={userr.foto_dpi}
+                                    alt="Foto DPI"
+                                    rounded
+                                    style={{ width: '150px', height: '150px' }}
+                                />
+                            </Col>
+                        </Row>
+                        <Row>
                             <Col xs={12} md={6}>
                                 <Form.Group className="mb-3">
                                     <Form.Label htmlFor="CLIENTE_NOMBRE">Nombre</Form.Label>
@@ -141,7 +181,7 @@ function ListaUsuarios() {
                                         name="CLIENTE_FECHA"
                                         type="text"
                                         autoComplete="off"
-                                        defaultValue={userr.fecha_nac}
+                                        defaultValue={new Date(userr.fecha_nac).toLocaleDateString()}
                                         readOnly
                                     />
                                 </Form.Group>
@@ -157,7 +197,7 @@ function ListaUsuarios() {
                                         name="CLIENTE_GENERO"
                                         type="text"
                                         autoComplete="off"
-                                        defaultValue={userr.genero}
+                                        defaultValue={userr.genero === 'M' ? 'Masculino' : 'Femenino'}
                                         readOnly
                                     />
                                 </Form.Group>

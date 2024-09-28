@@ -2,19 +2,23 @@
 
 // React
 import { useState, useEffect } from "react";
-// Select
-import Select from 'react-select';
 // Axios
-import { handleAxios, handleAxiosError } from '@/helpers/axiosConfig';
+import { handleAxios, handleAxiosError,handleSwal } from '@/helpers/axiosConfig';
 // Bootstrap
-import { Col, Row, Form, Modal, Button } from 'react-bootstrap';
+import { Col, Row, Form, Modal, Button, Image } from 'react-bootstrap';
 // Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUserNinja, faPlaneArrival, faEdit } from "@fortawesome/free-solid-svg-icons";
+import { faUserNinja, faPlaneArrival, faDeleteLeft } from "@fortawesome/free-solid-svg-icons";
 // DataTable
 import DataTable from 'react-data-table-component';
 
+import { useRouter } from 'next/navigation';
+
+const MySwal = handleSwal();
+
 function ListaConductores() {
+
+    const router = useRouter();
 
     // Estado para almacenar los conductores obtenidos de la API
     const [conductores, setConductores] = useState([]);
@@ -43,6 +47,10 @@ function ListaConductores() {
                 genero: conductor.genero,
                 civi: conductor.estado_civil,
                 direccion: conductor.direccion,
+                fotografia: conductor.fotografia,
+                papeleria: conductor.papeleria,
+                fechaNacimiento: conductor.fecha_nacimiento,  // Fecha de nacimiento
+                codigoEmpleado: conductor.codigo_empleado,    // Código de empleado
             }));
 
             setConductores(conductoresFormateados);
@@ -56,6 +64,21 @@ function ListaConductores() {
         obtenerConductores();
     }, []);
 
+    // Función para dar de baja un conductor
+    const handleDarDeBaja = async (correo) => {
+        try {
+            const response = await handleAxios().post('asistentes/block-account', { email: correo });
+            MySwal.fire({
+                title: "Bloqueo",
+                text: "Usuario Bloqueado",
+                icon: "success",
+            });
+            obtenerConductores();
+        } catch (error) {
+            handleAxiosError(error);
+        }
+    }
+
     // Funciones para controlar el modal de detalle del conductor
     const handleCloseUser = () => {
         setUser({});
@@ -66,6 +89,12 @@ function ListaConductores() {
         setUser(rowUser);
         setShowUser(true);
     }
+
+    // Función para manejar la redirección al componente de viajes del conductor
+    const handleViajesConductor = (id_conductor) => {
+        localStorage.setItem("id", id_conductor);
+        router.push(`/dashboard_asistente/ListaViajesConductor`); // Redirigir a la ruta de viajes con el id del conductor
+    };
 
     // Definición de columnas para la tabla
     const columnas = [
@@ -87,11 +116,9 @@ function ListaConductores() {
         {
             name: 'VIAJES CONDUCTOR',
             cell: row => (
-                <>
-                    <Button variant="primary">
-                        <FontAwesomeIcon icon={faPlaneArrival} />
-                    </Button>
-                </>
+                <Button variant="primary" onClick={() => handleViajesConductor(row.id)}>
+                    <FontAwesomeIcon icon={faPlaneArrival} />
+                </Button>
             )
         },
         {
@@ -103,8 +130,8 @@ function ListaConductores() {
             name: 'Acciones',
             cell: row => (
                 <>
-                    <Button variant="warning">
-                        <FontAwesomeIcon icon={faEdit} /> Cambiar estado
+                    <Button variant="danger" onClick={() => handleDarDeBaja(row.correo)}>
+                        <FontAwesomeIcon icon={faDeleteLeft} /> Dar de Baja
                     </Button>
                     &nbsp;
                 </>
@@ -132,6 +159,13 @@ function ListaConductores() {
                         <Modal.Title>Información del Conductor</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
+                        <Row>
+                            <Col xs={12} className="text-center mb-3">
+                                {/* Mostrar la fotografía del conductor */}
+                                <Image src={userr.fotografia} rounded fluid />
+                            </Col>
+                        </Row>
+
                         <Row>
                             <Col xs={12} md={6}>
                                 <Form.Group className="mb-3">
@@ -274,6 +308,45 @@ function ListaConductores() {
                                         defaultValue={userr.direccion}
                                         readOnly
                                     />
+                                </Form.Group>
+                            </Col>
+                        </Row>
+
+                        <Row>
+                            <Col xs={12} md={6}>
+                                <Form.Group className="mb-3">
+                                    <Form.Label htmlFor="CLIENTE_FECHA_NACIMIENTO">Fecha de Nacimiento</Form.Label>
+                                    <Form.Control
+                                        id="CLIENTE_FECHA_NACIMIENTO"
+                                        name="CLIENTE_FECHA_NACIMIENTO"
+                                        type="text"
+                                        autoComplete="off"
+                                        defaultValue={userr.fechaNacimiento}
+                                        readOnly
+                                    />
+                                </Form.Group>
+                            </Col>
+                            <Col xs={12} md={6}>
+                                <Form.Group className="mb-3">
+                                    <Form.Label htmlFor="CLIENTE_CODIGO_EMPLEADO">Código Empleado</Form.Label>
+                                    <Form.Control
+                                        id="CLIENTE_CODIGO_EMPLEADO"
+                                        name="CLIENTE_CODIGO_EMPLEADO"
+                                        type="text"
+                                        autoComplete="off"
+                                        defaultValue={userr.codigoEmpleado}
+                                        readOnly
+                                    />
+                                </Form.Group>
+                            </Col>
+                        </Row>
+
+                        {/* Link de papelería */}
+                        <Row>
+                            <Col xs={12}>
+                                <Form.Group className="mb-3">
+                                    <Form.Label htmlFor="CLIENTE_PAPELERIA"></Form.Label>
+                                    <a href={userr.papeleria} target="_blank" rel="noopener noreferrer">Descargar CV</a>
                                 </Form.Group>
                             </Col>
                         </Row>
