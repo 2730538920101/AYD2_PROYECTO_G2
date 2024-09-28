@@ -103,7 +103,7 @@ class ViajeController:
         
     
     #* Método para obtener los viajes pendientes (sin conductor asignado)
-    def get_viajes_pendientes(self, cliente_id):
+    def get_viajes_pendientes(self):
         try:
             # Definir la consulta SQL para obtener los viajes pendientes junto con los datos del cliente
             query = """
@@ -111,11 +111,11 @@ class ViajeController:
                 c.CLI_ID, c.NOMBRE, c.FECHA_NACIMIENTO, c.GENERO, c.CORREO, c.TELEFONO
             FROM Viaje v
             JOIN Cliente c ON v.CLI_ID = c.CLI_ID
-            WHERE v.CONDUCTOR_CON_ID IS NULL AND c.CLI_ID = :cliente_id
+            WHERE v.CONDUCTOR_CON_ID IS NULL
             """
             
             # Ejecutar la consulta con el ID del cliente
-            viajes_pendientes = self.db.fetch_all(query, {"cliente_id": cliente_id})
+            viajes_pendientes = self.db.fetch_all(query)
             
             # Formatear los resultados en una lista de diccionarios
             viajes = []

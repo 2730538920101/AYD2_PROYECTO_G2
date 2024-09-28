@@ -9,7 +9,8 @@ export default function Layout({ children }) {
   return (
     <>
       <Sidebar routes={[
-        //{ title: "Solicitud Modificación", link: "/dashboard_conductor/modificar", icon: faEdit },
+        { title: "Viajes", link: "/dashboard_conductor", icon: faEdit },
+        { title: "Historial", link: "/dashboard_conductor/historial", icon: faEdit },
       ]} />
       <main className="content">
         <Navbar />
