@@ -2,7 +2,7 @@
 
 import Sidebar from '@/components/Sidebar';
 import Navbar from '@/components/Navbar';
-import { faTag } from "@fortawesome/free-solid-svg-icons";
+import { faTag, faHandshakeAngle } from "@fortawesome/free-solid-svg-icons";
 
 export default function Layout({ children }) {
 
@@ -10,7 +10,8 @@ export default function Layout({ children }) {
     <>
       <Sidebar routes={[
 
-        { title: "Actializar Tarifas", link: "/dashboard_administrador/tarifas", icon: faTag },
+        { title: "Actualizar Tarifas", link: "/dashboard_administrador/tarifas", icon: faTag },
+        { title: "Registrar Asistente", link: "/dashboard_administrador/registrar_asistente", icon: faHandshakeAngle },
         // { title: "Expedientes", link: "/dashboard_usuario/expediente", icon: faBook },
       ]} />
       <main className="content">
