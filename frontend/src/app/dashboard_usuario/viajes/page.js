@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { Row, Col, Button, Container, Card, ListGroup, ListGroupItem, Table, Modal, Form } from 'react-bootstrap';
 import { faUser, faCakeCandles,  faIdCard, faPhone, faKey}  from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { handleAxiosError, handleAxiosJWT, handleAxios, handleSwal } from '@/helpers/axiosConfig';
+import { handleAxiosError, handleAxiosJWT, handleAxios, handleSwal, handleAxiosMultipart } from '@/helpers/axiosConfig';
 import { FindCliente } from '@/helpers/findCliente';
 import Cookies from 'js-cookie';
 import { useState, useEffect } from 'react';
@@ -16,10 +16,14 @@ const Viajes = () => {
     let [Favoritos, setFavoritos] = useState(null);
     let [CurrentViaje, setCurrentViaje] = useState(null);
     let [Cliente, setCliente] = useState(null);
-    const [showModal, setShowModal] = useState(false);
+    const [showModalCancel, setShowModalCancel] = useState(false);
+    const [showModalReport, setShowModalReport] = useState(false);
 
-    const handleShow = () => setShowModal(true);
-    const handleClose = () => setShowModal(false);
+    const handleShowCancel = () => setShowModalCancel(true);
+    const handleCloseCancel = () => setShowModalCancel(false);
+
+    const handleShowReport = () => setShowModalReport(true);
+    const handleCloseReport = () => setShowModalReport(false);
 
     useEffect(() => {
         async function fetchData() {
@@ -41,6 +45,7 @@ const Viajes = () => {
         }
         fetchData()
     }, [])
+
     const formatearFecha = (fecha) => {
         const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         return new Date(fecha).toLocaleDateString('es-ES', opciones);
@@ -73,7 +78,7 @@ const Viajes = () => {
 
     };
 
-    const handleSubmitModal = async (e) => {
+    const handleSubmitModalCancel = async (e) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         formData.append('viaje_id', CurrentViaje.via_id);
@@ -86,7 +91,33 @@ const Viajes = () => {
                 text: "Tu viaje ha sido cancelado",
                 icon: "success",
             }).then(() => {
-                handleClose();
+                handleCloseCancel();
+            });
+
+        }catch(error){
+            console.log(error)
+            handleAxiosError(error);
+        }
+    };
+
+    const handleSubmitModalReport = async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
+        formData.append('viajeid', CurrentViaje.via_id);
+        formData.append('type', "Cliente");
+        try{
+            console.log("formData", formData)
+            let ax = handleAxiosMultipart()
+            ax.defaults.baseURL = process.env.NEXT_PUBLIC_NOTIFICATION_PRODUCER_SERVICE;
+            console.log(ax.defaults.baseURL)
+            const resp = await ax.post('/producer/notify/send', formData)
+            console.log(resp)
+            MySwal.fire({
+                title: "Reporte enviado",
+                text: "Tu reporte ha sido enviado",
+                icon: "success",
+            }).then(() => {
+                handleCloseReport();
             });
 
         }catch(error){
@@ -97,9 +128,6 @@ const Viajes = () => {
 
     if (!Favoritos) return <div>Loading...</div>
 
-    console.log(Favoritos)
-    console.log("-")
-    console.log(CurrentViaje)
     return (
 <main>
     <Container>
@@ -127,7 +155,8 @@ const Viajes = () => {
             <ListGroupItem><strong>Conductor:</strong> Aún no asignado</ListGroupItem>
         )}
         </ListGroup>
-        <Button onClick={handleShow} >Cancelar viaje actual</Button>
+        <Button onClick={handleShowCancel} >Cancelar viaje actual</Button>
+        <Button onClick={handleShowReport} >Reportar un problema</Button>
         </Card>
         </div>
     ) : (
@@ -176,12 +205,12 @@ const Viajes = () => {
     </Row>
     </Container>
 
-    <Modal show={showModal} onHide={handleClose}>
+    <Modal show={showModalCancel} onHide={handleCloseCancel}>
         <Modal.Header closeButton>
             <Modal.Title>Cancelación de viaje</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-            <Form onSubmit={handleSubmitModal}>
+            <Form onSubmit={handleSubmitModalCancel}>
                 <Form.Group className="mb-4">
                     <Form.Label>Describa la razón de la cancelación:</Form.Label>
                     <Form.Control
@@ -192,11 +221,42 @@ const Viajes = () => {
                         placeholder="Ingrese los detalles del problema"
                     />
                 </Form.Group>
-                <Button variant="secondary" onClick={handleClose}>
+                <Button variant="secondary" onClick={handleCloseCancel}>
                     Salir
                 </Button>
                 <Button type='submit' variant="primary">
                     Cancelar Viaje
+                </Button>
+            </Form>
+        </Modal.Body>
+    </Modal>
+
+    <Modal show={showModalReport} onHide={handleCloseReport}>
+        <Modal.Header closeButton>
+            <Modal.Title>Reportar un problema</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+            <Form onSubmit={handleSubmitModalReport}>
+                <Form.Group className="mb-4">
+                    <Form.Label>Descripción del problema:</Form.Label>
+                    <Form.Control
+                        as="textarea"
+                        name="message"
+                        id="message"
+                        rows={3}
+                        placeholder="Ingrese los detalles del problema"
+                        required
+                    />
+                </Form.Group>
+                <Form.Group className="mb-4">
+                    <Form.Label>Imagen Adjunta</Form.Label>
+                    <Form.Control name="adjunto" id="adjunto" type='file' accept='image/*' required/>
+                </Form.Group>
+                <Button variant="secondary" onClick={handleCloseReport}>
+                    Salir
+                </Button>
+                <Button type='submit' variant="primary">
+                    Reportar Problema
                 </Button>
             </Form>
         </Modal.Body>
