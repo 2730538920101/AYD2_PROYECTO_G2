@@ -1,12 +1,14 @@
 from flask import Blueprint, request, jsonify
 from ..utils.funciones import BadRequestError
 from ..controllers.asistentes_controller import AsistentesController
+from ..services.cognito_service import CognitoService
 
 # Definir el Blueprint
 bp = Blueprint('asistentes', __name__)
 
 # Inicializar el controlador y el servicio S3
 asistentes_controller = AsistentesController()
+cognito_service = CognitoService()
 
 # Ruta para obtener todos los asistentes
 @bp.route('/', methods=['GET'])
@@ -48,3 +50,20 @@ def actualizar_asistente():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+# Ruta para bloquear una cuenta
+@bp.route('/block-account', methods=['POST'])
+def block_account():
+    data = request.get_json()
+    email = data.get('email')
+
+    if not email:
+        return jsonify({"error": "Email is required"}), 400
+
+    # Bloquear cuenta
+    response = cognito_service.block_account(email)
+    
+    if response:
+        return jsonify({"message": "Account blocked successfully"}), 200
+    else:
+        return jsonify({"error": "Failed to block account"}), 400
