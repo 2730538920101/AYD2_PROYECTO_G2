@@ -149,11 +149,20 @@ class ViajeController:
         try:
             # Definir la consulta SQL para obtener los viajes finalizados del cliente
             query = """
-            SELECT VIA_ID, ESTADO, FECHA_INICIO, FECHA_FIN, ORIGEN, DESTINO, TOTAL
-            FROM Viaje
-            WHERE CLI_ID = %s
-            AND ESTADO = 'FINALIZADO'
-            ORDER BY FECHA_FIN DESC
+            SELECT 
+                CLI_ID,
+                ORIGEN,
+                DESTINO,
+                TOTAL,
+                COUNT(*) AS num_viajes
+            FROM 
+                Viaje
+            WHERE 
+                CLI_ID = %s AND ESTADO = 'FINALIZADO' 
+            GROUP BY 
+                CLI_ID, ORIGEN, DESTINO, TOTAL
+            ORDER BY 
+                num_viajes DESC
             LIMIT %s;
             """
             values = (cli_id, num_viajes)
@@ -165,13 +174,11 @@ class ViajeController:
             viajes = []
             for row in viajes_frecuentes:
                 viaje = {
-                    "via_id": row[0],
-                    "estado": row[1],
-                    "fecha_inicio": row[2],
-                    "fecha_fin": row[3],
-                    "origen": row[4],
-                    "destino": row[5],
-                    "total": row[6]
+                    "cli_id": row[0],
+                    "origen": row[1],
+                    "destino": row[2],
+                    "total": row[3],
+                    "num_viajes": row[4]
                 }
                 viajes.append(viaje)
 

@@ -176,21 +176,23 @@ const Viajes = () => {
     </div>
     <Table striped bordered hover responsive>
         <thead>
-            <tr>
+            <tr class="text-center">
                 <th>#</th>
                 <th>Origen</th>
                 <th>Destino</th>
                 <th>Total (Q)</th>
+                <th>Núm. Viajes</th>
                 <th>Acción</th>
             </tr>
         </thead>
         <tbody>
             {Favoritos.map((viaje, index) => (
-                <tr key={viaje.via_id} className="align-middle">
+                <tr className="align-middle text-center">
                     <td>{index + 1}</td>
                     <td>{viaje.origen}</td>
                     <td>{viaje.destino}</td>
                     <td>{viaje.total}</td>
+                    <td>{viaje.num_viajes}</td>
                     <td>
                         <Button  size="sm" onClick={() => pedirViaje(viaje)} disabled={CurrentViaje !== null} >
                             Pedir Viaje

@@ -3,7 +3,7 @@ from ..controllers.viaje_controller import ViajeController
 
 # Definir el Blueprint
 bp = Blueprint('viajes', __name__)
-NUMERO_VIAJES_FRECUENTES = 1
+NUMERO_VIAJES_FRECUENTES = 10
 # Inicializar el controlador
 viaje_controller = ViajeController()
 
