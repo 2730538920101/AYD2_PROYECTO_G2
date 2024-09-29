@@ -8,6 +8,7 @@ import { handleAxiosError, handleSwal, handleAxiosMultipart, handleAxiosJWT } fr
 import { FindCliente } from '@/helpers/findCliente';
 import Cookies from 'js-cookie';
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 
 const check = (event) => {
     var input = document.getElementById('contrasenia2');
@@ -106,20 +107,11 @@ const RegisterUser = () => {
                                 <Form.Control id="telefono" name="telefono"  type="text" pattern="[1-9][0-9]{7,}" placeholder="88888888" defaultValue={cliente.telefono}/>
                             </InputGroup>
                         </Form.Group>
-                        <Form.Group className="mb-4">
-                            <Form.Label>Contraseña</Form.Label>
-                            <InputGroup>
-                                <InputGroup.Text>
-                                    <FontAwesomeIcon icon={faKey} />
-                                </InputGroup.Text>
-                                <Form.Control id="contraseniaWIP" name="contraseniaWIP"  onInput={check} type="password" placeholder='Inhabilitado temporalmente' disabled />
-                            </InputGroup>
-                        </Form.Group>
                         <Button variant="primary" type="submit" className="w-100">
                             Actualizar
                         </Button>
                     </Form>
-                    <a href="/">Regresar</a>
+                    <Link href="/dashboard_usuario/modificar/change_pass">Cambiar Contraseña</Link>
                 </div>
         </Col>
         </Row>

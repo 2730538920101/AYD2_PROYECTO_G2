@@ -6,6 +6,7 @@ import { Row, Col, Button, Form, InputGroup, Container } from 'react-bootstrap';
 import { faEnvelope, faUnlockAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { handleAxiosError, handleSwal, handleAxios } from '@/helpers/axiosConfig';
+import Link from 'next/link';
 
 const MySwal = handleSwal();
 
@@ -75,7 +76,7 @@ const Confirm = () => {
                 </Form>
                 <p className="text-left">
                   <br />
-                  <a href="/">Regresar</a>
+                  <Link href="/">Regresar</Link>
                 </p>
               </div>
             </Col>
