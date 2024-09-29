@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { handleAxiosError, handleSwal, handleAxios } from '@/helpers/axiosConfig';
 import { jwtDecode } from "jwt-decode";
 import { GetRoleFromGroup } from '../../helpers/roles'
+import Link from 'next/link';
 
 const MySwal = handleSwal();
 
@@ -91,11 +92,11 @@ const Login = () => {
                 </Form>
                 <p className="text-left">
                   <br />
-                  <a href="/confirm">Confirmar cuenta</a>
+                  <Link href="/confirm">Confirmar cuenta</Link>
                   <br />
-                      <a href="/registro_usuario">Registrarse como cliente</a>
+                      <Link href="/registro_usuario">Registrarse como cliente</Link>
                   <br />
-                      <a href="/crear_conductor">Registrarse como conductor</a>
+                      <Link href="/crear_conductor">Registrarse como conductor</Link>
                 </p>
               </div>
             </Col>

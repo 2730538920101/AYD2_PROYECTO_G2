@@ -5,6 +5,7 @@ import { Row, Col, Button, Form, InputGroup, Container } from 'react-bootstrap';
 import { faUser, faCakeCandles, faPersonHalfDress, faAt, faIdCard, faPhone, faKey, faQuestion, faReply, faFileContract } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { handleAxiosError, handleSwal, handleAxiosMultipart } from '@/helpers/axiosConfig';
+import Link from 'next/link';
 
 const check = (event) => {
     var input = document.getElementById('contrasenia2');
@@ -159,7 +160,7 @@ const RegisterUser = () => {
                             Registrarse
                         </Button>
                     </Form>
-                    <a href="/">Regresar</a>
+                    <Link href="/">Regresar</Link>
                 </div>
         </Col>
         </Row>
