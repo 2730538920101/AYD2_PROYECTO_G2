@@ -5,40 +5,45 @@ import { useState, useEffect } from "react";
 // Select
 import Select from 'react-select';
 // Axios
-import { handleAxios, handleAxiosMultipart, handleAxiosError, handleAxiosMsg } from '@/helpers/axiosConfig';
+import { handleAxios, handleAxiosError } from '@/helpers/axiosConfig';
 // Bootstrap
-import { Col, Row, Form, Modal, Button, Ratio, InputGroup } from 'react-bootstrap';
+import { Col, Row, Form, Modal, Button } from 'react-bootstrap';
 // Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUserNinja, faFileWord, faEdit, faFilePdf, faFileImage } from "@fortawesome/free-solid-svg-icons";
+import { faUserNinja, faFilePdf, faEdit, faFileImage } from "@fortawesome/free-solid-svg-icons";
 // DataTable
 import DataTable from 'react-data-table-component';
-
-const dataTemproal = [
-    { id: 1, usuario: "Juan", origen: "Zona 6", destino: "Zona 7", tarifa: "Q50.00", fecha_i: "8:00", fecha_f: "9:00" }
-];
-
-const usuarioTemproal =
-    { id: 1, nombre: "Juan", telefono: "12345678", edad: "45", dpi: "123456789", correo: "prueba@gmail.com", placa: "12345678A", marca: "Mazda", anio: "2024", genero: "M", civi: "Soltero", direccion: "Zona 6" };
-
 
 function SolicitudesEmpleo() {
 
     // Obtencion de los viajes para el select
     const [viajes, setViajes] = useState([]);
+
     const obtenerViajes = async () => {
         try {
-            /*const response = await handleAxios().get('/cliente/listar');
+            const response = await handleAxios().get('/conductores');
             const data = response.data;
-      
-            // Se formatea la data para que pueda almacenarse para utilizarse en un select
-            const temporal = data.map(cliente => {
-              return {
-                label: `${cliente.CUI} - ${cliente.NOMBRE} ${cliente.APELLIDO}`,
-                value: cliente.CUI
-              }
-            });*/
-            setViajes(dataTemproal);
+
+            // Mapear los datos a la estructura necesaria para la tabla
+            const temporal = data.map(conductor => {
+                return {
+                    id: conductor.con_id,
+                    usuario: conductor.nombre,
+                    correo: conductor.correo,
+                    telefono: conductor.telefono,
+                    dpi: conductor.numero_dpi,
+                    edad: new Date().getFullYear() - new Date(conductor.fecha_nacimiento).getFullYear(), // Calcula la edad a partir de la fecha de nacimiento
+                    placa: conductor.placa,
+                    marca: conductor.marca_vehiculo,
+                    anio: conductor.anio,
+                    genero: conductor.genero,
+                    civi: conductor.estado_civil,
+                    direccion: conductor.direccion,
+                    fotografia: conductor.fotografia,
+                    papeleria: conductor.papeleria,
+                }
+            });
+            setViajes(temporal);
         } catch (error) {
             handleAxiosError(error);
         }
@@ -57,7 +62,7 @@ function SolicitudesEmpleo() {
     }
 
     const handleShowUser = (rowUser) => {
-        setUser(usuarioTemproal);
+        setUser(rowUser);
         setShowUser(true); // Activa el modal
     }
 
@@ -80,43 +85,23 @@ function SolicitudesEmpleo() {
         {
             name: 'CV CONDUCTOR',
             cell: row => (
-                <>
+                <a href={row.papeleria} target="_blank" rel="noopener noreferrer">
                     <Button variant="danger">
                         <FontAwesomeIcon icon={faFilePdf} />
                     </Button>
-                </>
-            )
-        },     
-        {
-            name: 'FOTOGRAFIA CONDUCTOR',
-            cell: row => (
-                <>
-                    <Button variant="primary">
-                        <FontAwesomeIcon icon={faFileImage} />
-                    </Button>
-                </>
-            )
-        },        
-        {
-            name: 'FOTOGRAFIA AUTO',
-            cell: row => (
-                <>
-                    <Button variant="primary">
-                        <FontAwesomeIcon icon={faFileImage} />
-                    </Button>
-                </>
+                </a>
             )
         },
         {
-            name: 'Acciones',
+            name: 'FOTOGRAFIA',
             cell: row => (
-                <>
-                    <Button variant="warning">
-                        <FontAwesomeIcon icon={faEdit} /> Cambiar estado
+                <a href={row.fotografia} target="_blank" rel="noopener noreferrer">
+                    <Button variant="primary">
+                        <FontAwesomeIcon icon={faFileImage} />
                     </Button>
-                </>
+                </a>
             )
-        },
+        }
     ];
 
     return (
@@ -149,7 +134,7 @@ function SolicitudesEmpleo() {
                                         type="text"
                                         placeholder="Nombre"
                                         autoComplete="off"
-                                        defaultValue={userr.nombre}
+                                        defaultValue={userr.usuario}
                                         readOnly
                                     />
                                 </Form.Group>
@@ -170,19 +155,6 @@ function SolicitudesEmpleo() {
                         </Row>
 
                         <Row>
-                            <Col xs={12} md={6}>
-                                <Form.Group className="mb-3">
-                                    <Form.Label htmlFor="CLIENTE_EDAD">Edad</Form.Label>
-                                    <Form.Control
-                                        id="CLIENTE_EDAD"
-                                        name="CLIENTE_EDAD"
-                                        type="text"
-                                        autoComplete="off"
-                                        defaultValue={userr.edad}
-                                        readOnly
-                                    />
-                                </Form.Group>
-                            </Col>
                             <Col xs={12} md={6}>
                                 <Form.Group className="mb-3">
                                     <Form.Label htmlFor="CLIENTE_DPI">DPI</Form.Label>
