@@ -20,6 +20,12 @@ services:
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -P ${DATABASE_PORT} --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
 
   # Servicio para la aplicación principal (app_service)
   app_service:
@@ -54,7 +60,9 @@ services:
       - ADMIN_PASSWORD=${ADMIN_PASSWORD} 
       - ADMIN_VALIDATION=${ADMIN_VALIDATION}
     depends_on:
-      - database
+      database:
+        condition: service_healthy
+
 
   # Servicio de notificaciones (producer)
   notification_producer:
@@ -115,11 +123,11 @@ services:
       - ayd2_p1_network
     environment:
       - NEXT_PUBLIC_APP_SERVICE=${NEXT_PUBLIC_APP_SERVICE}
-      - NEXT_PUBLIC_AUTH_SERVICE=${NEXT_PUBLIC_AUTH_SERVICE}
       - NEXT_PUBLIC_NOTIFICATION_PRODUCER_SERVICE=${NEXT_PUBLIC_NOTIFICATION_PRODUCER_SERVICE}
       - NEXT_PUBLIC_NOTIFICATION_CONSUMER_SERVICE=${NEXT_PUBLIC_NOTIFICATION_CONSUMER_SERVICE}
       - NEXT_PUBLIC_APP_VERSION=${NEXT_PUBLIC_APP_VERSION}
-   
+
+
 volumes:
   ayd2_p1_data:
 
