@@ -11,7 +11,7 @@ import DataTable from 'react-data-table-component';
 
 function ListaViajesConductor() {
     const [viajes, setViajes] = useState([]);
-    const id_conductor = localStorage.getItem("id");
+    const [id_conductor, setIdConductor] = useState(null);
     // Función para obtener los viajes del conductor
     const obtenerViajes = async () => {
         try {
@@ -23,6 +23,7 @@ function ListaViajesConductor() {
     };
 
     useEffect(() => {
+        setIdConductor(localStorage.getItem("id"));
         obtenerViajes(); // Obtener los viajes cuando se monte el componente
     }, [id_conductor]);
 

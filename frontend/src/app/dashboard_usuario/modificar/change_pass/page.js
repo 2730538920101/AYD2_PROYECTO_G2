@@ -5,17 +5,15 @@ import { Row, Col, Button, Form, InputGroup, Container } from 'react-bootstrap';
 import { faKey}  from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { handleAxiosError, handleSwal, handleAxiosJWT } from '@/helpers/axiosConfig';
-import { FindCliente } from '@/helpers/findCliente';
 import Cookies from 'js-cookie';
-import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { getCookie } from '@/helpers/getCookies';
 
 const MySwal = handleSwal();
 
 const ChangePass = () => {
     const router = useRouter();
-    let cookies = Cookies.get('auth');
-    const { nombre } = JSON.parse(cookies);
+    const { nombre } = getCookie('auth');
 
     const handleActualizacionUsuario = async (e) => {
         e.preventDefault();
