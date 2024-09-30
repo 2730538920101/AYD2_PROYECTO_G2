@@ -1,11 +1,9 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { Row, Col, Button, Form, InputGroup, Container } from 'react-bootstrap';
-import { faUser, faCakeCandles, faPersonHalfDress, faAt, faIdCard, faPhone, faKey, faQuestion, faReply, faFileContract } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faCakeCandles, faPersonHalfDress, faAt, faFile, faPhone, faKey, faMapLocation, faIdCard, faFileContract } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { handleAxiosError, handleSwal, handleAxiosMultipart } from '@/helpers/axiosConfig';
-import Link from 'next/link';
 
 const check = (event) => {
     var input = document.getElementById('contrasenia2');
@@ -21,19 +19,16 @@ const MySwal = handleSwal();
 
 const RegisterUser = () => {
 
-    const router = useRouter();
-    const handleRegistroUsuario = async (e) => {
+    const handleRegistroAsistente = async (e) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         try {
-            const res = await handleAxiosMultipart().post('clientes', formData);
+            const res = await handleAxiosMultipart().post('asistentes', formData);
             console.log(res)
             MySwal.fire({
                 title: "Registro Exitoso",
-                text: "Bienvenido a la plataforma",
+                text: "Asistente registrado",
                 icon: "success",
-            }).then(() => {
-                router.push("/login");
             });
         } catch (error) {
             console.log(error)
@@ -50,9 +45,9 @@ const RegisterUser = () => {
             <Col xs="{12}" className="d-flex align-items-center justify-content-center">
                 <div className="bg-white shadow-soft border rounded border-light p-4 p-lg-5 w-100 fmxw-500">
                     <div className="text-center text-md-center mb-4 mt-md-0">
-                        <h3 className="mb-0">Registro</h3>
+                        <h3 className="mb-0">Registro de Asistentes</h3>
                     </div>
-                    <Form className="mt-4" onSubmit={handleRegistroUsuario}>
+                    <Form className="mt-4" onSubmit={handleRegistroAsistente}>
                         <Form.Group className="mb-4">
                             <Form.Label>Nombre Completo</Form.Label>
                             <InputGroup>
@@ -60,15 +55,6 @@ const RegisterUser = () => {
                                     <FontAwesomeIcon icon={faUser} />
                                 </InputGroup.Text>
                                 <Form.Control id="nombre" name="nombre" autoFocus required type="text" placeholder="Nombre Apellido" />
-                            </InputGroup>
-                        </Form.Group>
-                        <Form.Group className="mb-4">
-                            <Form.Label>Fecha de Nacimiento</Form.Label>
-                            <InputGroup>
-                                <InputGroup.Text>
-                                    <FontAwesomeIcon icon={faCakeCandles} />
-                                </InputGroup.Text>
-                                <Form.Control id="fecha_nacimiento" name="fecha_nacimiento" required type="date" />
                             </InputGroup>
                         </Form.Group>
                         <Form.Group className="mb-4">
@@ -94,12 +80,12 @@ const RegisterUser = () => {
                             </InputGroup>
                         </Form.Group>
                         <Form.Group className="mb-4">
-                            <Form.Label>DPI (fotografía)</Form.Label>
+                            <Form.Label>Papelería</Form.Label>
                             <InputGroup>
                                 <InputGroup.Text>
-                                    <FontAwesomeIcon icon={faIdCard} />
+                                    <FontAwesomeIcon icon={faFile} />
                                 </InputGroup.Text>
-                                <Form.Control id="foto_dpi" name="foto_dpi" required type="file" />
+                                <Form.Control id="papeleria" name="papeleria" required type="file" />
                             </InputGroup>
                         </Form.Group>
                         <Form.Group className="mb-4">
@@ -130,37 +116,54 @@ const RegisterUser = () => {
                             </InputGroup>
                         </Form.Group>
                         <Form.Group className="mb-4">
-                            <Form.Label>Pregunta de Seguridad</Form.Label>
-                            <InputGroup>
-                                <InputGroup.Text>
-                                    <FontAwesomeIcon icon={faQuestion} />
-                                </InputGroup.Text>
-                                <Form.Control id="pregunta" name="pregunta" required type="text" placeholder="¿Cuál fue el nombre de mi primero mascota?" />
-                            </InputGroup>
-                        </Form.Group>
-                        <Form.Group className="mb-4">
-                            <Form.Label>Respuesta</Form.Label>
-                            <InputGroup>
-                                <InputGroup.Text>
-                                    <FontAwesomeIcon icon={faReply} />
-                                </InputGroup.Text>
-                                <Form.Control id="respuesta" name="respuesta" required type="text" placeholder="Manchas" />
-                            </InputGroup>
-                        </Form.Group>
-                        <Form.Group className="mb-4">
-                            <Form.Label>Estado</Form.Label>
+                            <Form.Label>Estado Civil</Form.Label>
                             <InputGroup>
                                 <InputGroup.Text>
                                     <FontAwesomeIcon icon={faFileContract} />
                                 </InputGroup.Text>
-                                <Form.Control id="estado" name="estado" required type="text" placeholder="Estado" />
+                                <Form.Control id="estado_civil" name="estado_civil" required type="text" placeholder="Estado" />
+                            </InputGroup>
+                        </Form.Group>
+                        <Form.Group className="mb-4">
+                            <Form.Label>Fecha de Nacimiento</Form.Label>
+                            <InputGroup>
+                                <InputGroup.Text>
+                                    <FontAwesomeIcon icon={faCakeCandles} />
+                                </InputGroup.Text>
+                                <Form.Control id="fecha_nacimiento" name="fecha_nacimiento" required type="date" />
+                            </InputGroup>
+                        </Form.Group>
+                        <Form.Group className="mb-4">
+                            <Form.Label>Dirección</Form.Label>
+                            <InputGroup>
+                                <InputGroup.Text>
+                                    <FontAwesomeIcon icon={faMapLocation} />
+                                </InputGroup.Text>
+                                <Form.Control id="direccion" name="direccion" required type="text" placeholder="direccion" />
+                            </InputGroup>
+                        </Form.Group>
+                        <Form.Group className="mb-4">
+                            <Form.Label>DPI</Form.Label>
+                            <InputGroup>
+                                <InputGroup.Text>
+                                    <FontAwesomeIcon icon={faIdCard} />
+                                </InputGroup.Text>
+                                <Form.Control id="numero_dpi" name="numero_dpi" required type="text" placeholder="123 av. 8 ca." />
+                            </InputGroup>
+                        </Form.Group>
+                        <Form.Group className="mb-4">
+                            <Form.Label>Número de cuenta</Form.Label>
+                            <InputGroup>
+                                <InputGroup.Text>
+                                    <FontAwesomeIcon icon={faFileContract} />
+                                </InputGroup.Text>
+                                <Form.Control id="numero_cuenta" name="numero_cuenta" required type="text" placeholder="7489461741" />
                             </InputGroup>
                         </Form.Group>
                         <Button variant="primary" type="submit" className="w-100">
-                            Registrarse
+                            Registrar
                         </Button>
                     </Form>
-                    <Link href="/">Regresar</Link>
                 </div>
         </Col>
         </Row>

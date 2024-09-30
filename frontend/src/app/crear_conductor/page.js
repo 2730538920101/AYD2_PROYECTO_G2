@@ -3,35 +3,47 @@
 import { useRouter } from 'next/navigation';
 import { crearSession } from '@/helpers/session';
 import { Row, Col, Button, Form, InputGroup, Container } from 'react-bootstrap';
-import { faEnvelope, faUnlockAlt, faPhone, faIdCard, faFilePdf, faCamera, faCar, faAddressCard } from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope, faUnlockAlt, faPhone, faIdCard, faFilePdf, faCamera, faCar, faAddressCard, faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { handleAxiosError, handleSwal, handleAxios } from '@/helpers/axiosConfig';
+import { handleAxiosError, handleSwal, handleAxiosMultipart } from '@/helpers/axiosConfig';
 
 const MySwal = handleSwal();
 
 const Registro = () => {
 
   const router = useRouter();
-  
+
   const handleRegistro = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
 
+    // Obtener los valores de las contraseñas y fecha de nacimiento
+    const password = formData.get('password');
+    const confirmPassword = formData.get('confirmPassword');
+    const fechaNacimiento = formData.get('fechaNacimiento');
+
+    // Validar que las contraseñas coincidan
+    if (password !== confirmPassword) {
+      MySwal.fire({
+        title: 'Error',
+        text: 'Las contraseñas no coinciden',
+        icon: 'error',
+      });
+      return;
+    }
+
     try {
-      // Aquí harías la llamada a tu API para registrar al usuario
-      // const res = await handleAxios().post('/registro', formData);
-      // MySwal.fire({
-      //   title: 'Registro Completo',
-      //   text: "¡Registro exitoso!",
-      //   icon: 'success'
-      // }).then(() => {
-      //   if (res.status === 200) {
-      //     crearSession(res.data);
-      //     router.push("/dashboard");
-      //   }
-      // });
-      router.push("/");
+      const res = await handleAxiosMultipart().post('conductores', formData);
+            console.log(res)
+            MySwal.fire({
+                title: "Registro Exitoso",
+                text: "Bienvenido a la plataforma",
+                icon: "success",
+            }).then(() => {
+                router.push("/login");
+            });
     } catch (error) {
+      console.log(error)
       handleAxiosError(error);
     }
   };
@@ -58,7 +70,18 @@ const Registro = () => {
                       <InputGroup.Text>
                         <FontAwesomeIcon icon={faIdCard} />
                       </InputGroup.Text>
-                      <Form.Control id="nombreCompleto" name="nombreCompleto" required type="text" placeholder="Nombre Completo" />
+                      <Form.Control id="nombre" name="nombre" required type="text" placeholder="Nombre Completo" />
+                    </InputGroup>
+                  </Form.Group>
+
+                  {/* Fecha de Nacimiento */}
+                  <Form.Group className="mb-4">
+                    <Form.Label>Fecha de Nacimiento</Form.Label>
+                    <InputGroup>
+                      <InputGroup.Text>
+                        <FontAwesomeIcon icon={faCalendar} />
+                      </InputGroup.Text>
+                      <Form.Control id="fecha_nacimiento" name="fecha_nacimiento" required type="date" />
                     </InputGroup>
                   </Form.Group>
 
@@ -69,20 +92,14 @@ const Registro = () => {
                       <InputGroup.Text>
                         <FontAwesomeIcon icon={faPhone} />
                       </InputGroup.Text>
-                      <Form.Control id="celular" name="celular" required type="text" placeholder="Número de Celular" />
+                      <Form.Control id="telefono" name="telefono" required type="text" placeholder="Número de Celular" />
                     </InputGroup>
-                  </Form.Group>
-
-                  {/* Edad */}
-                  <Form.Group className="mb-4">
-                    <Form.Label>Edad</Form.Label>
-                    <Form.Control id="edad" name="edad" required type="number" placeholder="Edad" />
                   </Form.Group>
 
                   {/* DPI */}
                   <Form.Group className="mb-4">
                     <Form.Label>DPI</Form.Label>
-                    <Form.Control id="dpi" name="dpi" required type="text" placeholder="Número de DPI" />
+                    <Form.Control id="numero_dpi" name="numero_dpi" required type="text" placeholder="Número de DPI" />
                   </Form.Group>
 
                   {/* Correo */}
@@ -96,6 +113,28 @@ const Registro = () => {
                     </InputGroup>
                   </Form.Group>
 
+                  {/* Contraseña */}
+                  <Form.Group className="mb-4">
+                    <Form.Label>Contraseña</Form.Label>
+                    <InputGroup>
+                      <InputGroup.Text>
+                        <FontAwesomeIcon icon={faUnlockAlt} />
+                      </InputGroup.Text>
+                      <Form.Control id="contrasenia" name="contrasenia" required type="password" placeholder="Contraseña" />
+                    </InputGroup>
+                  </Form.Group>
+
+                  {/* Confirmar Contraseña */}
+                  <Form.Group className="mb-4">
+                    <Form.Label>Confirmar Contraseña</Form.Label>
+                    <InputGroup>
+                      <InputGroup.Text>
+                        <FontAwesomeIcon icon={faUnlockAlt} />
+                      </InputGroup.Text>
+                      <Form.Control id="contrasenia2" name="contrasenia2" required type="password" placeholder="Confirmar Contraseña" />
+                    </InputGroup>
+                  </Form.Group>
+
                   {/* CV (Archivo PDF) */}
                   <Form.Group className="mb-4">
                     <Form.Label>CV (Archivo PDF)</Form.Label>
@@ -103,11 +142,11 @@ const Registro = () => {
                       <InputGroup.Text>
                         <FontAwesomeIcon icon={faFilePdf} />
                       </InputGroup.Text>
-                      <Form.Control id="cv" name="cv" required type="file" accept="application/pdf" />
+                      <Form.Control id="papeleria" name="papeleria" required type="file" accept="application/pdf" />
                     </InputGroup>
                   </Form.Group>
 
-                  {/* Fotografía */}
+                  {/* Fotografía 
                   <Form.Group className="mb-4">
                     <Form.Label>Fotografía</Form.Label>
                     <InputGroup>
@@ -117,7 +156,7 @@ const Registro = () => {
                       <Form.Control id="fotografia" name="fotografia" required type="file" accept="image/*" />
                     </InputGroup>
                   </Form.Group>
-
+                  */}
                   {/* Fotografía del Vehículo */}
                   <Form.Group className="mb-4">
                     <Form.Label>Fotografía del Vehículo</Form.Label>
@@ -125,7 +164,7 @@ const Registro = () => {
                       <InputGroup.Text>
                         <FontAwesomeIcon icon={faCar} />
                       </InputGroup.Text>
-                      <Form.Control id="fotoVehiculo" name="fotoVehiculo" required type="file" accept="image/*" />
+                      <Form.Control id="fotografia" name="fotografia" required type="file" accept="image/*" />
                     </InputGroup>
                   </Form.Group>
 
@@ -138,13 +177,13 @@ const Registro = () => {
                   {/* Marca de Vehículo */}
                   <Form.Group className="mb-4">
                     <Form.Label>Marca del Vehículo</Form.Label>
-                    <Form.Control id="marcaVehiculo" name="marcaVehiculo" required type="text" placeholder="Marca del Vehículo" />
+                    <Form.Control id="marca_vehiculo" name="marca_vehiculo" required type="text" placeholder="Marca del Vehículo" />
                   </Form.Group>
 
                   {/* Año del Vehículo */}
                   <Form.Group className="mb-4">
                     <Form.Label>Año del Vehículo</Form.Label>
-                    <Form.Control id="anioVehiculo" name="anioVehiculo" required type="number" placeholder="Año del Vehículo" />
+                    <Form.Control id="anio" name="anio" required type="number" placeholder="Año del Vehículo" />
                   </Form.Group>
 
                   {/* Género */}
@@ -152,16 +191,15 @@ const Registro = () => {
                     <Form.Label>Género</Form.Label>
                     <Form.Select id="genero" name="genero" required>
                       <option value="">Seleccionar Género</option>
-                      <option value="masculino">Masculino</option>
-                      <option value="femenino">Femenino</option>
-                      <option value="otro">Otro</option>
+                      <option value="M">Masculino</option>
+                      <option value="F">Femenino</option>
                     </Form.Select>
                   </Form.Group>
 
                   {/* Estado Civil */}
                   <Form.Group className="mb-4">
                     <Form.Label>Estado Civil</Form.Label>
-                    <Form.Select id="estadoCivil" name="estadoCivil" required>
+                    <Form.Select id="estado_civil" name="estado_civil" required>
                       <option value="">Seleccionar Estado Civil</option>
                       <option value="soltero">Soltero</option>
                       <option value="casado">Casado</option>
@@ -180,6 +218,11 @@ const Registro = () => {
                       <Form.Control id="direccion" name="direccion" required type="text" placeholder="Dirección de Domicilio" />
                     </InputGroup>
                   </Form.Group>
+
+                  {/* Estado Información (campo oculto) */}
+                  <Form.Control id="estado_informacion" name="estado_informacion" type="hidden" value="PENDIENTE" />
+
+                  <Form.Control id="numero_cuenta" name="numero_cuenta" type="hidden" value="0000000000" />
 
                   <Button variant="primary" type="submit" className="w-100">
                     Solicitar

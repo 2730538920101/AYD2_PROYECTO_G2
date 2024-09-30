@@ -2,66 +2,101 @@
 
 // React
 import { useState, useEffect } from "react";
-// Select
-import Select from 'react-select';
 // Axios
-import { handleAxios, handleAxiosMultipart, handleAxiosError, handleAxiosMsg } from '@/helpers/axiosConfig';
+import { handleAxios, handleAxiosError,handleSwal } from '@/helpers/axiosConfig';
 // Bootstrap
-import { Col, Row, Form, Modal, Button, Ratio, InputGroup } from 'react-bootstrap';
+import { Col, Row, Form, Modal, Button, Image } from 'react-bootstrap';
 // Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUserNinja, faPlaneArrival, faEdit } from "@fortawesome/free-solid-svg-icons";
+import { faUserNinja, faPlaneArrival, faDeleteLeft } from "@fortawesome/free-solid-svg-icons";
 // DataTable
 import DataTable from 'react-data-table-component';
 
-const dataTemproal = [
-    { id: 1, usuario: "Juan", Estado: "Activo" },
-    { id: 2, usuario: "Pedro", Estado: "Inactivo" }
-];
+import { useRouter } from 'next/navigation';
 
-const usuarioTemproal =
-    { id: 1, nombre: "Juan", telefono: "12345678", edad: "45", dpi: "123456789", correo: "prueba@gmail.com", placa: "12345678A", marca: "Mazda", anio: "2024", genero: "M", civi: "Soltero", direccion: "Zona 6" };
-
+const MySwal = handleSwal();
 
 function ListaConductores() {
 
-    // Obtencion de los viajes para el select
-    const [viajes, setViajes] = useState([]);
-    const obtenerViajes = async () => {
+    const router = useRouter();
+
+    // Estado para almacenar los conductores obtenidos de la API
+    const [conductores, setConductores] = useState([]);
+
+    // Estado para el modal
+    const [showUser, setShowUser] = useState(false);
+    const [userr, setUser] = useState({});
+
+    // Función para obtener los conductores desde la API
+    const obtenerConductores = async () => {
         try {
-            /*const response = await handleAxios().get('/cliente/listar');
+            const response = await handleAxios().get('conductores');
             const data = response.data;
-      
-            // Se formatea la data para que pueda almacenarse para utilizarse en un select
-            const temporal = data.map(cliente => {
-              return {
-                label: `${cliente.CUI} - ${cliente.NOMBRE} ${cliente.APELLIDO}`,
-                value: cliente.CUI
-              }
-            });*/
-            setViajes(dataTemproal);
+            
+            // Mapear la respuesta para ajustarla al formato esperado en la tabla
+            const conductoresFormateados = data.map(conductor => ({
+                id: conductor.con_id,
+                usuario: conductor.nombre,
+                Estado: conductor.estado_informacion,
+                telefono: conductor.telefono,
+                correo: conductor.correo,
+                dpi: conductor.numero_dpi,
+                placa: conductor.placa,
+                marca: conductor.marca_vehiculo,
+                anio: conductor.anio,
+                genero: conductor.genero,
+                civi: conductor.estado_civil,
+                direccion: conductor.direccion,
+                fotografia: conductor.fotografia,
+                papeleria: conductor.papeleria,
+                fechaNacimiento: conductor.fecha_nacimiento,  // Fecha de nacimiento
+                codigoEmpleado: conductor.codigo_empleado,    // Código de empleado
+            }));
+
+            setConductores(conductoresFormateados);
         } catch (error) {
             handleAxiosError(error);
         }
     }
 
+    // Ejecutar la función de obtener conductores al montar el componente
     useEffect(() => {
-        obtenerViajes();
+        obtenerConductores();
     }, []);
 
-    const [showUser, setShowUser] = useState(false);
-    const [userr, setUser] = useState({});
+    // Función para dar de baja un conductor
+    const handleDarDeBaja = async (correo) => {
+        try {
+            const response = await handleAxios().post('asistentes/block-account', { email: correo });
+            MySwal.fire({
+                title: "Bloqueo",
+                text: "Usuario Bloqueado",
+                icon: "success",
+            });
+            obtenerConductores();
+        } catch (error) {
+            handleAxiosError(error);
+        }
+    }
 
+    // Funciones para controlar el modal de detalle del conductor
     const handleCloseUser = () => {
         setUser({});
         setShowUser(false);
     }
 
     const handleShowUser = (rowUser) => {
-        setUser(usuarioTemproal);
-        setShowUser(true); // Activa el modal
+        setUser(rowUser);
+        setShowUser(true);
     }
 
+    // Función para manejar la redirección al componente de viajes del conductor
+    const handleViajesConductor = (id_conductor) => {
+        localStorage.setItem("id", id_conductor);
+        router.push(`/dashboard_asistente/ListaViajesConductor`); // Redirigir a la ruta de viajes con el id del conductor
+    };
+
+    // Definición de columnas para la tabla
     const columnas = [
         {
             name: 'NOMBRE CONDUCTOR',
@@ -81,11 +116,9 @@ function ListaConductores() {
         {
             name: 'VIAJES CONDUCTOR',
             cell: row => (
-                <>
-                    <Button variant="primary">
-                        <FontAwesomeIcon icon={faPlaneArrival} />
-                    </Button>
-                </>
+                <Button variant="primary" onClick={() => handleViajesConductor(row.id)}>
+                    <FontAwesomeIcon icon={faPlaneArrival} />
+                </Button>
             )
         },
         {
@@ -97,11 +130,10 @@ function ListaConductores() {
             name: 'Acciones',
             cell: row => (
                 <>
-                    <Button variant="warning" >
-                        <FontAwesomeIcon icon={faEdit} /> Cambiar estado
+                    <Button variant="danger" onClick={() => handleDarDeBaja(row.correo)}>
+                        <FontAwesomeIcon icon={faDeleteLeft} /> Dar de Baja
                     </Button>
                     &nbsp;
-
                 </>
             )
         },
@@ -114,7 +146,7 @@ function ListaConductores() {
                     <DataTable
                         title="Lista Conductores"
                         columns={columnas}
-                        data={viajes}
+                        data={conductores}
                         pagination
                     />
                 </Col>
@@ -128,6 +160,13 @@ function ListaConductores() {
                     </Modal.Header>
                     <Modal.Body>
                         <Row>
+                            <Col xs={12} className="text-center mb-3">
+                                {/* Mostrar la fotografía del conductor */}
+                                <Image src={userr.fotografia} rounded fluid />
+                            </Col>
+                        </Row>
+
+                        <Row>
                             <Col xs={12} md={6}>
                                 <Form.Group className="mb-3">
                                     <Form.Label htmlFor="CLIENTE_NOMBRE">Nombre</Form.Label>
@@ -137,7 +176,7 @@ function ListaConductores() {
                                         type="text"
                                         placeholder="Nombre"
                                         autoComplete="off"
-                                        defaultValue={userr.nombre}
+                                        defaultValue={userr.usuario}
                                         readOnly
                                     />
                                 </Form.Group>
@@ -160,13 +199,13 @@ function ListaConductores() {
                         <Row>
                             <Col xs={12} md={6}>
                                 <Form.Group className="mb-3">
-                                    <Form.Label htmlFor="CLIENTE_EDAD">Edad</Form.Label>
+                                    <Form.Label htmlFor="CLIENTE_CORREO">Correo</Form.Label>
                                     <Form.Control
-                                        id="CLIENTE_EDAD"
-                                        name="CLIENTE_EDAD"
+                                        id="CLIENTE_CORREO"
+                                        name="CLIENTE_CORREO"
                                         type="text"
                                         autoComplete="off"
-                                        defaultValue={userr.edad}
+                                        defaultValue={userr.correo}
                                         readOnly
                                     />
                                 </Form.Group>
@@ -189,19 +228,6 @@ function ListaConductores() {
                         <Row>
                             <Col xs={12} md={6}>
                                 <Form.Group className="mb-3">
-                                    <Form.Label htmlFor="CLIENTE_CORREO">Correo</Form.Label>
-                                    <Form.Control
-                                        id="CLIENTE_CORREO"
-                                        name="CLIENTE_CORREO"
-                                        type="text"
-                                        autoComplete="off"
-                                        defaultValue={userr.correo}
-                                        readOnly
-                                    />
-                                </Form.Group>
-                            </Col>
-                            <Col xs={12} md={6}>
-                                <Form.Group className="mb-3">
                                     <Form.Label htmlFor="CLIENTE_PLACA">Placa</Form.Label>
                                     <Form.Control
                                         id="CLIENTE_PLACA"
@@ -213,9 +239,6 @@ function ListaConductores() {
                                     />
                                 </Form.Group>
                             </Col>
-                        </Row>
-
-                        <Row>
                             <Col xs={12} md={6}>
                                 <Form.Group className="mb-3">
                                     <Form.Label htmlFor="CLIENTE_MARCA">Marca del Vehículo</Form.Label>
@@ -229,6 +252,9 @@ function ListaConductores() {
                                     />
                                 </Form.Group>
                             </Col>
+                        </Row>
+
+                        <Row>
                             <Col xs={12} md={6}>
                                 <Form.Group className="mb-3">
                                     <Form.Label htmlFor="CLIENTE_ANIO">Año del Vehículo</Form.Label>
@@ -242,9 +268,6 @@ function ListaConductores() {
                                     />
                                 </Form.Group>
                             </Col>
-                        </Row>
-
-                        <Row>
                             <Col xs={12} md={6}>
                                 <Form.Group className="mb-3">
                                     <Form.Label htmlFor="CLIENTE_GENERO">Género</Form.Label>
@@ -258,6 +281,9 @@ function ListaConductores() {
                                     />
                                 </Form.Group>
                             </Col>
+                        </Row>
+
+                        <Row>
                             <Col xs={12} md={6}>
                                 <Form.Group className="mb-3">
                                     <Form.Label htmlFor="CLIENTE_CIVIL">Estado Civil</Form.Label>
@@ -271,9 +297,6 @@ function ListaConductores() {
                                     />
                                 </Form.Group>
                             </Col>
-                        </Row>
-
-                        <Row>
                             <Col xs={12}>
                                 <Form.Group className="mb-3">
                                     <Form.Label htmlFor="CLIENTE_DIRECCION">Dirección</Form.Label>
@@ -285,6 +308,45 @@ function ListaConductores() {
                                         defaultValue={userr.direccion}
                                         readOnly
                                     />
+                                </Form.Group>
+                            </Col>
+                        </Row>
+
+                        <Row>
+                            <Col xs={12} md={6}>
+                                <Form.Group className="mb-3">
+                                    <Form.Label htmlFor="CLIENTE_FECHA_NACIMIENTO">Fecha de Nacimiento</Form.Label>
+                                    <Form.Control
+                                        id="CLIENTE_FECHA_NACIMIENTO"
+                                        name="CLIENTE_FECHA_NACIMIENTO"
+                                        type="text"
+                                        autoComplete="off"
+                                        defaultValue={userr.fechaNacimiento}
+                                        readOnly
+                                    />
+                                </Form.Group>
+                            </Col>
+                            <Col xs={12} md={6}>
+                                <Form.Group className="mb-3">
+                                    <Form.Label htmlFor="CLIENTE_CODIGO_EMPLEADO">Código Empleado</Form.Label>
+                                    <Form.Control
+                                        id="CLIENTE_CODIGO_EMPLEADO"
+                                        name="CLIENTE_CODIGO_EMPLEADO"
+                                        type="text"
+                                        autoComplete="off"
+                                        defaultValue={userr.codigoEmpleado}
+                                        readOnly
+                                    />
+                                </Form.Group>
+                            </Col>
+                        </Row>
+
+                        {/* Link de papelería */}
+                        <Row>
+                            <Col xs={12}>
+                                <Form.Group className="mb-3">
+                                    <Form.Label htmlFor="CLIENTE_PAPELERIA"></Form.Label>
+                                    <a href={userr.papeleria} target="_blank" rel="noopener noreferrer">Descargar CV</a>
                                 </Form.Group>
                             </Col>
                         </Row>

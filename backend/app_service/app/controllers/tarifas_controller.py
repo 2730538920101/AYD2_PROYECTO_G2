@@ -48,3 +48,27 @@ class TarifaController:
                 self.db.execute_query(query, (origen, destino, monto))
             else:
                 print("Error: Falta información en el JSON", tarifa)
+
+
+    #*Metodo para obtener todas las tarifas
+    @staticmethod
+    def get_tarifas():
+        try:
+            # Definir la consulta SQL para obtener las tarifas
+            query = "SELECT * FROM Tarifa"
+            # Ejecutar la consulta
+            db = MySQLSingleton()
+            result = db.fetch_all(query)
+
+            # Formatear los resultados en una lista de diccionarios
+            tarifas = []
+            for tarifa in result:
+                tarifas.append({
+                    "tarifa_id": tarifa[0],
+                    "origen": tarifa[1],
+                    "destino": tarifa[2],
+                    "monto": tarifa[3]
+                })
+            return tarifas
+        except Error as e:
+            raise Exception(f"Error al obtener las tarifas: {e}")
