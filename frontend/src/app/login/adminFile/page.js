@@ -6,15 +6,15 @@ import { faFileShield, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { handleAxiosError, handleSwal, handleAxiosMultipartJWT } from '@/helpers/axiosConfig';
 import { crearSession } from '@/helpers/session';
-import Cookies from 'js-cookie'
+import { getCookie } from '@/helpers/getCookies';
+
 
 const MySwal = handleSwal();
 
 const LoginAdmin = () => {
 
-    const cookies = Cookies.get('auth');
     const router = useRouter();
-    const {nombre} = JSON.parse(cookies);
+    const {nombre} = getCookie('auth');
     const handleUploadAdmin = async (e) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
