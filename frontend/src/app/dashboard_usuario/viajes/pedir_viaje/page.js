@@ -8,6 +8,7 @@ import { handleAxiosError, handleAxiosJWT, handleAxios, handleSwal } from '@/hel
 import { FindCliente } from '@/helpers/findCliente';
 import Cookies from 'js-cookie';
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 
 
 const MySwal = handleSwal();
@@ -145,7 +146,7 @@ const Viajes = () => {
                             Pedir Viaje
                         </Button>
                     </Form>
-                    <a href="/dashboard_usuario/viajes">Regresar</a>
+                    <Link href="/dashboard_usuario/viajes">Regresar</Link>
                 </div>
         </Col>
         </Row>
