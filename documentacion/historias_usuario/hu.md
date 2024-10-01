@@ -15,17 +15,9 @@ Yo, como cliente quiero registrarme en la plataforma ingresando toda mi informac
    - Número de celular
    - Contraseña (se debe confirmar la contraseña)
    - Pregunta de seguridad
-   - Métodos de pago
-     - Tarjeta:
-       - Nombre del propietario
-       - Número de la tarjeta (16 dígitos)
-       - Fecha de vencimiento (YYYY-MM-DD)
-       - Código CVV (3 dígitos)
-     - Efectivo al finalizar el viaje
 2. Se debe validar que todos los campos cumplan con el formato y tipo de dato acorde a lo que se solicita, de lo contrario manejo de errores.
-3. Los métodos de pago no son obligatorios llenarlos en este registro.
-4. Al completar el registro se envía una confirmación al usuario por correo electrónico, el cliente no podrá acceder a la aplicación hasta validar su información con este método de verificación.
-5. Los datos sensibles de los clientes se deben encriptar (SHA 256) previo a su almacenamiento en la base de datos.
+3. Al completar el registro se envía una confirmación al usuario por correo electrónico, el cliente no podrá acceder a la aplicación hasta validar su información con este método de verificación.
+4. Los datos sensibles de los clientes se deben encriptar (SHA 256) previo a su almacenamiento en la base de datos.
 
 **PRIORIDAD:** Alta  
 **ESTIMACIÓN:** 10
@@ -100,7 +92,7 @@ Yo como usuario administrador del sistema, necesito registrar a los usuarios con
 ### ID: HU-0004
 **TÍTULO:** Sesión de usuario cliente  
 **DESCRIPCIÓN:**  
-Yo como cliente, quiero iniciar sesión en la plataforma para poder ingresar a los módulos: Modificar información personal, calificar conductores, ver información de los conductores, reportar un inconveniente, agregar un método de pago, guardar la ubicación de mi viaje actual, cancelar el viaje actual y solicitar viajes.
+Yo como cliente, quiero iniciar sesión en la plataforma para poder ingresar a los módulos: Modificar información personal, calificar conductores, ver información de los conductores, reportar un inconveniente, guardar la ubicación de mi viaje actual, cancelar el viaje actual y solicitar viajes.
 
 **CRITERIOS DE ACEPTACIÓN:**
 1. El usuario cliente debe haber validado la cuenta luego de haberla creado y previo a iniciar sesión por primera vez en la plataforma.
@@ -196,7 +188,7 @@ Yo como usuario (cliente/conductor/asistente), quiero recuperar mi contraseña a
 ### ID: HU-0010
 **TÍTULO:** Modificar información personal usuario cliente  
 **DESCRIPCIÓN:**  
-Yo como cliente, quiero modificar la información de mi registro de usuario para completar los campos opcionales que no se llenaron anteriormente como por ejemplo agregar un método de pago y también para actualizar la información que se registró en primera instancia.
+Yo como cliente, quiero modificar la información de mi registro de usuario para completar los campos opcionales que no se llenaron anteriormente como por ejemplo actualizar la información que se registró en primera instancia.
 
 **CRITERIOS DE ACEPTACIÓN:**
 1. Se debe validar que todos los campos cumplan con el formato y tipo de dato acorde a lo que se solicita, de lo contrario manejo de errores.
@@ -240,7 +232,7 @@ Yo como cliente, necesito enviar una señal de alerta en caso algo sale mal dura
 
 **CRITERIOS DE ACEPTACIÓN:**
 1. Durante el viaje el cliente puede enviar una sola alerta de pánico.
-2. Se debe solicitar una descripción de lo sucedido para incluirla en el mensaje de alerta.
+2. Se debe solicitar una descripción y fotografía de lo sucedido para incluirla en el mensaje de alerta.
 3. El viaje se debe pasar a estado “PANICO” y enviar las notificaciones correspondientes a la central de alertas a la cual solo tendrán acceso los administradores de la plataforma y asistentes.
 4. Los datos se deben ingresar correctamente, con el formato y tipo de dato correspondiente, de lo contrario, manejar el error.
 
@@ -284,13 +276,13 @@ Yo como cliente, necesito ver los viajes del historial de viajes para poder hace
 ### ID: HU-0016
 **TÍTULO:** Cancelar viaje cliente  
 **DESCRIPCIÓN:**  
-Yo como cliente, necesito la opción de poder cancelar los viajes en curso para que sea reasignado a otro conductor.
+Yo como cliente, necesito la opción de poder cancelar los viajes activos.
 
 **CRITERIOS DE ACEPTACIÓN:**
 1. Solo se puede cancelar un viaje si está en estado “EN ESPERA” y “ACEPTADO”, ya que, se debe esperar la aceptación del conductor para que sea asignado un viaje. Si el conductor acepta el viaje, aún es posible cancelarlo porque el cliente no se ha subido al vehículo.
 2. Se debe indicar la razón de la cancelación.
 3. Si un cliente cancela 3 viajes o más en un día, su calificación sufrirá de una penalización de una estrella.
-4. Se debe enviar una notificación a los usuarios tipo cliente y conductor, indicando que el viaje fue cancelado y que será enviado a la lista de espera para ser reasignado a un nuevo conductor.
+4. Se debe enviar una notificación a los usuarios tipo cliente y conductor, indicando que el viaje fue cancelado.
 
 **PRIORIDAD:** Media  
 **ESTIMACIÓN:** 5
@@ -315,12 +307,13 @@ Yo como conductor, necesito tener acceso a las solicitudes de viaje que generan 
 ### ID: HU-0018
 **TÍTULO:** Cancelar viaje conductor  
 **DESCRIPCIÓN:**  
-Yo como conductor, necesito la opción de poder cancelar los viajes en curso para que sea reasignado a otro conductor.
+Yo como conductor, necesito la opción de poder cancelar los viajes en curso.
 
 **CRITERIOS DE ACEPTACIÓN:**
 1. Solo se puede cancelar un viaje si está en estado “EN ESPERA” y “ACEPTADO”, ya que, se debe esperar la aceptación del conductor para que sea asignado un viaje. Si el conductor acepta el viaje, aún es posible cancelarlo porque el cliente no se ha subido al vehículo.
 2. Se debe indicar la razón de la cancelación.
 3. Se debe enviar una notificación a los usuarios tipo cliente y conductor, indicando que el viaje fue cancelado y que será enviado a la lista de espera para ser reasignado a un nuevo conductor.
+4. Al hacer 10 cancelaciones el mismo día se bloqueara la cuenta del conductor.
 
 **PRIORIDAD:** Media  
 **ESTIMACIÓN:** 8
@@ -349,7 +342,7 @@ Yo como conductor, necesito enviar una señal de alerta en caso algo sale mal du
 
 **CRITERIOS DE ACEPTACIÓN:**
 1. Durante el viaje el conductor puede enviar una sola alerta de pánico.
-2. Se debe solicitar una descripción de lo sucedido para incluirla en el mensaje de alerta.
+2. Se debe solicitar una descripción y fotografía de lo sucedido para incluirla en el mensaje de alerta.
 3. El viaje se debe pasar a estado “PANICO” y enviar las notificaciones correspondientes a la central de alertas a la cual solo tendrán acceso los administradores de la plataforma y asistentes.
 4. Los datos se deben ingresar correctamente, con el formato y tipo de dato correspondiente, de lo contrario, manejar el error.
 
@@ -380,8 +373,8 @@ Yo como conductor, cuando acepto un viaje, necesito ver detalles importantes sob
 **CRITERIOS DE ACEPTACIÓN:**
 1. La calificación es el promedio de estrellas que tiene el cliente (aproximado) en el total de los viajes en los que ha sido calificado por los demás usuarios.
 
-**PRIORIDAD:** Baja  
-**ESTIMACIÓN:** 3
+**PRIORIDAD:** Media  
+**ESTIMACIÓN:** 5
 
 ---
 
@@ -629,6 +622,47 @@ Yo como administrador, quiero cargar las tarifas establecidas en el sistema, des
 
 **PRIORIDAD:** Media  
 **ESTIMACIÓN:** 5
+
+---
+
+### ID: HU-0040
+**TÍTULO:** Solicitudes activar cuenta conductor  
+**DESCRIPCIÓN:**  
+Yo como asistente, necesito ver las solicitudes de conductor para poder gestionarlas.
+
+**CRITERIOS DE ACEPTACIÓN:**
+1. Se debe visualizar la lista de solicitudes.
+2. Cada solicitud debe contar con el documento e justificación.
+
+**PRIORIDAD:** Baja  
+**ESTIMACIÓN:** 3
+
+---
+
+### ID: HU-0041
+**TÍTULO:** Activar cuenta conductor  
+**DESCRIPCIÓN:**  
+Yo como conductor, necesito solicitar la activación de la cuenta.
+
+**CRITERIOS DE ACEPTACIÓN:**
+1. Se debe permitir subir un documento con la justificación de la cancelación de los viajes.
+
+**PRIORIDAD:** Baja  
+**ESTIMACIÓN:** 3
+
+---
+
+### ID: HU-0042
+**TÍTULO:** Reporte impago  
+**DESCRIPCIÓN:**  
+Yo como conductor, necesito realizar un reporte cuando un cliente no cumpla con el pago del servicio.
+
+**CRITERIOS DE ACEPTACIÓN:**
+1. Permitir reportar a un cliente si al finalizar un viaje no cumple con el pago.
+2. Bloquear al usuario que no cumplió con el pago del servicio. 
+
+**PRIORIDAD:** Baja  
+**ESTIMACIÓN:** 3
 
 
 [REGRESAR](../../README.md)

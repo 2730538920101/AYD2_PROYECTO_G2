@@ -29,6 +29,21 @@
 14. [Matriz de Stakeholders VS Casos de uso](documentacion/matrices/stakeholders-cdu.md)
 15. [Gestión del proyecto](https://ayd1.atlassian.net/jira/software/projects/AYD2PRO/boards/5?atlOrigin=eyJpIjoiNDM3NjBlZTU1MDdhNGU5ZGEzZDA2OWNjN2M4Y2JiMjAiLCJwIjoiaiJ9)
 
+## Documentacion de metodologías ágiles implementadas
+1.  [Sprint Planning review](documentacion/scrum/sprint_planning.md)
+2.  [Sprint dailys review](documentacion/scrum/sprint_daily.md)
+3.  [Sprint kanban review](documentacion/scrum/sprint_kanban.md)
+4.  [Sprint backlog review](documentacion/scrum/sprint_backlog_review.md)
+5.  [Sprint retrospective review](documentacion/scrum//sprint_retrospective.md)
+
+## Documentacion del backend
+
+
+
+**SOLO PARA LOS MIEMBROS DEL GRUPO**
+
+[<img src="https://run.pstmn.io/button.svg" alt="Run In Postman" style="width: 128px; height: 32px;">](https://ayd288.postman.co/collection/14490412-f157c578-a165-4b9f-95c9-86a2b0ad295a?source=rip_markdown)
+
 ## Propuesta de interfaz de usuario
 
 |----------------------------------------------------------------------------------------------------|
