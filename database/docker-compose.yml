@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+
+  # Servicio para la base de datos
+  database:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: carlosmz87/ayd2_p1_database:latest
+    container_name: ayd2_p1_database_container
+    volumes:
+      - ayd2_p1_data:/var/lib/mysql
+    networks:
+      - ayd2_p1_external_network
+    ports:
+      - "${DATABASE_PORT}:${DATABASE_PORT}"
+    env_file:
+      - .env
+  
+volumes:
+  ayd2_p1_data:
+
+networks:
+  ayd2_p1_external_network:
+    external: true 

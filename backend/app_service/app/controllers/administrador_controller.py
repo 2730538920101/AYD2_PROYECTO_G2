@@ -3,6 +3,8 @@ from mysql.connector import Error
 from ..controllers.encryption_controller import EncryptionController
 from ..services.cognito_service import CognitoService  # Importar el servicio de Cognito
 from ..models.factory_method.factory import UserFactory  # Importar la fábrica de usuarios
+import os
+
 
 class AdministradorController:
     def __init__(self):
@@ -25,9 +27,9 @@ class AdministradorController:
     def create_administrador(self, administrador):
         """
         Insertar un nuevo administrador en la base de datos y registrar en Cognito.
+        También escribir el valor encriptado de validacion en un archivo.
         """
         try:
-            
             # Registrar al administrador en Cognito primero
             cognito_response = self.cognito_service.register_user(
                 administrador.usuario,
@@ -43,18 +45,30 @@ class AdministradorController:
                 INSERT INTO Administrador (usuario, contrasenia, validacion)
                 VALUES (%s, %s, %s)
                 """
+                encrypted_password = EncryptionController().encrypt(password=administrador.contrasenia, action='encrypt')
+                encrypted_validation = EncryptionController().encrypt(password=administrador.validacion, action='encrypt')
+
                 values = (
-                    administrador.usuario,              # Usuario es el correo
-                    EncryptionController().encrypt(password=administrador.contrasenia, action='encrypt'),         # Contraseña ya encriptada
-                    EncryptionController().encrypt(password=administrador.validacion, action='encrypt')        # Validación adicional si aplica
+                    administrador.usuario,          # Usuario es el correo
+                    encrypted_password,             # Contraseña ya encriptada
+                    encrypted_validation            # Validación también encriptada
                 )
 
                 # Ejecutar la consulta usando el singleton
                 self.db.execute_query(query, values)
 
                 print("Administrador registrado en la base de datos.")
+
+                # Escribir la validación encriptada en un archivo
+                file_path = os.path.join(os.getcwd(), 'clave.ayd')
+                with open(file_path, 'wb') as file:
+                    file.write(encrypted_validation)
+
+                    print(f"Archivo 'clave.ayd' creado en la ruta: {file_path}")
+
             else:
-                raise Exception("Error al registrar el administrador en Cognito.")        
+                raise Exception("Error al registrar el administrador en Cognito.")
+        
         except Error as e:
             raise Exception(f"Error al insertar administrador en la base de datos: {e}")
 
