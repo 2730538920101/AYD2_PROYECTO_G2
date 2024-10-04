@@ -15,3 +15,4 @@ crash.*.log
 
 ayd2_p1_bastion_key
 ayd2_p1_bastion_key.pub
+/ansible/.env
