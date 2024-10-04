@@ -10,14 +10,14 @@ class CognitoService:
             self.cognito_client = boto3.client(
                 'cognito-idp',
                 region_name=Config.AWS_REGION,
-                aws_access_key_id=Config.COGNITO_AWS_ACCESS_KEY_ID,
-                aws_secret_access_key=Config.COGNITO_AWS_SECRET_ACCESS_KEY
+                aws_access_key_id=Config.AWS_ACCESS_KEY_ID,
+                aws_secret_access_key=Config.AWS_SECRET_ACCESS_KEY
             )
             self.identity_client = boto3.client(
                 'cognito-identity',
                 region_name=Config.AWS_REGION,
-                aws_access_key_id=Config.COGNITO_AWS_ACCESS_KEY_ID,
-                aws_secret_access_key=Config.COGNITO_AWS_SECRET_ACCESS_KEY
+                aws_access_key_id=Config.AWS_ACCESS_KEY_ID,
+                aws_secret_access_key=Config.AWS_SECRET_ACCESS_KEY
             )
         except (NoCredentialsError, PartialCredentialsError) as e:
             print(f"Credenciales no encontradas o incompletas: {e}")
