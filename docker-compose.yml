@@ -38,6 +38,7 @@ services:
       - "${APP_PORT}:${APP_PORT}"
     networks:
       - ayd2_p1_network
+    restart: on-failure
     environment:
       - SECRET_KEY=${SECRET_KEY}
       - APP_PORT=${APP_PORT}

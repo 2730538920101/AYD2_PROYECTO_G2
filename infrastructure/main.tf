@@ -19,7 +19,10 @@ module "ec2" {
   ec2_name                   = var.ec2_name
   public_subnet_ids          = module.vpc.public_subnets
   rds_endpoint               = module.rds.rds_endpoint
-  vpc_id                      = module.vpc.vpc_id
+  vpc_id                     = module.vpc.vpc_id
+  database_init_path         = var.database_init_path
+  ansible_playbook_path      = var.ansible_playbook_path
+  github_access_token        = var.github_access_token
 }
 
 module "rds" {

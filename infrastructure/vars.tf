@@ -212,3 +212,15 @@ variable "availability_zones" {
   default     = ["us-east-1a", "us-east-1b"]
 }
 
+
+variable "database_init_path" {
+  description = "Ruta al db_init.sql"
+}
+
+variable "ansible_playbook_path" {
+  description = "Ruta al playbook de ansible"
+}
+
+variable "github_access_token" {
+  description = "Token de autenticacion para github"
+}

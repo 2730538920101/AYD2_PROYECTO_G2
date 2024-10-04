@@ -1,0 +1,102 @@
+---
+- name: Configurar instancia para aplicación
+  hosts: localhost
+  become: true  # Permitir elevación de privilegios
+  tasks:
+    - name: Actualizar paquetes APT
+      apt:
+        update_cache: true  # Actualizar caché de paquetes
+
+    - name: Instalar MySQL client
+      apt:
+        name: mysql-client
+        state: present
+
+    - name: Copiar el script SQL
+      copy:
+        src: /home/ubuntu/db_init.sql
+        dest: /home/ubuntu/db_init.sql
+        mode: '0755'
+
+    - name: Copiar el script run_sql.sh
+      copy:
+        src: /home/ubuntu/run_sql.sh
+        dest: /home/ubuntu/run_sql.sh
+        mode: '0755'  # Otorgar permisos de ejecución
+
+    - name: Cambiar propietario del script run_sql.sh a usuario 'ubuntu'
+      file:
+        path: /home/ubuntu/run_sql.sh
+        owner: ubuntu
+        group: ubuntu
+        mode: '0755'  # Asegurar permisos de ejecución
+
+    - name: Ejecutar el script run_sql.sh
+      shell: "/home/ubuntu/run_sql.sh"
+      register: run_sql_output
+      ignore_errors: true
+
+    - name: Mostrar salida del script run_sql.sh
+      debug:
+        var: run_sql_output
+
+    - name: Instalar Docker
+      apt:
+        name: docker.io
+        state: present
+
+    - name: Iniciar y habilitar Docker
+      service:
+        name: docker
+        state: started
+        enabled: true  # Habilitar Docker para que inicie al arrancar
+
+    # --- Instalación de Docker Compose ---
+    
+    - name: Descargar la última versión de Docker Compose
+      shell: |
+        sudo curl -L "https://github.com/docker/compose/releases/download/$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep -Po '"tag_name": "\K.*\d')" /usr/local/bin/docker-compose
+        sudo chmod +x /usr/local/bin/docker-compose
+
+    - name: Verificar instalación de Docker Compose
+      command: docker-compose --version
+      register: docker_compose_version
+
+    - name: Mostrar versión de Docker Compose instalada
+      debug:
+        var: docker_compose_version
+
+
+    # --- Nuevas tareas para Git y clonar el repositorio ---
+
+    - name: Instalar Git
+      apt:
+        name: git
+        state: present
+
+    - name: Clonar el repositorio de GitHub usando Token de Acceso Personal
+      git:
+        repo: https://{{ lookup('env', 'GITHUB_TOKEN') }}@github.com/2730538920101/AYD2_PROYECTO_G2.git
+        dest: /home/ubuntu/AYD2_PROYECTO_G2
+        version: "main"
+        force: yes
+
+    # --- Navegar a la carpeta del repositorio y ejecutar Docker Compose ---
+    
+    - name: Navegar a la carpeta del repositorio clonado
+      shell: "cd /home/ubuntu/AYD2_PROYECTO_G2"
+      args:
+        chdir: /home/ubuntu/AYD2_PROYECTO_G2
+
+    - name: Ejecutar Docker Compose
+      shell: "docker-compose up -d"
+      args:
+        chdir: /home/ubuntu/AYD2_PROYECTO_G2
+
+    - name: Verificar contenedores en ejecución
+      command: "docker ps"
+      register: docker_ps_output
+
+    - name: Mostrar los contenedores en ejecución
+      debug:
+        var: docker_ps_output

@@ -38,6 +38,9 @@ db_user                    = "proyecto1"
 db_password                = "proyecto1"
 db_database                = "PROYECTO_VIAJES"
 
+database_init_path          = "/database/db_init.sql"
+ansible_playbook_path       = "/ansible/playbook.yaml"
+github_access_token         =
 
 Login AWS account
 
