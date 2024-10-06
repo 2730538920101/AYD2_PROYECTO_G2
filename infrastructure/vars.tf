@@ -1,4 +1,4 @@
-
+# Variables para la configuracion de terraform
 
 variable "project_name" {
   description = "Project name to tag resources"
@@ -14,7 +14,6 @@ variable "AWS_ACCESS_KEY" {
     description = "Llave de acceso AWS"
 }
 
-
 variable "AWS_SECRET_KEY" {
     description = "Llave secreta para acceso AWS"
 }
@@ -28,14 +27,10 @@ variable "aws_account_id" {
   type        = string
 }
 
-
-
 variable "ec2_name" {
   description = "Nombre del bastion host de administracion"
   default = "ayd2-p1"
 }
-
-
 
 variable "bastion_ami_id" {
   description = "AMI ID for the Bastion Host"
@@ -63,117 +58,19 @@ variable "rds_password" {
   description = "Password del usuario para el acceso a la base de datos"
 }
 
-
 variable "rds_name" {
   description = "Nombre del servicio de base de datos RDS con Mysql"
   default = "ayd2-p1"
 }
 
-
 variable "rds_dbname" {
   description = "Nombre de la base de datos"
-}
-
-
-
-
-
-variable "ecs_cluster_name" {
-  description = "Nombre para elementos del cluster de ECS"
-  default = "ayd2-p1"
 }
 
 variable "ecs_ami_id" {
   description = "Id de la AMI Optimizada para ECS"
   default = "ami-093d9f343e2236e99"
 }
-
-variable "app_port" {
-  description = "Puerto en el que se ejecuta el servicio de aplicación"
-  type        = number
-}
-
-variable "app_host" {
-  description = "Host para la aplicación"
-  type        = string
-}
-
-variable "secret_key" {
-  description = "Clave secreta para la aplicación"
-  type        = string
-}
-
-variable "auth_service_port" {
-  description = "Puerto en el que se ejecuta el servicio de autenticación"
-  type        = number
-}
-
-variable "producer_port" {
-  description = "Puerto en el que se ejecuta el productor de notificaciones"
-  type        = number
-}
-
-variable "consumer_port" {
-  description = "Puerto en el que se ejecuta el consumidor de notificaciones"
-  type        = number
-}
-
-variable "frontend_port" {
-  description = "Puerto en el que se ejecuta el frontend"
-  type        = number
-}
-
-variable "next_public_app_service" {
-  description = "URL pública del servicio de aplicación"
-  type        = string
-}
-
-variable "next_public_auth_service" {
-  description = "URL pública del servicio de autenticación"
-  type        = string
-}
-
-variable "next_public_notification_producer_service" {
-  description = "URL pública del servicio productor de notificaciones"
-  type        = string
-}
-
-variable "next_public_notification_consumer_service" {
-  description = "URL pública del servicio consumidor de notificaciones"
-  type        = string
-}
-
-variable "next_public_app_version" {
-  description = "Versión de la aplicación para el frontend"
-  type        = string
-}
-
-variable "sqs_queue_url" {
-  description = "URL de la cola de SQS utilizada"
-  type        = string
-}
-
-variable "db_host" {
-  description = "Host de la base de datos"
-  type        = string
-}
-
-variable "db_user" {
-  description = "Usuario para la base de datos"
-  type        = string
-}
-
-variable "db_password" {
-  description = "Contraseña para la base de datos"
-  type        = string
-}
-
-variable "db_database" {
-  description = "Nombre de la base de datos"
-  type        = string
-}
-
-
 
 variable "user_pool_name"{
   description = "Nombre del pool de usuarios de Cognito a utilizar"
@@ -184,6 +81,7 @@ variable "bucket_name" {
   description = "Nombre del bucket a utilizar"
   default = "ayd2-p1"
 }
+
 variable "queue_name"{
   description = "Nombre de la cola standar de SQS a utilizar"
   default = "ayd2-p1"
@@ -212,7 +110,6 @@ variable "availability_zones" {
   default     = ["us-east-1a", "us-east-1b"]
 }
 
-
 variable "database_init_path" {
   description = "Ruta al db_init.sql"
 }
@@ -223,4 +120,70 @@ variable "ansible_playbook_path" {
 
 variable "github_access_token" {
   description = "Token de autenticacion para github"
+}
+
+### Variables por defecto que conectaran los contenedores de docker
+
+variable "database_port" {
+  description = "Puerto para conectarse a la base de datos"
+}
+
+# Variables de entorno para APP_SERVICE
+variable "app_port" {
+  description = "Puerto para el app service en Docker"
+}
+
+variable "app_host" {
+  description = "IP del host del contenedor del app service"
+}
+
+variable "admin_email" {
+  description = "Correo del usuario administrador creado automaticamente al levantar el contenedor"
+}
+
+variable "admin_password" {
+  description = "Password del usuario administrador creado automaticamente al lenvantar el contenedor"
+}
+
+variable "admin_validation" {
+  description = "Clave de validacion para iniciar sesion como administrador en el app service"
+}
+
+# Variables de entorno para PRODUCER
+variable "producer_port" {
+  description = "Puerto para la conexion al contenedor del producer del notification service"
+}
+
+# Variables de entorno para CONSUMER
+variable "consumer_port" {
+  description = "Puerto para la conexion al contenedor del consumer del notification service"
+}
+
+# Variables de entorno para el frontend
+variable "frontend_port" {
+  description = "Puerto para la conexion al contenedor del servicio de frontend"
+}
+
+variable "next_public_app_service" {
+  description = "Ruta para la API del app service"
+}
+
+variable "next_public_notification_producer_service" {
+  description = "Ruta para la API del producer del notification service"
+}
+
+variable "next_public_notification_consumer_service" {
+  description = "Ruta para la API del consumer del notification service"
+}
+
+variable "next_public_app_version" {
+  description = "version de la app del cliente"
+}
+
+variable "ayd2_aws_access_key_id" {
+  description = "Clave de acceso AWS"
+}
+
+variable "ayd2_aws_secret_access_key" {
+  description = "Clave secreta de AWS"
 }
