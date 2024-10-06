@@ -132,40 +132,53 @@ resource "aws_instance" "bastion" {
       host        = self.public_ip
     }
   }
+  # Crear el archivo .env en la carpeta AYD2_PROYECTO_G2
+  provisioner "file" {
+    content = <<-EOF
+      MYSQL_DATABASE=${var.rds_dbname}
+      MYSQL_USER=${var.rds_username}
+      MYSQL_PASSWORD=${var.rds_password}
+      MYSQL_HOST=${split(":", var.rds_endpoint)[0]}
+      DATABASE_PORT=${var.database_port}
+
+      APP_PORT=${var.app_port}
+      APP_HOST=${var.app_host}
+      AWS_REGION=${var.AWS_REGION}
+      AWS_BUCKET_NAME=${var.aws_bucket_name}
+      AWS_ACCESS_KEY_ID=${var.ayd2_aws_access_key_id}
+      AWS_SECRET_ACCESS_KEY=${var.ayd2_aws_secret_access_key}
+
+      COGNITO_USER_POOL_ID=${var.cognito_user_pool_id}
+      COGNITO_USER_POOL_CLIENT_ID=${var.cognito_user_pool_client_id}
+      COGNITO_IDENTITY_POOL_ID=${var.cognito_identity_pool_id}
+
+      ADMIN_EMAIL=${var.admin_email}
+      ADMIN_PASSWORD=${var.admin_password}
+      ADMIN_VALIDATION=${var.admin_validation}
+
+      SQS_QUEUE_URL=${var.sqs_queue_url}
+      PRODUCER_PORT=${var.producer_port}
+      CONSUMER_PORT=${var.consumer_port}
+      FRONTEND_PORT=${var.frontend_port}
+      NEXT_PUBLIC_APP_SERVICE=${var.next_public_app_service}
+      NEXT_PUBLIC_NOTIFICATION_PRODUCER_SERVICE=${var.next_public_notification_producer_service}
+      NEXT_PUBLIC_NOTIFICATION_CONSUMER_SERVICE=${var.next_public_notification_consumer_service}
+      NEXT_PUBLIC_APP_VERSION=${var.next_public_app_version}
+    EOF
+    destination = "/home/ubuntu/.env"
+
+    connection {
+      type        = "ssh"
+      user        = "ubuntu"
+      private_key = file(var.bastion_private_key_path)
+      host        = self.public_ip
+    }
+  }
 
   # Configurar variables de entorno para RDS
   provisioner "remote-exec" {
     inline = [  
         "export GITHUB_TOKEN=${var.github_access_token}",
-        "export MYSQL_DATABASE=${var.rds_dbname}",
-        "export MYSQL_USER=${var.rds_username}",
-        "export MYSQL_PASSWORD=${var.rds_password}",
-        "export MYSQL_HOST=${var.rds_endpoint}",
-        "export DATABASE_PORT=${var.database_port}",
-
-        "export APP_PORT=${var.app_port}",
-        "export APP_HOST=${var.app_host}",
-        "export AWS_REGION=${var.AWS_REGION}",
-        "export AWS_BUCKET_NAME=${var.aws_bucket_name}",
-        "export AWS_ACCESS_KEY_ID=${var.ayd2_aws_access_key_id}",
-        "export AWS_SECRET_ACCESS_KEY=${var.ayd2_aws_secret_access_key}",
-
-        "export COGNITO_USER_POOL_ID=${var.cognito_user_pool_id}",
-        "export COGNITO_USER_POOL_CLIENT_ID=${var.cognito_user_pool_client_id}",
-        "export COGNITO_IDENTITY_POOL_ID=${var.cognito_identity_pool_id}",
-
-        "export ADMIN_EMAIL=${var.admin_email}",
-        "export ADMIN_PASSWORD=${var.admin_password}",
-        "export ADMIN_VALIDATION=${var.admin_validation}",
-
-        "export SQS_QUEUE_URL=${var.sqs_queue_url}",
-        "export PRODUCER_PORT=${var.producer_port}",
-        "export CONSUMER_PORT=${var.consumer_port}",
-        "export FRONTEND_PORT=${var.frontend_port}",
-        "export NEXT_PUBLIC_APP_SERVICE=${var.next_public_app_service}",
-        "export NEXT_PUBLIC_NOTIFICATION_PRODUCER_SERVICE=${var.next_public_notification_producer_service}",
-        "export NEXT_PUBLIC_NOTIFICATION_CONSUMER_SERVICE=${var.next_public_notification_consumer_service}",
-        "export NEXT_PUBLIC_APP_VERSION=${var.next_public_app_version}",
         "ansible-playbook /home/ubuntu/playbook.yaml"
     ]
 

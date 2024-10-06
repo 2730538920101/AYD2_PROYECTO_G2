@@ -51,14 +51,17 @@
         state: started
         enabled: true  # Habilitar Docker para que inicie al arrancar
 
-    # --- Instalación de Docker Compose ---
-    
+    - name: Agregar usuario 'ubuntu' al grupo 'docker'
+      user:
+        name: ubuntu
+        group: docker
+        append: true
+
     - name: Descargar la última versión de Docker Compose
       shell: |
         LATEST_VERSION=$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep -Po '"tag_name": "\K.*\d')
-        sudo curl -L "https://github.com/docker/compose/releases/download/${LATEST_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-        sudo chmod +x /usr/local/bin/docker-compose
-
+        curl -L "https://github.com/docker/compose/releases/download/${LATEST_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+        chmod +x /usr/local/bin/docker-compose
 
     - name: Verificar instalación de Docker Compose
       command: docker-compose --version
@@ -67,7 +70,6 @@
     - name: Mostrar versión de Docker Compose instalada
       debug:
         var: docker_compose_version
-
 
     # --- Nuevas tareas para Git y clonar el repositorio ---
 
@@ -80,8 +82,18 @@
       git:
         repo: https://{{ lookup('env', 'GITHUB_TOKEN') }}@github.com/2730538920101/AYD2_PROYECTO_G2.git
         dest: /home/ubuntu/AYD2_PROYECTO_G2
-        version: "main"
+        version: "develop"
         force: yes
+
+    # --- Mover el archivo .env a la carpeta del proyecto ---
+    
+    - name: Mover archivo .env a la carpeta del proyecto
+      command: mv /home/ubuntu/.env /home/ubuntu/AYD2_PROYECTO_G2/.env
+
+    - name: Otorgar permisos al archivo .env
+      file:
+        path: /home/ubuntu/AYD2_PROYECTO_G2/.env
+        mode: '0600'
 
     # --- Navegar a la carpeta del repositorio y ejecutar Docker Compose ---
     
