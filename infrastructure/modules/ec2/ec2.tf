@@ -49,6 +49,22 @@ resource "aws_security_group" "bastion_sg" {
     cidr_blocks = ["0.0.0.0/0"] # Puerto para el contenedor 4 (3000)
   }
 
+  # Regla para puerto 80 (HTTP)
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"] # Permitir acceso HTTP público
+  }
+
+  # Regla para puerto 443 (HTTPS)
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"] # Permitir acceso HTTPS público
+  }
+
   # Reglas de salida (Egress)
   egress {
     from_port   = 0
