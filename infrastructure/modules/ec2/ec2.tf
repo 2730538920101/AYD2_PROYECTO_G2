@@ -137,6 +137,35 @@ resource "aws_instance" "bastion" {
   provisioner "remote-exec" {
     inline = [  
         "export GITHUB_TOKEN=${var.github_access_token}",
+        "export MYSQL_DATABASE=${var.rds_dbname}",
+        "export MYSQL_USER=${var.rds_username}",
+        "export MYSQL_PASSWORD=${var.rds_password}",
+        "export MYSQL_HOST=${var.rds_endpoint}",
+        "export DATABASE_PORT=${var.database_port}",
+
+        "export APP_PORT=${var.app_port}",
+        "export APP_HOST=${var.app_host}",
+        "export AWS_REGION=${var.AWS_REGION}",
+        "export AWS_BUCKET_NAME=${var.aws_bucket_name}",
+        "export AWS_ACCESS_KEY_ID=${var.ayd2_aws_access_key_id}",
+        "export AWS_SECRET_ACCESS_KEY=${var.ayd2_aws_secret_access_key}",
+
+        "export COGNITO_USER_POOL_ID=${var.cognito_user_pool_id}",
+        "export COGNITO_USER_POOL_CLIENT_ID=${var.cognito_user_pool_client_id}",
+        "export COGNITO_IDENTITY_POOL_ID=${var.cognito_identity_pool_id}",
+
+        "export ADMIN_EMAIL=${var.admin_email}",
+        "export ADMIN_PASSWORD=${var.admin_password}",
+        "export ADMIN_VALIDATION=${var.admin_validation}",
+
+        "export SQS_QUEUE_URL=${var.sqs_queue_url}",
+        "export PRODUCER_PORT=${var.producer_port}",
+        "export CONSUMER_PORT=${var.consumer_port}",
+        "export FRONTEND_PORT=${var.frontend_port}",
+        "export NEXT_PUBLIC_APP_SERVICE=${var.next_public_app_service}",
+        "export NEXT_PUBLIC_NOTIFICATION_PRODUCER_SERVICE=${var.next_public_notification_producer_service}",
+        "export NEXT_PUBLIC_NOTIFICATION_CONSUMER_SERVICE=${var.next_public_notification_consumer_service}",
+        "export NEXT_PUBLIC_APP_VERSION=${var.next_public_app_version}",
         "ansible-playbook /home/ubuntu/playbook.yaml"
     ]
 

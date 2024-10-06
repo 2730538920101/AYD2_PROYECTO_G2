@@ -55,8 +55,10 @@
     
     - name: Descargar la última versión de Docker Compose
       shell: |
-        sudo curl -L "https://github.com/docker/compose/releases/download/$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep -Po '"tag_name": "\K.*\d')" /usr/local/bin/docker-compose
+        LATEST_VERSION=$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep -Po '"tag_name": "\K.*\d')
+        sudo curl -L "https://github.com/docker/compose/releases/download/${LATEST_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
         sudo chmod +x /usr/local/bin/docker-compose
+
 
     - name: Verificar instalación de Docker Compose
       command: docker-compose --version
@@ -89,7 +91,7 @@
         chdir: /home/ubuntu/AYD2_PROYECTO_G2
 
     - name: Ejecutar Docker Compose
-      shell: "docker-compose up -d"
+      shell: "docker-compose -f docker-compose.prod.yml up -d"
       args:
         chdir: /home/ubuntu/AYD2_PROYECTO_G2
 
