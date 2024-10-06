@@ -28,16 +28,13 @@ module "ec2" {
   # Variables de Docker
   database_port                                     = var.database_port
   app_port                                          = var.app_port
-  app_host                                          = var.app_host
+  app_host                                          = var.app_host      
   admin_email                                       = var.admin_email
   admin_password                                    = var.admin_password
   admin_validation                                  = var.admin_validation
   producer_port                                     = var.producer_port
   consumer_port                                     = var.consumer_port
   frontend_port                                     = var.frontend_port
-  next_public_app_service                           = var.next_public_app_service
-  next_public_notification_producer_service         = var.next_public_notification_producer_service
-  next_public_notification_consumer_service         = var.next_public_notification_consumer_service
   next_public_app_version                           = var.next_public_app_version
   ayd2_aws_access_key_id                            = var.ayd2_aws_access_key_id
   ayd2_aws_secret_access_key                        = var.ayd2_aws_secret_access_key 
@@ -47,6 +44,9 @@ module "ec2" {
   cognito_user_pool_client_id                       = module.cognito.user_pool_client_id
   cognito_identity_pool_id                          = module.cognito.identity_pool_id
   sqs_queue_url                                     = module.sqs.standard_queue_url     # Asignando la URL de la cola SQS
+  next_public_app_service                           = var.next_public_app_service
+  next_public_notification_producer_service         = var.next_public_notification_producer_service
+  next_public_notification_consumer_service         = var.next_public_notification_consumer_service 
 }
 
 module "rds" {

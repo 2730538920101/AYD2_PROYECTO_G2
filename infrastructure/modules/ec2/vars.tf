@@ -87,7 +87,7 @@ variable "app_port" {
 }
 
 variable "app_host" {
-  description = "IP del host del contenedor del app service"
+  description = "Host para el app service en Docker"  
 }
 
 variable "admin_email" {
@@ -115,18 +115,6 @@ variable "consumer_port" {
 # Variables de entorno para el frontend
 variable "frontend_port" {
   description = "Puerto para la conexion al contenedor del servicio de frontend"
-}
-
-variable "next_public_app_service" {
-  description = "Ruta para la API del app service"
-}
-
-variable "next_public_notification_producer_service" {
-  description = "Ruta para la API del producer del notification service"
-}
-
-variable "next_public_notification_consumer_service" {
-  description = "Ruta para la API del consumer del notification service"
 }
 
 variable "next_public_app_version" {
@@ -164,4 +152,16 @@ variable "cognito_identity_pool_id" {
 # Variables de entorno para AWS SQS
 variable "sqs_queue_url" {
   description = "URL de la cola SQS"
+}
+
+variable "next_public_app_service" {
+  description = "Ruta para la API del app service"
+}
+
+variable "next_public_notification_producer_service" {
+  description = "Ruta para la API del producer del notification service"
+}
+
+variable "next_public_notification_consumer_service" {
+  description = "Ruta para la API del consumer del notification service"
 }

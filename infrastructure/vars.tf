@@ -134,7 +134,7 @@ variable "app_port" {
 }
 
 variable "app_host" {
-  description = "IP del host del contenedor del app service"
+  description = "Host para el app service en Docker"  
 }
 
 variable "admin_email" {
