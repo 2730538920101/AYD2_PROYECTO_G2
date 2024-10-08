@@ -63,21 +63,21 @@ export const handleSwal = () => {
 }
 
 export const handleAxios = () => {
-    axios.defaults.baseURL = process.env.NEXT_PUBLIC_API;
+    axios.defaults.baseURL = process.env.NEXT_PUBLIC_APP_SERVICE;
     axios.defaults.headers.common['Accept'] = 'application/json';
     axios.defaults.headers.common['Content-Type'] = 'application/json';
     return axios;
 };
 
 export const handleAxiosMultipart = () => {
-    axios.defaults.baseURL = process.env.NEXT_PUBLIC_API;
+    axios.defaults.baseURL = process.env.NEXT_PUBLIC_APP_SERVICE;
     axios.defaults.headers.common['Accept'] = 'application/json';
     axios.defaults.headers.common['Content-Type'] = 'multipart/form-data';
     return axios;
 };
 
 export const handleAxiosJWT = () => {
-    axios.defaults.baseURL = process.env.NEXT_PUBLIC_API;
+    axios.defaults.baseURL = process.env.NEXT_PUBLIC_APP_SERVICE;
     axios.defaults.headers.common['Accept'] = 'application/json';
     axios.defaults.headers.common['Content-Type'] = 'application/json';
     axios.interceptors.request.use(
@@ -107,7 +107,7 @@ export const handleAxiosJWT = () => {
 }
 
 export const handleAxiosMultipartJWT = () => {
-    axios.defaults.baseURL = process.env.NEXT_PUBLIC_API;
+    axios.defaults.baseURL = process.env.NEXT_PUBLIC_APP_SERVICE;
     axios.defaults.headers.common['Accept'] = 'application/json';
     axios.defaults.headers.common['Content-Type'] = 'multipart/form-data';
     axios.interceptors.request.use(

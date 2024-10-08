@@ -22,3 +22,8 @@ variable "project_name" {
   description = "Project name to tag resources"
   type        = string
 }
+
+variable "environment" {
+  description = "El entorno actual (desarrollo o producción)"
+  type        = string
+}
