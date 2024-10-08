@@ -164,17 +164,17 @@ variable "frontend_port" {
   description = "Puerto para la conexion al contenedor del servicio de frontend"
 }
 
-variable "next_public_app_service" {
-  description = "Ruta para la API del app service"
-}
+# variable "next_public_app_service" {
+#   description = "Ruta para la API del app service"
+# }
 
-variable "next_public_notification_producer_service" {
-  description = "Ruta para la API del producer del notification service"
-}
+# variable "next_public_notification_producer_service" {
+#   description = "Ruta para la API del producer del notification service"
+# }
 
-variable "next_public_notification_consumer_service" {
-  description = "Ruta para la API del consumer del notification service"
-}
+# variable "next_public_notification_consumer_service" {
+#   description = "Ruta para la API del consumer del notification service"
+# }
 
 variable "next_public_app_version" {
   description = "version de la app del cliente"
