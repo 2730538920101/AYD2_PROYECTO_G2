@@ -154,14 +154,14 @@ variable "sqs_queue_url" {
   description = "URL de la cola SQS"
 }
 
-variable "next_public_app_service" {
-  description = "Ruta para la API del app service"
-}
+# variable "next_public_app_service" {
+#   description = "Ruta para la API del app service"
+# }
 
-variable "next_public_notification_producer_service" {
-  description = "Ruta para la API del producer del notification service"
-}
+# variable "next_public_notification_producer_service" {
+#   description = "Ruta para la API del producer del notification service"
+# }
 
-variable "next_public_notification_consumer_service" {
-  description = "Ruta para la API del consumer del notification service"
-}
+# variable "next_public_notification_consumer_service" {
+#   description = "Ruta para la API del consumer del notification service"
+# }

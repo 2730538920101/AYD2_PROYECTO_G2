@@ -176,9 +176,9 @@ resource "aws_instance" "bastion" {
       PRODUCER_PORT=${var.producer_port}
       CONSUMER_PORT=${var.consumer_port}
       FRONTEND_PORT=${var.frontend_port}
-      NEXT_PUBLIC_APP_SERVICE=${var.next_public_app_service}
-      NEXT_PUBLIC_NOTIFICATION_PRODUCER_SERVICE=${var.next_public_notification_producer_service}
-      NEXT_PUBLIC_NOTIFICATION_CONSUMER_SERVICE=${var.next_public_notification_consumer_service}
+      NEXT_PUBLIC_APP_SERVICE=http://${aws_instance.bastion.public_ip}:${var.app_port}/api
+      NEXT_PUBLIC_NOTIFICATION_PRODUCER_SERVICE=http://${aws_instance.bastion.public_ip}:${var.producer_port}/api
+      NEXT_PUBLIC_NOTIFICATION_CONSUMER_SERVICE=http://${aws_instance.bastion.public_ip}:${var.consumer_port}/api
       NEXT_PUBLIC_APP_VERSION=${var.next_public_app_version}
     EOF
     destination = "/home/ubuntu/.env"

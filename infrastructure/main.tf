@@ -44,9 +44,9 @@ module "ec2" {
   cognito_user_pool_client_id                       = module.cognito.user_pool_client_id
   cognito_identity_pool_id                          = module.cognito.identity_pool_id
   sqs_queue_url                                     = module.sqs.standard_queue_url     # Asignando la URL de la cola SQS
-  next_public_app_service                           = var.next_public_app_service
-  next_public_notification_producer_service         = var.next_public_notification_producer_service
-  next_public_notification_consumer_service         = var.next_public_notification_consumer_service 
+  # next_public_app_service                           = var.next_public_app_service
+  # next_public_notification_producer_service         = var.next_public_notification_producer_service
+  # next_public_notification_consumer_service         = var.next_public_notification_consumer_service
 }
 
 module "rds" {
