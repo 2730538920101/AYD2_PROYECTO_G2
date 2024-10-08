@@ -131,7 +131,7 @@ variable "ayd2_aws_secret_access_key" {
 
 # Variables que se deben copiar a otros modulos
 
-variable "aws_bucket_name" {
+variable "bucket_name" {
   description = "Nombre del bucket de S3 generado"
 }
 
@@ -165,3 +165,8 @@ variable "sqs_queue_url" {
 # variable "next_public_notification_consumer_service" {
 #   description = "Ruta para la API del consumer del notification service"
 # }
+
+variable "environment" {
+  description = "El entorno actual (desarrollo o producción)"
+  type        = string
+}

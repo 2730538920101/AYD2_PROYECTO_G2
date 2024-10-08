@@ -12,3 +12,8 @@ variable "AWS_REGION" {
   description = "AWS region for Cognito resources"
   type        = string
 }
+
+variable "environment" {
+  description = "El entorno actual (desarrollo o producción)"
+  type        = string
+}

@@ -1,11 +1,13 @@
 ## Primer paso de ejecucion
 
+-   Crear los archivos terraform.tfvars, terraform.development.tfvars y terraform.production.tfvars
+
 -   Ejecuta el comando para aplicar solo el recurso de bloqueo de acceso público:
     -   terraform apply -target=aws_s3_bucket_public_access_block.public_lock
 
 -   Una vez que el bloqueo de acceso público esté configurado, aplica la configuración del bucket y la política:
-    -   terraform apply -target=aws_s3_bucket.ayd2_p1_bucket
-    -   terraform apply -target=aws_s3_bucket_policy.public_policy
+    -   terraform apply -target=aws_s3_bucket.ayd2_p1_bucket -var-file="terraform.environment.tfvars"
+    -   terraform apply -target=aws_s3_bucket_policy.public_policy -var-file="terraform.environment.tfvars"
 
 -   Para crear las keypairs del bastion host (ec2 de administracion) usaremos ssh-keygen, con esto crearemos una llave publica y privada que asociaremos al keypair
     -   ssh-keygen -t rsa -b 4096 -f /home/carlos/Escritorio/AYD2_PROYECTO_G2/infrastructure/ayd2_p1_bastion_key
@@ -13,3 +15,9 @@
 -   Crear las variables de entorno con las rutas a estos archivos y demas variables de entorno en terraform.tfvars
 
 -   Por ultimo ejecuta terraform apply para iniciar el resto de la infrastructura
+
+
+## Manual para separar entornos en terraform
+
+["MANUAL DE WORKSPACES EN TERRAFORM"](/infrastructure/manual_terraform_workspaces.md)
+

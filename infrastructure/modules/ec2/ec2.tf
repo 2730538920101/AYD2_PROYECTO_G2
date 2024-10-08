@@ -160,7 +160,7 @@ resource "aws_instance" "bastion" {
       APP_PORT=${var.app_port}
       APP_HOST=${var.app_host}
       AWS_REGION=${var.AWS_REGION}
-      AWS_BUCKET_NAME=${var.aws_bucket_name}
+      AWS_BUCKET_NAME=${var.bucket_name}
       AWS_ACCESS_KEY_ID=${var.ayd2_aws_access_key_id}
       AWS_SECRET_ACCESS_KEY=${var.ayd2_aws_secret_access_key}
 
