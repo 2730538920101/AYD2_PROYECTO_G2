@@ -102,6 +102,11 @@
       args:
         chdir: /home/ubuntu/AYD2_PROYECTO_G2
 
+    - name: Ejecutar el build desde Docker Compose
+      shell: "docker-compose -f docker-compose.prod.yml build"
+      args:
+        chdir: /home/ubuntu/AYD2_PROYECTO_G2
+
     - name: Ejecutar Docker Compose
       shell: "docker-compose -f docker-compose.prod.yml up -d"
       args:

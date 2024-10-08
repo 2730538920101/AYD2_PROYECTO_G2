@@ -47,3 +47,7 @@ variable "private_subnet_availability_zones" {
   type        = list(string)
 }
 
+variable "environment" {
+  description = "El entorno actual (desarrollo o producción)"
+  type        = string
+}

@@ -2,7 +2,6 @@
 
 variable "project_name" {
   description = "Project name to tag resources"
-  default     = "ayd2_p1_deployment"
 }
 
 variable "AWS_REGION" {
@@ -29,7 +28,6 @@ variable "aws_account_id" {
 
 variable "ec2_name" {
   description = "Nombre del bastion host de administracion"
-  default = "ayd2-p1"
 }
 
 variable "bastion_ami_id" {
@@ -60,7 +58,6 @@ variable "rds_password" {
 
 variable "rds_name" {
   description = "Nombre del servicio de base de datos RDS con Mysql"
-  default = "ayd2-p1"
 }
 
 variable "rds_dbname" {
@@ -74,17 +71,14 @@ variable "ecs_ami_id" {
 
 variable "user_pool_name"{
   description = "Nombre del pool de usuarios de Cognito a utilizar"
-  default = "ayd2-p1"
 }
 
 variable "bucket_name" {
   description = "Nombre del bucket a utilizar"
-  default = "ayd2-p1"
 }
 
 variable "queue_name"{
   description = "Nombre de la cola standar de SQS a utilizar"
-  default = "ayd2-p1"
 }
 
 variable "vpc_cidr" {
@@ -186,4 +180,9 @@ variable "ayd2_aws_access_key_id" {
 
 variable "ayd2_aws_secret_access_key" {
   description = "Clave secreta de AWS"
+}
+
+variable "environment" {
+  description = "El entorno actual (desarrollo o producción)"
+  type        = string
 }

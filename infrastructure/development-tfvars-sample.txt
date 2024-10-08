@@ -1,0 +1,19 @@
+aws_account_id                                  = "857738776382"
+project_name                                    = "ayd2_p1_development"
+vpc_cidr                                        = "10.0.0.0/16"
+public_subnet_cidrs                             = ["10.0.1.0/24", "10.0.2.0/24"]
+private_subnet_cidrs                            = ["10.0.3.0/24", "10.0.4.0/24"]
+availability_zones                              = ["us-east-1a", "us-east-1b"]
+user_pool_name                                  = "ayd2-p1-development"
+AWS_REGION                                      = "us-east-1"
+AWS_ACCESS_KEY                                  = ""
+AWS_SECRET_KEY                                  = ""
+AWS_ACCESS_TOKEN                                = ""
+
+queue_name                                      = "ayd2-p1-development"
+
+bucket_name                                     = "ayd2-p1-development"
+# Variables para las claves secretas
+ayd2_aws_access_key_id                          = ""
+ayd2_aws_secret_access_key                      = ""
+environment                                     = "development"
