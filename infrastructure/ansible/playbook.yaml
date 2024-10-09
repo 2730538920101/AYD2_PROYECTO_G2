@@ -86,7 +86,7 @@
         force: yes
 
     # --- Mover el archivo .env a la carpeta del proyecto ---
-    
+
     - name: Mover archivo .env a la carpeta del proyecto
       command: mv /home/ubuntu/.env /home/ubuntu/AYD2_PROYECTO_G2/.env
 
@@ -95,22 +95,37 @@
         path: /home/ubuntu/AYD2_PROYECTO_G2/.env
         mode: '0600'
 
-    # --- Navegar a la carpeta del repositorio y ejecutar Docker Compose ---
-    
-    - name: Navegar a la carpeta del repositorio clonado
-      shell: "cd /home/ubuntu/AYD2_PROYECTO_G2"
-      args:
-        chdir: /home/ubuntu/AYD2_PROYECTO_G2
+    - name: Mover archivo .env.production a la carpeta del frontend
+      command: mv /home/ubuntu/.env.production /home/ubuntu/AYD2_PROYECTO_G2/frontend/.env.production
 
-    - name: Ejecutar el build desde Docker Compose
-      shell: "docker-compose -f docker-compose.prod.yml build"
+    - name: Otorgar permisos al archivo .env.production
+      file:
+        path: /home/ubuntu/AYD2_PROYECTO_G2/frontend/.env.production
+        mode: '0600'
+
+    # --- Navegar a la carpeta del repositorio y ejecutar Docker Compose ---
+
+    - name: Construir el contenedor del frontend
+      shell: "docker-compose -f docker-compose.prod.yml build frontend"
       args:
         chdir: /home/ubuntu/AYD2_PROYECTO_G2
+      register: build_output
+      ignore_errors: true
+
+    - name: Mostrar logs de construcción del frontend
+      debug:
+        var: build_output
 
     - name: Ejecutar Docker Compose
       shell: "docker-compose -f docker-compose.prod.yml up -d"
       args:
         chdir: /home/ubuntu/AYD2_PROYECTO_G2
+      register: up_output
+      ignore_errors: true
+
+    - name: Mostrar logs de ejecución de Docker Compose
+      debug:
+        var: up_output
 
     - name: Verificar contenedores en ejecución
       command: "docker ps"
