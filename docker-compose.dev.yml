@@ -2,31 +2,6 @@ version: '3'
 
 services:
 
-  # Servicio para la base de datos
-  database:
-    build:
-      context: ./database
-      dockerfile: Dockerfile
-    image: carlosmz87/ayd2_p1_database:latest
-    container_name: ayd2_p1_database_container
-    volumes:
-      - ayd2_p1_data:/var/lib/mysql
-    ports:
-      - "${DATABASE_PORT}:${DATABASE_PORT}"
-    networks:
-      - ayd2_p1_network
-    environment:
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-    healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost -P ${DATABASE_PORT} --silent"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 60s
-
   # Servicio para la aplicación principal (app_service)
   app_service:
     build:
@@ -38,8 +13,9 @@ services:
       - "${APP_PORT}:${APP_PORT}"
     networks:
       - ayd2_p1_network
+      - ayd2_p1_external_network
+    restart: on-failure
     environment:
-      - SECRET_KEY=${SECRET_KEY}
       - APP_PORT=${APP_PORT}
       - APP_HOST=${APP_HOST}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
@@ -49,19 +25,14 @@ services:
       - DATABASE_PORT=${DATABASE_PORT}
       - AWS_REGION=${AWS_REGION}
       - AWS_BUCKET_NAME=${AWS_BUCKET_NAME}
-      - S3_AWS_ACCESS_KEY_ID=${S3_AWS_ACCESS_KEY_ID}
-      - S3_AWS_SECRET_ACCESS_KEY=${S3_AWS_SECRET_ACCESS_KEY}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - COGNITO_USER_POOL_ID=${COGNITO_USER_POOL_ID}
       - COGNITO_USER_POOL_CLIENT_ID=${COGNITO_USER_POOL_CLIENT_ID}
       - COGNITO_IDENTITY_POOL_ID=${COGNITO_IDENTITY_POOL_ID}
-      - COGNITO_AWS_ACCESS_KEY_ID=${COGNITO_AWS_ACCESS_KEY_ID}
-      - COGNITO_AWS_SECRET_ACCESS_KEY=${COGNITO_AWS_SECRET_ACCESS_KEY}
       - ADMIN_EMAIL=${ADMIN_EMAIL}
       - ADMIN_PASSWORD=${ADMIN_PASSWORD} 
       - ADMIN_VALIDATION=${ADMIN_VALIDATION}
-    depends_on:
-      database:
-        condition: service_healthy
 
 
   # Servicio de notificaciones (producer)
@@ -80,10 +51,8 @@ services:
       - PRODUCER_PORT=${PRODUCER_PORT}
       - AWS_REGION=${AWS_REGION}
       - AWS_BUCKET_NAME=${AWS_BUCKET_NAME}
-      - S3_AWS_ACCESS_KEY_ID=${S3_AWS_ACCESS_KEY_ID}
-      - S3_AWS_SECRET_ACCESS_KEY=${S3_AWS_SECRET_ACCESS_KEY}
-      - SQS_AWS_ACCESS_KEY_ID=${SQS_AWS_ACCESS_KEY_ID}
-      - SQS_AWS_SECRET_ACCESS_KEY=${SQS_AWS_SECRET_ACCESS_KEY}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
     depends_on:
       - app_service
 
@@ -98,13 +67,16 @@ services:
       - "${CONSUMER_PORT}:${CONSUMER_PORT}"
     networks:
       - ayd2_p1_network
+      - ayd2_p1_external_network
     environment:
       - SQS_QUEUE_URL=${SQS_QUEUE_URL}
       - CONSUMER_PORT=${CONSUMER_PORT}
-      - DB_HOST=${DB_HOST}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_DATABASE=${DB_DATABASE}
+      - MYSQL_HOST=${MYSQL_HOST}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
     depends_on:
       - notification_producer
 
@@ -120,16 +92,13 @@ services:
       - notification_consumer
     restart: always
     networks:
-      - ayd2_p1_network
+      - ayd2_p1_network     
     environment:
       - NEXT_PUBLIC_APP_SERVICE=${NEXT_PUBLIC_APP_SERVICE}
       - NEXT_PUBLIC_NOTIFICATION_PRODUCER_SERVICE=${NEXT_PUBLIC_NOTIFICATION_PRODUCER_SERVICE}
       - NEXT_PUBLIC_NOTIFICATION_CONSUMER_SERVICE=${NEXT_PUBLIC_NOTIFICATION_CONSUMER_SERVICE}
       - NEXT_PUBLIC_APP_VERSION=${NEXT_PUBLIC_APP_VERSION}
-
-
-volumes:
-  ayd2_p1_data:
-
 networks:
   ayd2_p1_network:
+  ayd2_p1_external_network:
+    external: true

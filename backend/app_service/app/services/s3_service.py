@@ -5,7 +5,7 @@ from config import Config
 
 class S3Service:
     def __init__(self, bucket_name=Config.AWS_BUCKET_NAME, region_name=Config.AWS_REGION):
-        self.s3 = boto3.client('s3', region_name=region_name, aws_access_key_id=Config.S3_AWS_ACCESS_KEY_ID, aws_secret_access_key=Config.S3_AWS_SECRET_ACCESS_KEY)
+        self.s3 = boto3.client('s3', region_name=region_name, aws_access_key_id=Config.AWS_ACCESS_KEY_ID, aws_secret_access_key=Config.AWS_SECRET_ACCESS_KEY)
         self.bucket_name = bucket_name
 
     def list_objects(self, prefix=''):

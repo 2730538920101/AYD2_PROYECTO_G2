@@ -1,0 +1,88 @@
+version: '3'
+
+services:
+
+  # Servicio para la aplicación principal (app_service)
+  app_service:
+    image: carlosmz87/ayd2_p1_app_service:latest
+    container_name: ayd2_p1_app_service_container
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    networks:
+      - ayd2_p1_network
+    restart: on-failure
+    environment:
+      - APP_PORT=${APP_PORT}
+      - APP_HOST=${APP_HOST}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD} 
+      - MYSQL_HOST=${MYSQL_HOST}   
+      - DATABASE_PORT=${DATABASE_PORT}
+      - AWS_REGION=${AWS_REGION}
+      - AWS_BUCKET_NAME=${AWS_BUCKET_NAME}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - COGNITO_USER_POOL_ID=${COGNITO_USER_POOL_ID}
+      - COGNITO_USER_POOL_CLIENT_ID=${COGNITO_USER_POOL_CLIENT_ID}
+      - COGNITO_IDENTITY_POOL_ID=${COGNITO_IDENTITY_POOL_ID}
+      - ADMIN_EMAIL=${ADMIN_EMAIL}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD} 
+      - ADMIN_VALIDATION=${ADMIN_VALIDATION}
+
+
+  # Servicio de notificaciones (producer)
+  notification_producer:
+    image: carlosmz87/ayd2_p1_notification_producer:latest
+    container_name: ayd2_p1_notification_producer_container
+    ports:
+      - "${PRODUCER_PORT}:${PRODUCER_PORT}"
+    networks:
+      - ayd2_p1_network
+    environment:
+      - SQS_QUEUE_URL=${SQS_QUEUE_URL}
+      - PRODUCER_PORT=${PRODUCER_PORT}
+      - AWS_REGION=${AWS_REGION}
+      - AWS_BUCKET_NAME=${AWS_BUCKET_NAME}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+    depends_on:
+      - app_service
+
+  # Servicio de notificaciones (consumer)
+  notification_consumer:
+    image: carlosmz87/ayd2_p1_notification_consumer:latest
+    container_name: ayd2_p1_notification_consumer_container
+    ports:
+      - "${CONSUMER_PORT}:${CONSUMER_PORT}"
+    networks:
+      - ayd2_p1_network
+    environment:
+      - SQS_QUEUE_URL=${SQS_QUEUE_URL}
+      - CONSUMER_PORT=${CONSUMER_PORT}
+      - MYSQL_HOST=${MYSQL_HOST}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+    depends_on:
+      - notification_producer
+
+  frontend:
+    image: carlosmz87/ayd2_p1_frontend:latest
+    container_name: ayd2_p1_frontend_container
+    ports:
+      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
+    depends_on:
+      - notification_consumer
+    restart: always
+    networks:
+      - ayd2_p1_network     
+    environment:
+      - NEXT_PUBLIC_APP_SERVICE=${NEXT_PUBLIC_APP_SERVICE}
+      - NEXT_PUBLIC_NOTIFICATION_PRODUCER_SERVICE=${NEXT_PUBLIC_NOTIFICATION_PRODUCER_SERVICE}
+      - NEXT_PUBLIC_NOTIFICATION_CONSUMER_SERVICE=${NEXT_PUBLIC_NOTIFICATION_CONSUMER_SERVICE}
+      - NEXT_PUBLIC_APP_VERSION=${NEXT_PUBLIC_APP_VERSION}
+networks:
+  ayd2_p1_network:

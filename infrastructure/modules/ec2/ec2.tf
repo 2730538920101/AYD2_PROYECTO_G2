@@ -18,9 +18,54 @@ resource "aws_security_group" "bastion_sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["0.0.0.0/0"] # SSH
   }
 
+  ingress {
+    from_port   = 5000
+    to_port     = 5000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"] # Puerto para el contenedor 1 (5000)
+  }
+
+  ingress {
+    from_port   = 4100
+    to_port     = 4100
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"] # Puerto para el contenedor 2 (4100)
+  }
+
+  ingress {
+    from_port   = 4200
+    to_port     = 4200
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"] # Puerto para el contenedor 3 (4200)
+  }
+
+  ingress {
+    from_port   = 3000
+    to_port     = 3000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"] # Puerto para el contenedor 4 (3000)
+  }
+
+  # Regla para puerto 80 (HTTP)
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"] # Permitir acceso HTTP público
+  }
+
+  # Regla para puerto 443 (HTTPS)
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"] # Permitir acceso HTTPS público
+  }
+
+  # Reglas de salida (Egress)
   egress {
     from_port   = 0
     to_port     = 0
@@ -42,7 +87,49 @@ resource "aws_instance" "bastion" {
   key_name                    = aws_key_pair.bastion_key_pair.key_name
   associate_public_ip_address = true
 
-  # Transferir el script SQL y un script de conexión al Bastion Host
+  # Instalar Ansible en el Bastion Host
+  provisioner "remote-exec" {
+    inline = [
+      "sudo apt-get update",
+      "sudo apt-get install -y software-properties-common",
+      "sudo apt-add-repository --yes --update ppa:ansible/ansible",
+      "sudo apt-get install -y ansible"
+    ]
+
+    connection {
+      type        = "ssh"
+      user        = "ubuntu"
+      private_key = file(var.bastion_private_key_path)
+      host        = self.public_ip
+    }
+  }
+
+  # Transferir el playbook de Ansible
+  provisioner "file" {
+    source      = var.ansible_playbook_path
+    destination = "/home/ubuntu/playbook.yaml"
+
+    connection {
+      type        = "ssh"
+      user        = "ubuntu"
+      private_key = file(var.bastion_private_key_path)
+      host        = self.public_ip
+    }
+  }
+
+  # Transferir el archivo SQL
+  provisioner "file" {
+    source      = var.database_init_path
+    destination = "/home/ubuntu/db_init.sql"
+
+    connection {
+      type        = "ssh"
+      user        = "ubuntu"
+      private_key = file(var.bastion_private_key_path)
+      host        = self.public_ip
+    }
+  }
+
   provisioner "file" {
     content     = <<-EOF
       #!/bin/bash
@@ -61,10 +148,56 @@ resource "aws_instance" "bastion" {
       host        = self.public_ip
     }
   }
+  # provisioner "file" {
+  #   content = <<-EOF
+  #     NEXT_PUBLIC_APP_SERVICE=http://${self.public_ip}:${var.app_port}/api
+  #     NEXT_PUBLIC_NOTIFICATION_PRODUCER_SERVICE=http://${self.public_ip}:${var.producer_port}/api
+  #     NEXT_PUBLIC_NOTIFICATION_CONSUMER_SERVICE=http://${self.public_ip}:${var.consumer_port}/api
+  #     NEXT_PUBLIC_APP_VERSION=${var.next_public_app_version}
+  #   EOF
+  #   destination = "/home/ubuntu/.env.production"  # Cambia esta ruta si es necesario
 
+  #   connection {
+  #     type        = "ssh"
+  #     user        = "ubuntu"
+  #     private_key = file(var.bastion_private_key_path)
+  #     host        = self.public_ip
+  #   }
+  # }
+  # Crear el archivo .env en la carpeta AYD2_PROYECTO_G2
   provisioner "file" {
-    source      = "database/db_init.sql"
-    destination = "/home/ubuntu/db_init.sql"
+    content = <<-EOF
+      MYSQL_DATABASE=${var.rds_dbname}
+      MYSQL_USER=${var.rds_username}
+      MYSQL_PASSWORD=${var.rds_password}
+      MYSQL_HOST=${split(":", var.rds_endpoint)[0]}
+      DATABASE_PORT=${var.database_port}
+
+      APP_PORT=${var.app_port}
+      APP_HOST=${var.app_host}
+      AWS_REGION=${var.AWS_REGION}
+      AWS_BUCKET_NAME=${var.bucket_name}
+      AWS_ACCESS_KEY_ID=${var.ayd2_aws_access_key_id}
+      AWS_SECRET_ACCESS_KEY=${var.ayd2_aws_secret_access_key}
+
+      COGNITO_USER_POOL_ID=${var.cognito_user_pool_id}
+      COGNITO_USER_POOL_CLIENT_ID=${var.cognito_user_pool_client_id}
+      COGNITO_IDENTITY_POOL_ID=${var.cognito_identity_pool_id}
+
+      ADMIN_EMAIL=${var.admin_email}
+      ADMIN_PASSWORD=${var.admin_password}
+      ADMIN_VALIDATION=${var.admin_validation}
+
+      SQS_QUEUE_URL=${var.sqs_queue_url}
+      PRODUCER_PORT=${var.producer_port}
+      CONSUMER_PORT=${var.consumer_port}
+      FRONTEND_PORT=${var.frontend_port}
+      NEXT_PUBLIC_APP_SERVICE=http://${self.public_ip}:${var.app_port}/api
+      NEXT_PUBLIC_NOTIFICATION_PRODUCER_SERVICE=http://${self.public_ip}:${var.producer_port}/api
+      NEXT_PUBLIC_NOTIFICATION_CONSUMER_SERVICE=http://${self.public_ip}:${var.consumer_port}/api
+      NEXT_PUBLIC_APP_VERSION=${var.next_public_app_version}
+    EOF
+    destination = "/home/ubuntu/.env"
 
     connection {
       type        = "ssh"
@@ -74,13 +207,11 @@ resource "aws_instance" "bastion" {
     }
   }
 
-  # Instalar MySQL client y ejecutar el script SQL
+  # Configurar variables de entorno para RDS
   provisioner "remote-exec" {
-    inline = [
-      "sudo apt-get update",
-      "sudo apt-get install -y mysql-client",
-      "chmod +x /home/ubuntu/run_sql.sh",
-      "/home/ubuntu/run_sql.sh"
+    inline = [  
+        "export GITHUB_TOKEN=${var.github_access_token}",
+        "ansible-playbook /home/ubuntu/playbook.yaml"
     ]
 
     connection {
@@ -90,7 +221,6 @@ resource "aws_instance" "bastion" {
       host        = self.public_ip
     }
   }
-
   tags = {
     Name = "${var.project_name}-bastion-host"
   }
