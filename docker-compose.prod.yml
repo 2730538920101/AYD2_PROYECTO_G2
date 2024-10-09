@@ -4,9 +4,6 @@ services:
 
   # Servicio para la aplicación principal (app_service)
   app_service:
-    build:
-      context: ./backend/app_service
-      dockerfile: Dockerfile
     image: carlosmz87/ayd2_p1_app_service:latest
     container_name: ayd2_p1_app_service_container
     ports:
@@ -36,9 +33,6 @@ services:
 
   # Servicio de notificaciones (producer)
   notification_producer:
-    build:
-      context: ./backend/notification_service/producer
-      dockerfile: Dockerfile
     image: carlosmz87/ayd2_p1_notification_producer:latest
     container_name: ayd2_p1_notification_producer_container
     ports:
@@ -57,9 +51,6 @@ services:
 
   # Servicio de notificaciones (consumer)
   notification_consumer:
-    build:
-      context: ./backend/notification_service/consumer
-      dockerfile: Dockerfile
     image: carlosmz87/ayd2_p1_notification_consumer:latest
     container_name: ayd2_p1_notification_consumer_container
     ports:
@@ -79,9 +70,6 @@ services:
       - notification_producer
 
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
     image: carlosmz87/ayd2_p1_frontend:latest
     container_name: ayd2_p1_frontend_container
     ports:

@@ -37,10 +37,21 @@ ENV NODE_ENV=production
 
 RUN addgroup -g 1001 -S nodejs
 RUN adduser -S nextjs -u 1001
+RUN apk add --no-cache bash
 
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/.env.production ./.env.production
+COPY --from=builder /app/scripts/entrypoint.sh ./scripts/entrypoint.sh
+# Change ownership of the /app/.next directory and entrypoint script to the "nextjs" user
+USER root
+RUN chown -R nextjs /app/.next && \
+    chown nextjs ./scripts/entrypoint.sh
+
+RUN chmod -R 755 /app/.next && \
+    chmod +x ./scripts/entrypoint.sh
+ENTRYPOINT [ "./scripts/entrypoint.sh" ]
 
 USER nextjs
 
