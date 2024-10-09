@@ -95,26 +95,26 @@
         path: /home/ubuntu/AYD2_PROYECTO_G2/.env
         mode: '0600'
 
-    - name: Mover archivo .env.production a la carpeta del frontend
-      command: mv /home/ubuntu/.env.production /home/ubuntu/AYD2_PROYECTO_G2/frontend/.env.production
+    # - name: Mover archivo .env.production a la carpeta del frontend
+    #   command: mv /home/ubuntu/.env.production /home/ubuntu/AYD2_PROYECTO_G2/frontend/.env.production
 
-    - name: Otorgar permisos al archivo .env.production
-      file:
-        path: /home/ubuntu/AYD2_PROYECTO_G2/frontend/.env.production
-        mode: '0600'
+    # - name: Otorgar permisos al archivo .env.production
+    #   file:
+    #     path: /home/ubuntu/AYD2_PROYECTO_G2/frontend/.env.production
+    #     mode: '0600'
 
-    # --- Navegar a la carpeta del repositorio y ejecutar Docker Compose ---
+    # # --- Navegar a la carpeta del repositorio y ejecutar Docker Compose ---
 
-    - name: Construir el contenedor del frontend
-      shell: "docker-compose -f docker-compose.prod.yml build frontend"
-      args:
-        chdir: /home/ubuntu/AYD2_PROYECTO_G2
-      register: build_output
-      ignore_errors: true
+    # - name: Construir el contenedor del frontend
+    #   shell: "docker-compose -f docker-compose.prod.yml build frontend"
+    #   args:
+    #     chdir: /home/ubuntu/AYD2_PROYECTO_G2
+    #   register: build_output
+    #   ignore_errors: true
 
-    - name: Mostrar logs de construcción del frontend
-      debug:
-        var: build_output
+    # - name: Mostrar logs de construcción del frontend
+    #   debug:
+    #     var: build_output
 
     - name: Ejecutar Docker Compose
       shell: "docker-compose -f docker-compose.prod.yml up -d"
