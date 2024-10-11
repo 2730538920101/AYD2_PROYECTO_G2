@@ -3,7 +3,7 @@
 aws eks update-kubeconfig --name jenkins-cluster
 
 
-## Para crear el keypair
+## Para crear el keypair de los worker nodes
 
 ssh-keygen -t rsa -b 4096 -f eks-cluster-key
 
