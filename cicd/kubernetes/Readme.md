@@ -5,23 +5,28 @@
 ```
 cicd/
 └── kubernetes/
-    ├── deployment/
-    │   ├── jenkins-master.yml
-    │   └── jenkins-slave.yml
-    ├── service/
-    │   ├── jenkins-master-service.yml
-    │   └── jenkins-slave-service.yml
+    ├── deployments/
+    │   ├── deployment.yml 
+    ├── services/
+    │   ├── service.yml
     └── config/
-        └── jenkins-config.yml
-
+        └── namespace.yml
+        └── serviceAccount.yml
+        └── volume.yml
 ```
 
 
 ##  Despliegue
 Para desplegar estos recursos, puedes ejecutar los siguientes comandos en la terminal, desde la carpeta cicd/kubernetes/:
 
-kubectl apply -f config/jenkins-config.yml
-kubectl apply -f deployments/jenkins-master.yml
-kubectl apply -f deployments/jenkins-slave.yml
-kubectl apply -f services/jenkins-master-service.yml
-kubectl apply -f services/jenkins-slave-service.yml
+-   kubectl apply -f config/namespace.yml
+-   kubectl apply -f config/serviceAccount.yml
+-   kubectl apply -f config/volume.yml
+-   kubectl apply -f deployments/deployment.yml
+-   bubectl apply -f services/service.yml
+
+
+##  Guia de instalacion de Jenkins master con kubernetes
+
+[Instalar Jenkins master con kubernetes](https://devopscube.com/setup-jenkins-on-kubernetes-cluster/)
+
