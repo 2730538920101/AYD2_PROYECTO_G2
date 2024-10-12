@@ -2,8 +2,6 @@
 
 import { useRouter } from 'next/navigation';
 import { Row, Col, Button, Container, Card, ListGroup, ListGroupItem, Table, Modal, Form } from 'react-bootstrap';
-import { faUser, faCakeCandles,  faIdCard, faPhone, faKey}  from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { handleAxiosError, handleAxiosJWT, handleAxios, handleSwal, handleAxiosMultipart } from '@/helpers/axiosConfig';
 import { FindCliente } from '@/helpers/findCliente';
 import Cookies from 'js-cookie';
@@ -25,26 +23,52 @@ const Viajes = () => {
     const handleShowReport = () => setShowModalReport(true);
     const handleCloseReport = () => setShowModalReport(false);
 
-    useEffect(() => {
-        async function fetchData() {
-            let cookies = Cookies.get('auth');
-            const { nombre } = await JSON.parse(cookies);
-            const data = await FindCliente(nombre);
-            setCliente(data);
-            const viajes = await handleAxios().get(`/viaje/cliente/${data.cli_id}`);
+    const fetchCurrentViaje = async (cli_id) => {
+        try {
+            const viajes = await handleAxios().get(`/viaje/cliente/${cli_id}`);
+            let foundViaje = null;
             for (let i = 0; i < viajes.data.length; i++) {
-
-                console.log(viajes.data[i],"viaje")
                 if (viajes.data[i].estado === 'EN CURSO' || viajes.data[i].estado === 'PENDIENTE' || viajes.data[i].estado === 'ACEPTADO') {
-                    setCurrentViaje(viajes.data[i])
+                    foundViaje = viajes.data[i];
                     break;
                 }
             }
-            const favoritos = await handleAxios().get(`/viaje/frecuentes/${data.cli_id}`);
-            setFavoritos(favoritos.data)
+            setCurrentViaje(foundViaje);
+        } catch (error) {
+            console.error("Error fetching current viaje:", error);
         }
-        fetchData()
-    }, [])
+    };
+
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                let cookies = Cookies.get('auth');
+                const { nombre } = await JSON.parse(cookies);
+                const data = await FindCliente(nombre);
+                setCliente(data);
+
+                await fetchCurrentViaje(data.cli_id);
+
+                const favoritos = await handleAxios().get(`/viaje/frecuentes/${data.cli_id}`);
+                setFavoritos(favoritos.data);
+            } catch (error) {
+                console.error("Error fetching initial data:", error);
+            }
+        }
+
+        fetchData();
+    }, []);
+
+    useEffect(() => {
+        if (Cliente) {
+            const intervalId = setInterval(() => {
+                fetchCurrentViaje(Cliente.cli_id);
+            }, 3000); // 3 segundos
+
+            // Limpiar el intervalo cuando el componente se desmonte
+            return () => clearInterval(intervalId);
+        }
+    }, [Cliente]); // Solo configurar el intervalo cuando `Cliente` cambia
 
     const formatearFecha = (fecha) => {
         const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
