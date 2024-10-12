@@ -4,14 +4,19 @@ metadata:
   name: jenkins-service
   namespace: devops-tools
   annotations:
-      prometheus.io/scrape: 'true'
-      prometheus.io/path:   /
-      prometheus.io/port:   '8080'
+    prometheus.io/scrape: 'true'
+    prometheus.io/path:   /
+    prometheus.io/port:   '8080'
 spec:
   selector: 
     app: jenkins-server
   type: LoadBalancer
   ports:
-    - port: 8080
+    - name: http-port       # Nombre único para el puerto HTTP
+      port: 8080
       targetPort: 8080
       nodePort: 32000
+    - name: jnlp-port       # Nombre único para el puerto JNLP
+      port: 50000
+      targetPort: 50000
+      nodePort: 32001       # O cualquier puerto disponible
