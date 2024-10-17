@@ -1,0 +1,93 @@
+services:
+
+  # Servicio para la aplicación principal (app_service)
+  test_app_service:
+    build:
+      context: ../../backend/app_service
+      dockerfile: Dockerfile
+    image: carlosmz87/ayd2_p1_app_service:latest
+    container_name: test_app_service
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    networks:
+      - ayd2_p1_test_network
+      - ayd2_p1_external_test_network
+    restart: on-failure
+    env_file:
+      - .env
+    depends_on:
+      test_database:
+        condition: service_healthy
+
+  # Servicio de notificaciones (producer)
+# test_notification_producer:
+#   build:
+#     context: ../../backend/notification_service/producer
+#     dockerfile: Dockerfile
+#   image: carlosmz87/ayd2_p1_notification_producer:latest
+#   container_name: test_notification_producer
+#   ports:
+#     - "${PRODUCER_PORT}:${PRODUCER_PORT}"
+#   networks:
+#     - ayd2_p1_test_network
+#   env_file:
+#     - .env
+#   depends_on:
+#     - test_app_service
+#
+# # Servicio de notificaciones (consumer)
+# test_notification_consumer:
+#   build:
+#     context: ../../backend/notification_service/consumer
+#     dockerfile: Dockerfile
+#   image: carlosmz87/ayd2_p1_notification_consumer:latest
+#   container_name: test_notification_consumer
+#   ports:
+#     - "${CONSUMER_PORT}:${CONSUMER_PORT}"
+#   networks:
+#     - ayd2_p1_test_network
+#     - ayd2_p1_external_test_network
+#   env_file:
+#     - .env
+#   depends_on:
+#     - test_notification_producer
+
+# test_frontend:
+#   build:
+#     context: ../../frontend
+#     dockerfile: Dockerfile
+#   image: carlosmz87/ayd2_p1_frontend:latest
+#   container_name: test_frontend
+#   ports:
+#     - "${FRONTEND_PORT}:${FRONTEND_PORT}"
+#    depends_on:
+#     - test_notification_consumer
+#   restart: always
+#   networks:
+#     - ayd2_p1_test_network     
+#   env_file:
+#     - .env
+
+  test_database:
+    build:
+      context: ../../database
+      dockerfile: Dockerfile
+    image: carlosmz87/ayd2_p1_database:latest
+    container_name: test_database
+    networks:
+      - ayd2_p1_external_test_network
+    ports:
+      - "${DATABASE_PORT}:${DATABASE_PORT}"
+    env_file:
+      - .env
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
+      start_period: 5s
+      interval: 5s
+      timeout: 5s
+      retries: 55
+  
+networks:
+  ayd2_p1_test_network:
+  ayd2_p1_external_test_network:
+    external: true
