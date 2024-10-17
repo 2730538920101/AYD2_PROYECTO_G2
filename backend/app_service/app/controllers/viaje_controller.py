@@ -6,14 +6,14 @@ class ViajeController:
     def __init__(self):
         # Conectar a la base de datos usando el singleton
         self.db = MySQLSingleton()
-    
+
     #* Método para obtener todos los viajes
     def get_viajes(self):
         try:
             #Definir la consulta SQL
             query = """SELECT CLI_ID, CONDUCTOR_CON_ID, ESTADO, FECHA_INICIO, FECHA_FIN, ORIGEN, DESTINO, TOTAL
                         FROM Viaje"""
-            
+
             #Ejecutar la consulta usando el singleton
             viaje_rows = self.db.fetch_all(query, [])
 
@@ -31,13 +31,13 @@ class ViajeController:
                     "total": row[7]
                 }
                 viajes.append(viaje)
-            
+
             #Retornar los resultados
             return viajes
-        
+
         except Error as e:
             raise Exception(f"Error al obtener viajes: {e}")
-    
+
 
     # Método para crear un nuevo viaje
     def create_viaje(self, viaje_data):
@@ -73,19 +73,19 @@ class ViajeController:
 
         except Error as e:
             raise Exception(f"Error al insertar viaje: {e}")
-    
+
     #* Método para verificar si el cliente tiene historial de viajes
     def verificar_historial_cliente(self, cliente_id):
         try:
             # Consulta para contar los viajes del cliente
             query = """
-            SELECT COUNT(*) 
+            SELECT COUNT(*)
             FROM Viaje
             WHERE CLI_ID = %s
             """
             # Ejecutar la consulta
             resultado = self.db.fetch_one(query, (cliente_id,))
-            
+
             # Verificar si el cliente tiene historial de viajes
             if resultado[0] > 0:
                 return {
@@ -100,8 +100,8 @@ class ViajeController:
 
         except Error as e:
             raise Exception(f"Error al verificar historial de viajes del cliente: {e}")
-        
-    
+
+
     #* Método para obtener los viajes pendientes (sin conductor asignado)
     def get_viajes_pendientes(self):
         try:
@@ -113,10 +113,10 @@ class ViajeController:
             JOIN Cliente c ON v.CLI_ID = c.CLI_ID
             WHERE v.CONDUCTOR_CON_ID IS NULL
             """
-            
+
             # Ejecutar la consulta con el ID del cliente
             viajes_pendientes = self.db.fetch_all(query)
-            
+
             # Formatear los resultados en una lista de diccionarios
             viajes = []
             for row in viajes_pendientes:
@@ -143,25 +143,25 @@ class ViajeController:
         except Error as e:
             raise Exception(f"Error al obtener viajes pendientes: {e}")
 
-    
+
     #* Método para obtener los viajes frecuentes de un cliente
     def get_historial_viajes_frecuentes(self, cli_id, num_viajes):
         try:
             # Definir la consulta SQL para obtener los viajes finalizados del cliente
             query = """
-            SELECT 
+            SELECT
                 CLI_ID,
                 ORIGEN,
                 DESTINO,
                 TOTAL,
                 COUNT(*) AS num_viajes
-            FROM 
+            FROM
                 Viaje
-            WHERE 
-                CLI_ID = %s AND ESTADO = 'FINALIZADO' 
-            GROUP BY 
+            WHERE
+                CLI_ID = %s AND ESTADO = 'FINALIZADO'
+            GROUP BY
                 CLI_ID, ORIGEN, DESTINO, TOTAL
-            ORDER BY 
+            ORDER BY
                 num_viajes DESC
             LIMIT %s;
             """
@@ -187,7 +187,56 @@ class ViajeController:
         except Error as e:
             raise Exception(f"Error al obtener historial de viajes frecuentes: {e}")
 
-    
+    # Metodo para que el cliente pueda calificar al conductor
+    def calificar_conductor(self, viaje_id, calificacion):
+        try:
+            # Verificar el estado del viaje antes de calificar
+            query_estado = "SELECT ESTADO FROM Viaje WHERE VIA_ID = %s"
+            estado_viaje = self.db.fetch_one(query_estado, (viaje_id,))
+
+            if not estado_viaje:
+                raise Exception("El viaje no existe.")
+
+            estado = estado_viaje[0]
+            if estado != 'FINALIZADO':
+                raise Exception("Solo se pueden calificar viajes en estado FINALIZADO.")
+
+            # Se actualiza el parametro 'CALIFICACION_CONDUCTOR' en la tabla Viaje
+            query_update = """
+            UPDATE Viaje
+            SET CALIFICACION_CONDUCTOR = %s
+            WHERE VIA_ID = %s
+            """
+            self.db.execute_query(query_update, (calificacion, viaje_id))
+
+        except Error as e:
+            raise Exception(f"Error al calificar al conductor: {e}")
+
+    # Metodo para que el conductor pueda calificar al cliente
+    def calificar_cliente(self, viaje_id, calificacion):
+        try:
+            # Verificar el estado del viaje antes de calificar
+            query_estado = "SELECT ESTADO FROM Viaje WHERE VIA_ID = %s"
+            estado_viaje = self.db.fetch_one(query_estado, (viaje_id,))
+
+            if not estado_viaje:
+                raise Exception("El viaje no existe.")
+
+            estado = estado_viaje[0]
+
+            if estado != 'FINALIZADO':
+                raise Exception("Solo se pueden calificar viajes en estado FINALIZADO.")
+
+            # Se actualiza el parametro 'CALIFICACION_CLIENTE' en la tabla Viaje
+            query_update = """
+            UPDATE Viaje
+            SET CALIFICACION_CLIENTE = %s
+            WHERE VIA_ID = %s
+            """
+            self.db.execute_query(query_update, (calificacion, viaje_id))
+
+        except Error as e:
+            raise Exception(f"Error al calificar al cliente: {e}")
 
     #* Método para aceptar un viaje (conductor)
     def aceptar_viaje(self, viaje_id, conductor_id):
@@ -206,7 +255,7 @@ class ViajeController:
         except Error as e:
             raise Exception(f"Error al aceptar viaje: {e}")
 
-    
+
     #* Método para cancelar un viaje (cliente)
     def cancelar_viaje(self, viaje_id, razon_cancelacion):
         try:
@@ -228,7 +277,7 @@ class ViajeController:
             VALUES (%s, %s, %s, %s)
             """
             values_cancelar = (viaje_id, 'Cancelación por cliente', razon_cancelacion, datetime.now())
-            
+
             # Ejecutar la consulta para registrar la cancelación
             self.db.execute_query(query_cancelar, values_cancelar)
 
@@ -243,7 +292,7 @@ class ViajeController:
 
         except Error as e:
             raise Exception(f"Error al cancelar viaje: {e}")
-    
+
     #* Método para modificar el estado del viaje a "EN CURSO" (conductor)
     def iniciar_viaje(self, viaje_id):
         try:
@@ -259,7 +308,7 @@ class ViajeController:
         except Error as e:
             raise Exception(f"Error al iniciar viaje: {e}")
 
-        
+
     #* Método para finalizar un viaje (conductor)
     def finalizar_viaje(self, viaje_id):
         try:
@@ -307,7 +356,7 @@ class ViajeController:
 
         except Error as e:
             raise Exception(f"Error al obtener viajes de conductor: {e}")
-    
+
     #* Metodo para listar los viajes de un cliente
     def get_viajes_cliente(self, cli_id):
         try:
