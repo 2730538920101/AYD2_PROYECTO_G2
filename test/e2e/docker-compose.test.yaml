@@ -52,21 +52,21 @@ services:
 #   depends_on:
 #     - test_notification_producer
 
-# test_frontend:
-#   build:
-#     context: ../../frontend
-#     dockerfile: Dockerfile
-#   image: carlosmz87/ayd2_p1_frontend:latest
-#   container_name: test_frontend
-#   ports:
-#     - "${FRONTEND_PORT}:${FRONTEND_PORT}"
-#    depends_on:
+  test_frontend:
+    build:
+      context: ../../frontend
+      dockerfile: Dockerfile
+    image: carlosmz87/ayd2_p1_frontend:latest
+    container_name: test_frontend
+    ports:
+      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
+#   depends_on:
 #     - test_notification_consumer
-#   restart: always
-#   networks:
-#     - ayd2_p1_test_network     
-#   env_file:
-#     - .env
+    restart: always
+    networks:
+      - ayd2_p1_test_network     
+    env_file:
+      - .env
 
   test_database:
     build:

@@ -5,6 +5,8 @@ Existe el archivo `taskfile.yaml`, para ejecutar estas instrucciones de manera m
 
 Luego de levantar el entorno de pruebas podemos abrir la ui de playwirght para ejecutar las pruebas
 
+Aveces parece que el la lave de `print_key.sh` es incorrecta; basta con generarla de nuevo si hay errores.
+
 ```bash
 npx playwright test --ui
 ```
