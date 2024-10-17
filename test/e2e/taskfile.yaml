@@ -1,0 +1,50 @@
+version: '3'
+
+tasks:
+  install-deps:
+    cmds:
+      - npm install
+      - npx playwright install chromium
+  docker-test-env:
+    cmds:
+      - docker network create "ayd2_p1_external_test_network" | echo "network ayd2_p1_external_test_network ya existe"
+      - docker compose -f docker-compose.test.yaml up -d 
+      - task: print_admin_key
+        ignore_error: true
+  print_admin_key:
+    cmds:
+      - ./print_key.sh
+  aws-test-env:
+    dir: ../test-infrastructure
+    cmds:
+      - tofu init
+      - tofu apply --auto-approve 
+      - echo "AWS_ACCESS_KEY_ID=$(tofu output -raw AWS_ACCESS_KEY_ID)" > .env_tf
+      - echo "AWS_SECRET_ACCESS_KEY=$(tofu output -raw AWS_SECRET_ACCESS_KEY)" >> .env_tf
+      - echo "AWS_ACCESS_KEY_ID=$(tofu output -raw AWS_ACCESS_KEY_ID)" >> .env_tf
+      - echo "AWS_SECRET_ACCESS_KEY=$(tofu output -raw AWS_SECRET_ACCESS_KEY)" >> .env_tf
+      - echo "AWS_BUCKET_NAME=$(tofu output -raw AWS_BUCKET_NAME)" >> .env_tf
+      - echo "COGNITO_USER_POOL_ID=$(tofu output -raw COGNITO_USER_POOL_ID)" >> .env_tf
+      - echo "COGNITO_USER_POOL_CLIENT_ID=$(tofu output -raw COGNITO_USER_POOL_CLIENT_ID)" >> .env_tf
+      - echo "COGNITO_IDENTITY_POOL_ID=$(tofu output -raw COGNITO_IDENTITY_POOL_ID)" >> .env_tf
+      - echo "SQS_QUEUE_URL=$(tofu output -raw SQS_QUEUE_URL)" >> .env_tf
+      - cat ../e2e/.env_static .env_tf > ../e2e/.env
+  start-test-env:
+    cmds:
+      - task: aws-test-env
+      - task: docker-test-env
+  stop-aws-test-env:
+    dir: ../test-infrastructure
+    cmds:
+      - tofu destroy --auto-approve
+  stop-docker-test-env:
+    cmds:
+      - docker compose -f docker-compose.test.yaml down
+  stop-test-env: 
+    deps: [stop-aws-test-env, stop-docker-test-env]
+  all:
+    cmds:
+      - task: install-deps
+      - task: aws-test-env
+      - task: docker-backend-test-env
+      - task: stop-test-env
