@@ -5,7 +5,6 @@ import {  handleAxios } from '@/helpers/axiosConfig';
 import { FindCliente } from '@/helpers/findCliente';
 import Cookies from 'js-cookie';
 import { useState, useEffect } from 'react';
-import { Rating } from '@smastrom/react-rating'
 
 const Viajes = () => {
     let [Viajes, setViajes] = useState(null);
