@@ -5,6 +5,7 @@ import {  handleAxios } from '@/helpers/axiosConfig';
 import { FindCliente } from '@/helpers/findCliente';
 import Cookies from 'js-cookie';
 import { useState, useEffect } from 'react';
+import { Rating } from '@smastrom/react-rating'
 
 const Viajes = () => {
     let [Viajes, setViajes] = useState(null);
@@ -23,6 +24,66 @@ const Viajes = () => {
     const formatearFecha = (fecha) => {
         const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         return new Date(fecha).toLocaleDateString('es-ES', opciones);
+    };
+
+    const calificarConductor = async (viaje_id, calificacion) => {
+        try {
+            await handleAxios().put(`/viaje/calificar-conductor`, {
+                viaje_id,
+                calificacion
+            });
+            setViajes(prevViajes => prevViajes.map(viaje => 
+                viaje.via_id === viaje_id ? { ...viaje, calificacion } : viaje
+            ));
+        } catch (error) {
+            console.error('Error al calificar el conductor:', error);
+        }
+    };
+
+    const RatingStars = ({ viaje }) => {
+        const [hoverRating, setHoverRating] = useState(0);
+        const [currentRating, setCurrentRating] = useState(viaje.calificacion ? viaje.calificacion  : 0); // Escala de 1-5
+
+        const handleMouseEnter = (rating) => {
+            setHoverRating(rating);
+        };
+
+        const handleMouseLeave = () => {
+            setHoverRating(0);
+        };
+
+        const handleClick = (rating) => {
+            setCurrentRating(rating);
+            calificarConductor(viaje.via_id, rating); // Multiplica por 2 para ajustar la escala 1-10
+        };
+        // Estilos en línea para las estrellas
+        const starStyle = {
+            fontSize: '24px',
+            color: 'lightgray',
+            cursor: 'pointer',
+            transition: 'color 0.2s'
+        };
+
+        const filledStarStyle = {
+            ...starStyle,
+            color: 'gold'
+        };
+
+        return (
+            <div style={{ display: 'inline-flex' }}>
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9 , 10].map((star) => (
+                    <span
+                        key={star}
+                        style={hoverRating >= star || currentRating >= star ? filledStarStyle : starStyle}
+                        onMouseEnter={() => handleMouseEnter(star)}
+                        onMouseLeave={handleMouseLeave}
+                        onClick={() => handleClick(star)}
+                    >
+                        ★
+                    </span>
+                ))}
+            </div>
+        );
     };
 
     if (!Viajes) return <div>Loading...</div>
@@ -47,6 +108,7 @@ const Viajes = () => {
                 <th>Fecha de Finalización</th>
                 <th>Total (Q)</th>
                 <th>Conductor</th>
+                <th>Calificación</th>
             </tr>
         </thead>
         <tbody>
@@ -74,6 +136,16 @@ const Viajes = () => {
                             </>
                         ) : (
                             'No asignado'
+                        )}
+                    </td>
+                    <td>
+                        {viaje.estado === 'FINALIZADO' ? (
+                            <>
+                            <RatingStars viaje={viaje} /> {/* Componente de estrellas */}
+                            </>
+                        ) : (
+                            <>
+                            </>
                         )}
                     </td>
                 </tr>
