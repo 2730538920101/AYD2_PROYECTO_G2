@@ -21,8 +21,10 @@ class ClientesController:
     def get_clientes(self):
 
         # Definir la consulta SQL
-        query = """SELECT CLI_ID, NOMBRE, FECHA_NACIMIENTO, GENERO, CORREO, FOTO_DPI, TELEFONO
-                FROM Cliente"""
+        query = """SELECT c.CLI_ID, c.NOMBRE, c.FECHA_NACIMIENTO, c.GENERO, c.CORREO, c.FOTO_DPI, c.TELEFONO, AVG(v.CALIFICACION_CLIENTE) AS CALIFICACION
+                    FROM Cliente c
+                    INNER JOIN Viaje v ON c.CLI_ID = v.CLI_ID
+                    GROUP BY c.CLI_ID"""
 
         # Ejecutar la consulta usando el singleton
         cliente_rows = self.db.fetch_all(query, [])
@@ -37,7 +39,8 @@ class ClientesController:
                 "genero": row[3],
                 "correo": row[4],
                 "foto_dpi": row[5],
-                "telefono": row[6]
+                "telefono": row[6],
+                "calificacion": int(row[7])
             }
             clientes.append(cliente)
 
@@ -168,8 +171,10 @@ class ClientesController:
     #*Metodo para obtener un cliente por su ID
     def get_cliente_by_id(self, cliente_id):
         # Definir la consulta SQL
-        query = """SELECT CLI_ID, NOMBRE, FECHA_NACIMIENTO, GENERO, CORREO, FOTO_DPI, TELEFONO
-                FROM Cliente
+        query = """SELECT c.CLI_ID, c.NOMBRE, c.FECHA_NACIMIENTO, c.GENERO, c.CORREO, c.FOTO_DPI, c.TELEFONO, AVG(v.CALIFICACION_CLIENTE) AS CALIFICACION
+                FROM Cliente c
+                INNER JOIN Viaje v ON c.CLI_ID = v.CLI_ID
+                GROUP BY c.CLI_ID
                 WHERE CLI_ID = %s"""
 
         # Ejecutar la consulta usando el singleton
@@ -187,7 +192,8 @@ class ClientesController:
             "genero": cliente_row[3],
             "correo": cliente_row[4],
             "foto_dpi": cliente_row[5],
-            "telefono": cliente_row[6]
+            "telefono": cliente_row[6],
+            "calificacion": int(cliente_row[7])
         }
 
         # Retornar el cliente encontrado
