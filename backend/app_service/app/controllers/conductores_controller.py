@@ -22,9 +22,9 @@ class ConductoresController:
         try:
             # Definir la consulta SQL
             query = """ SELECT c.CON_ID, c.NOMBRE, c.TELEFONO, c.ESTADO_CIVIL, c.GENERO, c.CORREO, c.CODIGO_EMPLEADO, c.FECHA_NACIMIENTO, 
-                    c.DIRECCION, c.NUMERO_DPI, c.PAPELERIA, c.FOTOGRAFIA, c.MARCA_VEHICULO, c.PLACA, c.ANIO, c.ESTADO_INFORMACION, AVG(v.CALIFICACION_CONDUCTOR) AS CALIFICACION
+                    c.DIRECCION, c.NUMERO_DPI, c.PAPELERIA, c.FOTOGRAFIA, c.MARCA_VEHICULO, c.PLACA, c.ANIO, c.ESTADO_INFORMACION, IFNULL(AVG(v.CALIFICACION_CONDUCTOR),0) AS CALIFICACION
                     FROM Conductor c
-                    INNER JOIN Viaje v ON c.CON_ID = v.CONDUCTOR_CON_ID 
+                    LEFT JOIN Viaje v ON c.CON_ID = v.CONDUCTOR_CON_ID 
                     GROUP BY c.CON_ID"""
 
             # Ejecutar la consulta usando el singleton
@@ -203,11 +203,12 @@ class ConductoresController:
         try:
             # Definir la consulta SQL
             query = """ SELECT c.CON_ID, c.NOMBRE, c.TELEFONO, c.ESTADO_CIVIL, c.GENERO, c.CORREO, c.CODIGO_EMPLEADO, c.FECHA_NACIMIENTO, 
-                        c.DIRECCION, c.NUMERO_DPI, c.PAPELERIA, c.FOTOGRAFIA, c.MARCA_VEHICULO, c.PLACA, c.ANIO, c.ESTADO_INFORMACION, AVG(v.CALIFICACION_CONDUCTOR) AS CALIFICACION
+                        c.DIRECCION, c.NUMERO_DPI, c.PAPELERIA, c.FOTOGRAFIA, c.MARCA_VEHICULO, c.PLACA, c.ANIO, c.ESTADO_INFORMACION, IFNULL(AVG(v.CALIFICACION_CONDUCTOR),0) AS CALIFICACION
                         FROM Conductor c
-                        INNER JOIN Viaje v ON c.CON_ID = v.CONDUCTOR_CON_ID 
+                        LEFT JOIN Viaje v ON c.CON_ID = v.CONDUCTOR_CON_ID 
+                        WHERE c.CON_ID = %s
                         GROUP BY c.CON_ID
-                        WHERE CON_ID = %s"""
+                        """
 
             # Ejecutar la consulta usando el singleton
             conductor_row = self.db.fetch_one(query, [con_id])

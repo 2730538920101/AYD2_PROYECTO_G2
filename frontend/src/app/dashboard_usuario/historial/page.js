@@ -25,14 +25,14 @@ const Viajes = () => {
         return new Date(fecha).toLocaleDateString('es-ES', opciones);
     };
 
-    const calificarConductor = async (viaje_id, calificacion) => {
+    const calificarConductor = async (viaje_id, calificacion_conductor) => {
         try {
             await handleAxios().put(`/viaje/calificar-conductor`, {
-                viaje_id,
-                calificacion
+                viaje_id: viaje_id,
+                calificacion: calificacion_conductor
             });
             setViajes(prevViajes => prevViajes.map(viaje => 
-                viaje.via_id === viaje_id ? { ...viaje, calificacion } : viaje
+                viaje.via_id === viaje_id ? { ...viaje, calificacion_conductor } : viaje
             ));
         } catch (error) {
             console.error('Error al calificar el conductor:', error);
@@ -41,7 +41,7 @@ const Viajes = () => {
 
     const RatingStars = ({ viaje }) => {
         const [hoverRating, setHoverRating] = useState(0);
-        const [currentRating, setCurrentRating] = useState(viaje.calificacion ? viaje.calificacion  : 0); // Escala de 1-5
+        const [currentRating, setCurrentRating] = useState(viaje.calificacion_conductor ? viaje.calificacion_conductor  : 0); // Escala de 1-5
 
         const handleMouseEnter = (rating) => {
             setHoverRating(rating);
