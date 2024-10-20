@@ -21,11 +21,11 @@ class ConductoresController:
     def get_conductores(self):
         try:
             # Definir la consulta SQL
-            query = """ SELECT
-                            CON_ID, NOMBRE, TELEFONO, ESTADO_CIVIL, GENERO, CORREO, CODIGO_EMPLEADO,
-                            FECHA_NACIMIENTO, DIRECCION, NUMERO_DPI, PAPELERIA, FOTOGRAFIA, MARCA_VEHICULO,
-                            PLACA, ANIO, ESTADO_INFORMACION
-                        FROM Conductor"""
+            query = """ SELECT c.CON_ID, c.NOMBRE, c.TELEFONO, c.ESTADO_CIVIL, c.GENERO, c.CORREO, c.CODIGO_EMPLEADO, c.FECHA_NACIMIENTO, 
+                    c.DIRECCION, c.NUMERO_DPI, c.PAPELERIA, c.FOTOGRAFIA, c.MARCA_VEHICULO, c.PLACA, c.ANIO, c.ESTADO_INFORMACION, AVG(v.CALIFICACION_CONDUCTOR) AS CALIFICACION
+                    FROM Conductor c
+                    INNER JOIN Viaje v ON c.CON_ID = v.CONDUCTOR_CON_ID 
+                    GROUP BY c.CON_ID"""
 
             # Ejecutar la consulta usando el singleton
             conductor_rows = self.db.fetch_all(query, [])
@@ -49,7 +49,8 @@ class ConductoresController:
                     "marca_vehiculo": row[12],
                     "placa": row[13],
                     "anio": row[14],
-                    "estado_informacion": row[15]
+                    "estado_informacion": row[15],
+                    "calificacion": int(row[16])
                 }
                 conductores.append(conductor)
 
@@ -201,11 +202,11 @@ class ConductoresController:
     def get_conductor_by_id(self, con_id):
         try:
             # Definir la consulta SQL
-            query = """ SELECT
-                            CON_ID, NOMBRE, TELEFONO, ESTADO_CIVIL, GENERO, CORREO, CODIGO_EMPLEADO,
-                            FECHA_NACIMIENTO, DIRECCION, NUMERO_DPI, PAPELERIA, FOTOGRAFIA, MARCA_VEHICULO,
-                            PLACA, ANIO, ESTADO_INFORMACION
-                        FROM Conductor
+            query = """ SELECT c.CON_ID, c.NOMBRE, c.TELEFONO, c.ESTADO_CIVIL, c.GENERO, c.CORREO, c.CODIGO_EMPLEADO, c.FECHA_NACIMIENTO, 
+                        c.DIRECCION, c.NUMERO_DPI, c.PAPELERIA, c.FOTOGRAFIA, c.MARCA_VEHICULO, c.PLACA, c.ANIO, c.ESTADO_INFORMACION, AVG(v.CALIFICACION_CONDUCTOR) AS CALIFICACION
+                        FROM Conductor c
+                        INNER JOIN Viaje v ON c.CON_ID = v.CONDUCTOR_CON_ID 
+                        GROUP BY c.CON_ID
                         WHERE CON_ID = %s"""
 
             # Ejecutar la consulta usando el singleton
@@ -228,7 +229,8 @@ class ConductoresController:
                 "marca_vehiculo": conductor_row[12],
                 "placa": conductor_row[13],
                 "anio": conductor_row[14],
-                "estado_informacion": conductor_row[15]
+                "estado_informacion": conductor_row[15],
+                "calificacion": int(conductor_row[16])
             }
 
             # Retornar los resultados

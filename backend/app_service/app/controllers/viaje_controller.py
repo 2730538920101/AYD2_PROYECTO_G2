@@ -11,7 +11,7 @@ class ViajeController:
     def get_viajes(self):
         try:
             #Definir la consulta SQL
-            query = """SELECT CLI_ID, CONDUCTOR_CON_ID, ESTADO, FECHA_INICIO, FECHA_FIN, ORIGEN, DESTINO, TOTAL
+            query = """SELECT CLI_ID, CONDUCTOR_CON_ID, ESTADO, FECHA_INICIO, FECHA_FIN, ORIGEN, DESTINO, TOTAL, CALIFICACION_CONDUCTOR, CALIFICACION_CLIENTE
                         FROM Viaje"""
 
             #Ejecutar la consulta usando el singleton
@@ -28,7 +28,9 @@ class ViajeController:
                     "fecha_fin": row[4],
                     "origen": row[5],
                     "destino": row[6],
-                    "total": row[7]
+                    "total": row[7],
+                    "calificacion_conductor": row[8],
+                    "calificacion_cliente": row[9]
                 }
                 viajes.append(viaje)
 
