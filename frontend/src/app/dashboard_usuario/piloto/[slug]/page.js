@@ -2,7 +2,7 @@
 import { useParams } from 'next/navigation'
 import { Row, Col, Container, Card, ListGroup, ListGroupItem } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faHashtag, faCar, faCarRear, faPhone, faIdCard, faBirthdayCake, faPersonHalfDress, faEnvelope, faRing, faFile, faClipboardQuestion } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faHashtag, faCar, faCarRear, faPhone, faIdCard, faBirthdayCake, faPersonHalfDress, faEnvelope, faRing, faFile, faClipboardQuestion, faStar } from '@fortawesome/free-solid-svg-icons';
 import { handleAxios } from '@/helpers/axiosConfig';
 import { useState, useEffect } from 'react';
  
@@ -53,6 +53,7 @@ export default function Piloto() {
                         <FontAwesomeIcon icon={faFile} /> <strong>Documentación:</strong> <a href={Piloto.papeleria} target="_blank" rel="noopener noreferrer">Ver Documento</a>
                     </ListGroupItem>
                     <ListGroupItem><FontAwesomeIcon icon={faClipboardQuestion} /> <strong>Estado de Información:</strong> {Piloto.estado_informacion}</ListGroupItem>
+                    <ListGroupItem><FontAwesomeIcon icon={faStar}/> <strong>Calificación:</strong> {Piloto.calificacion}</ListGroupItem>
                 </ListGroup>
             </Card.Body>
         </Card>

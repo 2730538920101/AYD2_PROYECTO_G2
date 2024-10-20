@@ -21,9 +21,9 @@ class ClientesController:
     def get_clientes(self):
 
         # Definir la consulta SQL
-        query = """SELECT c.CLI_ID, c.NOMBRE, c.FECHA_NACIMIENTO, c.GENERO, c.CORREO, c.FOTO_DPI, c.TELEFONO, AVG(v.CALIFICACION_CLIENTE) AS CALIFICACION
+        query = """SELECT c.CLI_ID, c.NOMBRE, c.FECHA_NACIMIENTO, c.GENERO, c.CORREO, c.FOTO_DPI, c.TELEFONO, IFNULL(AVG(v.CALIFICACION_CLIENTE),0) AS CALIFICACION
                     FROM Cliente c
-                    INNER JOIN Viaje v ON c.CLI_ID = v.CLI_ID
+                    LEFT JOIN Viaje v ON c.CLI_ID = v.CLI_ID
                     GROUP BY c.CLI_ID"""
 
         # Ejecutar la consulta usando el singleton
@@ -171,9 +171,9 @@ class ClientesController:
     #*Metodo para obtener un cliente por su ID
     def get_cliente_by_id(self, cliente_id):
         # Definir la consulta SQL
-        query = """SELECT c.CLI_ID, c.NOMBRE, c.FECHA_NACIMIENTO, c.GENERO, c.CORREO, c.FOTO_DPI, c.TELEFONO, AVG(v.CALIFICACION_CLIENTE) AS CALIFICACION
+        query = """SELECT c.CLI_ID, c.NOMBRE, c.FECHA_NACIMIENTO, c.GENERO, c.CORREO, c.FOTO_DPI, c.TELEFONO, IFNULL(AVG(v.CALIFICACION_CLIENTE),0) AS CALIFICACION
                 FROM Cliente c
-                INNER JOIN Viaje v ON c.CLI_ID = v.CLI_ID
+                LEFT JOIN Viaje v ON c.CLI_ID = v.CLI_ID
                 GROUP BY c.CLI_ID
                 WHERE CLI_ID = %s"""
 

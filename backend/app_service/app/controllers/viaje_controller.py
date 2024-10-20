@@ -332,7 +332,7 @@ class ViajeController:
         try:
             # Definir la consulta SQL para obtener los viajes de un conductor
             query = """
-            SELECT VIA_ID, CLI_ID, ESTADO, FECHA_INICIO, FECHA_FIN, ORIGEN, DESTINO, TOTAL
+            SELECT VIA_ID, CLI_ID, ESTADO, FECHA_INICIO, FECHA_FIN, ORIGEN, DESTINO, TOTAL, CALIFICACION_CONDUCTOR, CALIFICACION_CLIENTE
             FROM Viaje
             WHERE CONDUCTOR_CON_ID = %s
             """
@@ -350,7 +350,9 @@ class ViajeController:
                     "fecha_fin": row[4],
                     "origen": row[5],
                     "destino": row[6],
-                    "total": row[7]
+                    "total": row[7],
+                    "calificacion_conductor": row[8],
+                    "calificacion_cliente": row[9]
                 }
                 viajes.append(viaje)
 
@@ -364,7 +366,7 @@ class ViajeController:
         try:
             # Definir la consulta SQL para obtener los viajes de un cliente
             query = """
-            SELECT VIA_ID, CONDUCTOR_CON_ID, ESTADO, FECHA_INICIO, FECHA_FIN, ORIGEN, DESTINO, TOTAL
+            SELECT VIA_ID, CONDUCTOR_CON_ID, ESTADO, FECHA_INICIO, FECHA_FIN, ORIGEN, DESTINO, TOTAL, CALIFICACION_CONDUCTOR, CALIFICACION_CLIENTE
             FROM Viaje
             WHERE CLI_ID = %s
             """
@@ -382,7 +384,9 @@ class ViajeController:
                     "fecha_fin": row[4],
                     "origen": row[5],
                     "destino": row[6],
-                    "total": row[7]
+                    "total": row[7],
+                    "calificacion_conductor": row[8],
+                    "calificacion_cliente": row[9]
                 }
                 viajes.append(viaje)
 
