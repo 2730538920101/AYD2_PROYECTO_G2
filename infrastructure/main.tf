@@ -67,7 +67,8 @@ module "ec2_prod" {
 
 module "rds_prod" {
   source                            = "./modules/rds"
-  environment                       = "production" 
+  environment                       = "production"
+  depends_on                        = [module.vpc_prod, module.s3_prod, module.sqs_prod] 
   public_subnet_cidr_blocks         = module.vpc_prod[0].public_subnets_cidrs
   private_subnet_availability_zones = module.vpc_prod[0].private_subnet_availability_zones
   rds_dbname                        = var.rds_dbname

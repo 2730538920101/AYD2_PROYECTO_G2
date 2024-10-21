@@ -148,6 +148,22 @@ resource "aws_instance" "bastion" {
       host        = self.public_ip
     }
   }
+  # provisioner "file" {
+  #   content = <<-EOF
+  #     NEXT_PUBLIC_APP_SERVICE=http://${self.public_ip}:${var.app_port}/api
+  #     NEXT_PUBLIC_NOTIFICATION_PRODUCER_SERVICE=http://${self.public_ip}:${var.producer_port}/api
+  #     NEXT_PUBLIC_NOTIFICATION_CONSUMER_SERVICE=http://${self.public_ip}:${var.consumer_port}/api
+  #     NEXT_PUBLIC_APP_VERSION=${var.next_public_app_version}
+  #   EOF
+  #   destination = "/home/ubuntu/.env.production"  # Cambia esta ruta si es necesario
+
+  #   connection {
+  #     type        = "ssh"
+  #     user        = "ubuntu"
+  #     private_key = file(var.bastion_private_key_path)
+  #     host        = self.public_ip
+  #   }
+  # }
   # Crear el archivo .env en la carpeta AYD2_PROYECTO_G2
   provisioner "file" {
     content = <<-EOF
@@ -176,9 +192,9 @@ resource "aws_instance" "bastion" {
       PRODUCER_PORT=${var.producer_port}
       CONSUMER_PORT=${var.consumer_port}
       FRONTEND_PORT=${var.frontend_port}
-      NEXT_PUBLIC_APP_SERVICE=http://${aws_instance.bastion.public_ip}:${var.app_port}/api
-      NEXT_PUBLIC_NOTIFICATION_PRODUCER_SERVICE=http://${aws_instance.bastion.public_ip}:${var.producer_port}/api
-      NEXT_PUBLIC_NOTIFICATION_CONSUMER_SERVICE=http://${aws_instance.bastion.public_ip}:${var.consumer_port}/api
+      NEXT_PUBLIC_APP_SERVICE=http://${self.public_ip}:${var.app_port}/api
+      NEXT_PUBLIC_NOTIFICATION_PRODUCER_SERVICE=http://${self.public_ip}:${var.producer_port}/api
+      NEXT_PUBLIC_NOTIFICATION_CONSUMER_SERVICE=http://${self.public_ip}:${var.consumer_port}/api
       NEXT_PUBLIC_APP_VERSION=${var.next_public_app_version}
     EOF
     destination = "/home/ubuntu/.env"
