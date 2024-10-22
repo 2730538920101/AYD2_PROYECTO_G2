@@ -113,7 +113,7 @@ class ViajeController:
                 c.CLI_ID, c.NOMBRE, c.FECHA_NACIMIENTO, c.GENERO, c.CORREO, c.TELEFONO
             FROM Viaje v
             JOIN Cliente c ON v.CLI_ID = c.CLI_ID
-            WHERE v.CONDUCTOR_CON_ID IS NULL
+            WHERE v.CONDUCTOR_CON_ID IS NULL AND v.ESTADO = 'PENDIENTE'
             """
 
             # Ejecutar la consulta con el ID del cliente
