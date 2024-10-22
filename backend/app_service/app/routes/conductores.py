@@ -28,7 +28,34 @@ def crear_conductor():
         return jsonify({"error": str(e)}), 400
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-    
+
+# Ruta para obtener conductores pendientes de confirmar
+@bp.route('/pendientes', methods=['GET'])
+def obtener_conductores_pendientes():
+    try:
+        # Llamar al método del controlador para obtener los conductores pendientes
+        conductores_pendientes = conductores_controller.get_conductores_pendientes()
+        return jsonify(conductores_pendientes), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+# Ruta para modificar el estado de informacion de un conductor
+@bp.route('/actualizar-estado', methods=['PUT'])
+def modificar_estado_informacion():
+    try:
+        # Obtener el ID del conductor a modificar
+        con_id = request.json.get('con_id', None)
+        if not con_id:
+            return jsonify({'error': 'Falta el ID del conductor'}), 400
+        # Obtener el estado del conductor
+        estado_informacion = request.json.get('estado_informacion', None)
+        if not estado_informacion:
+            return jsonify({'error': 'Falta el estado de información del conductor'}), 400
+        # Llamar al método del controlador para calificar al cliente
+        conductores_controller.update_estado_informacion(con_id, estado_informacion)
+        return jsonify({'mensaje': 'Estado de información del conductor actualizado exitosamente'}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 #* Ruta para obtener un conductor por su ID
 @bp.route('/<int:con_id>', methods=['GET'])
@@ -47,7 +74,7 @@ def actualizar_conductor(con_id):
     conductor = conductores_controller.get_conductor_by_id(con_id)
     if not conductor:
         return jsonify({'error': 'El conductor no existe.'}), 404
-    
+
     # Obtener los datos del formulario y los archivos
     datos = request.form
     archivo_fotografia = request.files.get('fotografia')
@@ -59,7 +86,7 @@ def actualizar_conductor(con_id):
             # Eliminar la antigua si existe
             if conductor['fotografia']:
                 s3_service.delete_object(conductor['fotografia'].split('/')[-1])
-            
+
             filename_fotografia = secure_filename(archivo_fotografia.filename)
             file_stream_fotografia = io.BytesIO(archivo_fotografia.read())
             filename_fotografia = "fotos_vehiculo_conductores/" + filename_fotografia

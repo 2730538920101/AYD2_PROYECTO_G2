@@ -21,10 +21,10 @@ class ConductoresController:
     def get_conductores(self):
         try:
             # Definir la consulta SQL
-            query = """ SELECT c.CON_ID, c.NOMBRE, c.TELEFONO, c.ESTADO_CIVIL, c.GENERO, c.CORREO, c.CODIGO_EMPLEADO, c.FECHA_NACIMIENTO, 
+            query = """ SELECT c.CON_ID, c.NOMBRE, c.TELEFONO, c.ESTADO_CIVIL, c.GENERO, c.CORREO, c.CODIGO_EMPLEADO, c.FECHA_NACIMIENTO,
                     c.DIRECCION, c.NUMERO_DPI, c.PAPELERIA, c.FOTOGRAFIA, c.MARCA_VEHICULO, c.PLACA, c.ANIO, c.ESTADO_INFORMACION, IFNULL(AVG(v.CALIFICACION_CONDUCTOR),0) AS CALIFICACION
                     FROM Conductor c
-                    LEFT JOIN Viaje v ON c.CON_ID = v.CONDUCTOR_CON_ID 
+                    LEFT JOIN Viaje v ON c.CON_ID = v.CONDUCTOR_CON_ID
                     GROUP BY c.CON_ID"""
 
             # Ejecutar la consulta usando el singleton
@@ -198,14 +198,67 @@ class ConductoresController:
         else:
             raise BadRequestError('La contraseña no coincide con la confirmación.')
 
+    # Metodo para obtener los conductores pendientes de confirmar
+    def get_conductores_pendientes(self):
+        try:
+            # Definir la consulta SQL
+            query = """SELECT c.CON_ID, c.NOMBRE, c.TELEFONO, c.ESTADO_CIVIL, c.GENERO, c.CORREO, c.CODIGO_EMPLEADO, c.FECHA_NACIMIENTO,
+                    c.DIRECCION, c.NUMERO_DPI, c.NUMERO_CUENTA, c.PAPELERIA, c.FOTOGRAFIA, c.MARCA_VEHICULO, c.PLACA, c.ANIO, c.ESTADO_INFORMACION
+                    FROM Conductor c
+                    WHERE UPPER(c.ESTADO_INFORMACION) = 'PENDIENTE'"""
+
+            # Ejecutar la consulta usando el singleton
+            conductor_rows = self.db.fetch_all(query, [])
+
+            # Convertir los resultados a una lista de diccionarios
+            conductores = []
+            for row in conductor_rows:
+                conductor = {
+                    "con_id": row[0],
+                    "nombre": row[1],
+                    "telefono": row[2],
+                    "estado_civil": row[3],
+                    "genero": row[4],
+                    "correo": row[5],
+                    "codigo_empleado": row[6],
+                    "fecha_nacimiento": row[7].strftime("%d/%m/%Y"),
+                    "direccion": row[8],
+                    "numero_dpi": row[9],
+                    "numero_cuenta": row[10],
+                    "papeleria": row[11],
+                    "fotografia": row[12],
+                    "marca_vehiculo": row[13],
+                    "placa": row[14],
+                    "anio": row[15],
+                    "estado_informacion": row[16]
+                }
+                conductores.append(conductor)
+
+            # Retornar los resultados
+            return conductores
+
+        except Exception as e:
+            raise Exception(f"Error al obtener conductores pendientes: {e}")
+
+    # Metodo para actualizar el estado de información de un conductor
+    def update_estado_informacion(self, con_id, estado_informacion):
+        try:
+            # Definir la consulta SQL y los parámetros
+            query = "UPDATE Conductor SET ESTADO_INFORMACION = %s WHERE CON_ID = %s"
+            values = (estado_informacion, con_id)
+            # Ejecutar la consulta usando el singleton
+            self.db.execute_query(query, values)
+        except Exception as e:
+            raise Exception(f"Error al actualizar el estado de información del conductor: {e}")
+
     #*Metodo para obtener un conductor por su ID
     def get_conductor_by_id(self, con_id):
         try:
             # Definir la consulta SQL
-            query = """ SELECT c.CON_ID, c.NOMBRE, c.TELEFONO, c.ESTADO_CIVIL, c.GENERO, c.CORREO, c.CODIGO_EMPLEADO, c.FECHA_NACIMIENTO, 
+            query = """ SELECT c.CON_ID, c.NOMBRE, c.TELEFONO, c.ESTADO_CIVIL, c.GENERO, c.CORREO, c.CODIGO_EMPLEADO, c.FECHA_NACIMIENTO,
                         c.DIRECCION, c.NUMERO_DPI, c.PAPELERIA, c.FOTOGRAFIA, c.MARCA_VEHICULO, c.PLACA, c.ANIO, c.ESTADO_INFORMACION, IFNULL(AVG(v.CALIFICACION_CONDUCTOR),0) AS CALIFICACION
                         FROM Conductor c
-                        LEFT JOIN Viaje v ON c.CON_ID = v.CONDUCTOR_CON_ID 
+                        LEFT JOIN Viaje v ON c.CON_ID = v.CONDUCTOR_CON_ID
                         WHERE c.CON_ID = %s
                         GROUP BY c.CON_ID
                         """
@@ -239,7 +292,7 @@ class ConductoresController:
 
         except Exception as e:
             raise Exception(f"Error al obtener conductor: {e}")
-        
+
     #* Metodo para actualizar un conductor
     def update_conductor(self, conductor_data):
         try:
@@ -266,12 +319,12 @@ class ConductoresController:
                 conductor_data.anio,
                 conductor_data.estado_informacion,
                 conductor_data.con_id
-            )  
+            )
             # Ejecutar la consulta usando el singleton
             self.db.execute_query(query, values)
-        except Error as e:
+        except Exception as e:
             raise Exception(f"Error al actualizar conductor: {e}")
-        
+
     #* Metodo para saber si un conductor existe
     def exists_conductor(self, con_id):
         try:
@@ -281,6 +334,6 @@ class ConductoresController:
             result = self.db.fetch_one(query, [con_id])
             # Retornar True si el conductor existe
             return result is not None
-        except Error as e:
+        except Exception as e:
             raise Exception(f"Error al verificar la existencia del conductor: {e}")
-        
+
