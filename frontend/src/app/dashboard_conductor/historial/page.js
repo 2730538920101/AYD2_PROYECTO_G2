@@ -36,7 +36,8 @@ function Historial() {
         tarifa: `Q${viaje.total}`,
         fecha_i: viaje.fecha_inicio,
         fecha_fin: viaje.fecha_fin, // Mostrar fecha_fin
-        estado: viaje.estado // Mostrar el estado del viaje
+        estado: viaje.estado,
+        califiacion: viaje.calificacion_cliente // Mostrar el estado del viaje
       }));
 
       setViajesAceptados(viajesAceptados);
@@ -75,14 +76,15 @@ function Historial() {
   // Función para obtener los detalles del usuario por su id, incluyendo la foto
   const obtenerDetalleUsuario = async (cli_id) => {
     try {
-      const response = await handleAxios().get(`clientes/${cli_id}`);
-      const data = response.data;
+      const response = await handleAxios().get(`clientes?cli_id=${cli_id}`);
+      const data = response.data[0];;
 
       setUser({
         nombre: data.nombre,
         fecha_nacimiento: data.fecha_nacimiento,
         genero: data.genero,
-        foto_dpi: data.foto_dpi // Incluir la URL de la foto del DPI
+        foto_dpi: data.foto_dpi, // Incluir la URL de la foto del DPI
+        calificacion:data.calificacion
       });
 
       setShowUser(true);
@@ -149,6 +151,11 @@ function Historial() {
       name: 'ESTADO',
       selector: row => row.estado,
       wrap: true,
+    },
+    {
+      name: 'CALIFICACIÓN',
+      selector: row => row.califiacion,
+      wrap: true,
     }
   ];
 
@@ -210,6 +217,19 @@ function Historial() {
                     type="text"
                     autoComplete='off'
                     defaultValue={userr.genero} // Mostrar el género del usuario
+                    readOnly
+                  />
+                </Form.Group>
+              </Col>
+              <Col xs={12} md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label htmlFor="CLIENTE_CALIFICACION">CALIFIACION</Form.Label>
+                  <Form.Control
+                    id="CLIENTE_CALIFICACION"
+                    name="CLIENTE_CALIFICACION"
+                    type="text"
+                    autoComplete="off"
+                    defaultValue={userr.calificacion} // Mostrar la fecha de nacimiento del usuario
                     readOnly
                   />
                 </Form.Group>

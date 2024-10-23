@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 // Select
 import Select from 'react-select';
 // Axios
-import { handleAxios, handleAxiosError } from '@/helpers/axiosConfig';
+import { handleAxios, handleAxiosError,handleSwal } from '@/helpers/axiosConfig';
 // Bootstrap
 import { Col, Row, Form, Modal, Button } from 'react-bootstrap';
 // Font Awesome
@@ -14,6 +14,8 @@ import { faUserNinja, faFilePdf, faEdit, faFileImage } from "@fortawesome/free-s
 // DataTable
 import DataTable from 'react-data-table-component';
 
+const MySwal = handleSwal();
+
 function SolicitudesEmpleo() {
 
     // Obtencion de los viajes para el select
@@ -21,7 +23,7 @@ function SolicitudesEmpleo() {
 
     const obtenerViajes = async () => {
         try {
-            const response = await handleAxios().get('/conductores');
+            const response = await handleAxios().get('/conductores/pendientes');
             const data = response.data;
 
             // Mapear los datos a la estructura necesaria para la tabla
@@ -44,6 +46,23 @@ function SolicitudesEmpleo() {
                 }
             });
             setViajes(temporal);
+        } catch (error) {
+            handleAxiosError(error);
+        }
+    }
+
+    const aprobarConductor = async (con_id) => {
+        try {
+            const response = await handleAxios().put(`/conductores/actualizar-estado`, {
+                con_id: con_id,
+                estado_informacion: "APROBADO"
+            });
+            MySwal.fire({
+                title: "Aprobado",
+                text: "Usuario Aprobado",
+                icon: "success",
+            });
+            obtenerViajes();
         } catch (error) {
             handleAxiosError(error);
         }
@@ -100,6 +119,16 @@ function SolicitudesEmpleo() {
                         <FontAwesomeIcon icon={faFileImage} />
                     </Button>
                 </a>
+            )
+        },
+        {
+            name: 'Acciones',
+            cell: row => (
+                <>
+                    <Button variant="success" onClick={() => aprobarConductor(row.id)}>
+                        <FontAwesomeIcon icon={faEdit} /> Aprobar
+                    </Button>
+                </>
             )
         }
     ];
