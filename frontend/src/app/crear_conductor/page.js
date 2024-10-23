@@ -222,8 +222,19 @@ const Registro = () => {
                   {/* Estado Información (campo oculto) */}
                   <Form.Control id="estado_informacion" name="estado_informacion" type="hidden" value="PENDIENTE" />
 
-                  <Form.Control id="numero_cuenta" name="numero_cuenta" type="hidden" value="0000000000" />
+                  {/* Dirección de Domicilio */}
+                  <Form.Group className="mb-4">
+                    <Form.Label>Número de Cuenta</Form.Label>
+                    <InputGroup>
+                      <InputGroup.Text>
+                        <FontAwesomeIcon icon={faAddressCard} />
+                      </InputGroup.Text>
+                      <Form.Control id="numero_cuenta" name="numero_cuenta" required type="text" placeholder="000000" />
+                    </InputGroup>
+                  </Form.Group>
 
+                  
+                    
                   <Button variant="primary" type="submit" className="w-100">
                     Solicitar
                   </Button>
