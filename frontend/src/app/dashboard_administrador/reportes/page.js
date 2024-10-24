@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { handleAxios } from '@/helpers/axiosConfig';
-import { Tabs, Tab, Container, Table } from 'react-bootstrap';
+import { Tabs, Tab, Container, Table, Accordion, Badge, Card, Button } from 'react-bootstrap';
 import { ResponsiveSankey } from '@nivo/sankey';
 import { ResponsivePie } from '@nivo/pie';
 
@@ -108,6 +108,56 @@ function Reportes() {
     };
 
     const dataPieChart2 = calcularDistribucionUsuarios();
+
+    // Función para calcular ingresos brutos y netos por día, con desglose de viajes
+    const calcularIngresosPorDiaConViajes = () => {
+        if (!Viajes) return [];
+
+        const viajesFinalizados = Viajes.filter(viaje => viaje.estado === 'FINALIZADO');
+
+        const ingresosPorDia = viajesFinalizados.reduce((acc, viaje) => {
+            const fecha = new Date(viaje.fecha_fin).toISOString().split('T')[0]; // Obtener la fecha sin hora
+            const total = parseFloat(viaje.total);
+
+            if (!acc[fecha]) {
+                acc[fecha] = { bruto: 0, neto: 0, viajes: [] };
+            }
+
+            acc[fecha].bruto += total;
+            acc[fecha].neto += total * 0.1;
+
+            acc[fecha].viajes.push({
+                cliente: obtenerNombreCliente(viaje.cli_id),
+                conductor: obtenerNombreConductor(viaje.conductor_con_id),
+                bruto: total.toFixed(2),
+                neto: (total * 0.1).toFixed(2),
+                origen: viaje.origen,
+                destino: viaje.destino
+            });
+
+            return acc;
+        }, {});
+
+        return Object.entries(ingresosPorDia).map(([fecha, { bruto, neto, viajes }]) => ({
+            fecha,
+            bruto: bruto.toFixed(2),
+            neto: neto.toFixed(2),
+            viajes
+        }));
+    };
+
+    // Función para calcular el total de ingresos brutos y netos acumulados
+    const calcularTotalGlobal = (ingresosConViajes) => {
+        const totalBruto = ingresosConViajes.reduce((acc, dia) => acc + parseFloat(dia.bruto), 0);
+        const totalNeto = ingresosConViajes.reduce((acc, dia) => acc + parseFloat(dia.neto), 0);
+        return {
+            totalBruto: totalBruto.toFixed(2),
+            totalNeto: totalNeto.toFixed(2)
+        };
+    };
+
+    const ingresosConViajes = calcularIngresosPorDiaConViajes();
+    const { totalBruto, totalNeto } = calcularTotalGlobal(ingresosConViajes);
 
     return (
         <Container>
@@ -236,6 +286,66 @@ function Reportes() {
                             ]}
                         />
                     </div>
+                </Tab>
+                <Tab eventKey="ingresos" title="Ingresos por día con viajes">
+                     <Accordion defaultActiveKey={null}>
+                        <Table striped bordered hover>
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Ingresos Brutos</th>
+                                    <th>Ingresos Netos</th>
+                                    <th>Detalles</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {ingresosConViajes.map((dia, index) => (
+                                    <tr key={index}>
+                                        <td>{dia.fecha}</td>
+                                        <td>{dia.bruto}</td>
+                                        <td>{dia.neto}</td>
+                                        <td>
+                                            <Accordion.Item eventKey={index.toString()}>
+                                                <Accordion.Header>Ver Detalles</Accordion.Header>
+                                                <Accordion.Body>
+                                                    <Table striped bordered hover>
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Origen</th>
+                                                                <th>Destino</th>
+                                                                <th>Cliente</th>
+                                                                <th>Conductor</th>
+                                                                <th>Ingresos Brutos</th>
+                                                                <th>Ingresos Netos</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {dia.viajes.map((viaje, viajeIndex) => (
+                                                                <tr key={viajeIndex}>
+                                                                    <td>{viaje.origen}</td>
+                                                                    <td>{viaje.destino}</td>
+                                                                    <td>{viaje.cliente}</td>
+                                                                    <td>{viaje.conductor}</td>
+                                                                    <td>{viaje.bruto}</td>
+                                                                    <td>{viaje.neto}</td>
+                                                                </tr>
+                                                            ))}
+                                                        </tbody>
+                                                    </Table>
+                                                </Accordion.Body>
+                                            </Accordion.Item>
+                                        </td>
+                                    </tr>
+                                ))}
+                                <tr>
+                                    <td><strong>Totales</strong></td>
+                                    <td><strong>{totalBruto}</strong></td>
+                                    <td><strong>{totalNeto}</strong></td>
+                                    <td></td> {/* Sin botón de detalles para la fila de totales */}
+                                </tr>
+                            </tbody>
+                        </Table>
+                    </Accordion>
                 </Tab>
             </Tabs>
         </Container>
