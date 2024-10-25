@@ -25,10 +25,12 @@ pipeline {
         }
         stage("Docker build App service") {
             steps {
-                echo "APP_SERVICE BUILD DOCKER IMAGE"
-                dir('../backend/app_service'){ 
-                    script{
-                        dockerImageA = docker.build "carlosmz87/ayd2_p1_app_service:latest"
+                container('docker'){
+                    echo "APP_SERVICE BUILD DOCKER IMAGE"
+                    dir('../backend/app_service'){ 
+                        script{
+                            dockerImageA = docker.build "carlosmz87/ayd2_p1_app_service:latest"
+                        }
                     }
                 }
             }
