@@ -1,0 +1,68 @@
+pipeline{
+    agent {
+        kubernetes {
+            label 'jenkins-slave'  // El label que asignaste a tu agente en Jenkins
+            defaultContainer 'jenkins-slave'  // Nombre del contenedor que ejecutará la tarea
+        }
+    }
+    
+    stages{
+        stage("Checkout"){
+            steps{
+                echo "GIT CHECKOUT STAGE"
+                git branch: 'develop', url: "https://github.com/2730538920101/AYD2_PROYECTO_G2.git"
+            }
+        }
+        stage("Test Backend"){
+            steps{
+                echo "TEST"
+                echo "BACKEND TEST"
+            }
+        }
+        stage("Docker Backend"){
+            steps{
+                echo "BACKEND BUILD DOCKER IMAGE"
+                // dir('backend'){ 
+                //     script{
+                //         dockerImageB = docker.build "carlosmz87/springcrudback"
+                //     }
+                // }
+            }
+        }
+        stage("Build Front"){
+            steps{
+                echo 'FRONTEND BUILD'
+                echo 'FRONTEND BUILD PROYECT'
+                // dir('frontend'){
+                //     sh 'npm install'
+                //     sh 'npm run ng build --prod'
+                // }
+            }
+        }
+        stage("Docker Frontend"){
+            steps{
+                echo "FRONTEND BUILD DOCKER IMAGE"
+                // dir('frontend'){
+                //     script{
+                //         dockerImageF = docker.build "carlosmz87/springcrudfront"
+                //     }
+                // }
+            }
+        }
+        stage("Deliver App"){
+            steps{
+                echo "DELIVER"
+                script{
+                    docker.withRegistry('', 'docker-hub'){
+                        echo "DELIVER BACKEND"
+                        dockerImageB.push('$BUILD_NUMBER')
+                        dockerImageB.push('latest')
+                        echo "DELIVER FRONTEND"
+                        dockerImageF.push('$BUILD_NUMBER')
+                        dockerImageF.push('latest')
+                    }
+                }               
+            }
+        }
+    }
+}
