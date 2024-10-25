@@ -23,6 +23,8 @@ pipeline {
                 volumeMounts:
                 - name: docker-sock
                   mountPath: /var/run/docker.sock
+                - name: workspace-volume
+                  mountPath: /home/jenkins/agent
               securityContext:
                 runAsUser: 1000  # Ajusta esto según sea necesario
                 runAsGroup: 1000  # Ajusta esto según sea necesario
@@ -31,6 +33,8 @@ pipeline {
               - name: docker-sock
                 hostPath:
                   path: /var/run/docker.sock
+              - name: workspace-volume
+                emptyDir: {}
             """
         }
     }
@@ -56,6 +60,7 @@ pipeline {
                     script {
                         echo "Building and pushing Docker images"
                         
+                        // Construcción de imágenes Docker
                         sh """
                         docker build -t carlosmz87/ayd2_p1_app_service:latest backend/app_service
                         docker build -t carlosmz87/ayd2_p1_notification_producer:latest backend/notification_service/producer
@@ -63,6 +68,7 @@ pipeline {
                         docker build -t carlosmz87/ayd2_p1_frontend:latest frontend
                         """
                         
+                        // Autenticación y subida de imágenes a Docker Hub
                         docker.withRegistry('', 'Dockerhub-credentials') {
                             sh """
                             docker push carlosmz87/ayd2_p1_app_service:latest
