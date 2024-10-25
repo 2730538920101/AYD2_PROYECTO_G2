@@ -1,7 +1,8 @@
 pipeline {
     agent {
         kubernetes {
-            defaultContainer 'docker'
+            inheritFrom 'jenkins-slave'
+            defaultContainer 'jnlp'
             yaml """
             apiVersion: v1
             kind: Pod
@@ -10,6 +11,9 @@ pipeline {
                 agent: jenkins-slave
             spec:
               containers:
+              - name: jnlp
+                image: jenkins/inbound-agent:alpine
+                args: ['\$(JENKINS_SECRET)', '\$(JENKINS_NAME)']
               - name: docker
                 image: docker:20.10.7
                 command:
@@ -28,9 +32,8 @@ pipeline {
         }
     }
     environment {
-        DOCKER_HUB_CREDENTIALS = credentials('Dockerhub-credentials') // Credenciales de Docker Hub
-        GIT_CREDENTIALS = credentials('Github-credentials') // Credenciales de GitHub
-        DOCKER_IMAGE_PREFIX = "carlosmz87/ayd2_p1" // Prefijo de imagen Docker
+        DOCKER_HUB_CREDENTIALS = credentials('Dockerhub-credentials')
+        GIT_CREDENTIALS = credentials('Github-credentials')
     }
 
     stages {
@@ -38,32 +41,31 @@ pipeline {
             steps {
                 script {
                     echo "GIT CHECKOUT STAGE"
-                    git url: "https://${GIT_CREDENTIALS_USR}:${GIT_CREDENTIALS_PSW}@github.com/2730538920101/AYD2_PROYECTO_G2.git", branch: 'develop'
+                    git url: "https://github.com/2730538920101/AYD2_PROYECTO_G2.git", branch: 'develop', credentialsId: 'Github-credentials'
                 }
             }
         }
-        
+
         stage("Docker build and push") {
             steps {
                 container('docker') {
                     script {
                         echo "Building and pushing Docker images"
                         
-                        def services = [
-                            "app_service": "backend/app_service",
-                            "notification_producer": "backend/notification_service/producer",
-                            "notification_consumer": "backend/notification_service/consumer",
-                            "frontend": "frontend"
-                        ]
+                        sh """
+                        docker build -t carlosmz87/ayd2_p1_app_service:latest backend/app_service
+                        docker build -t carlosmz87/ayd2_p1_notification_producer:latest backend/notification_service/producer
+                        docker build -t carlosmz87/ayd2_p1_notification_consumer:latest backend/notification_service/consumer
+                        docker build -t carlosmz87/ayd2_p1_frontend:latest frontend
+                        """
                         
-                        services.each { service, path ->
-                            sh "docker build -t ${DOCKER_IMAGE_PREFIX}_${service}:latest ${path}"
-                        }
-
                         docker.withRegistry('', 'Dockerhub-credentials') {
-                            services.each { service, _ ->
-                                sh "docker push ${DOCKER_IMAGE_PREFIX}_${service}:latest"
-                            }
+                            sh """
+                            docker push carlosmz87/ayd2_p1_app_service:latest
+                            docker push carlosmz87/ayd2_p1_notification_producer:latest
+                            docker push carlosmz87/ayd2_p1_notification_consumer:latest
+                            docker push carlosmz87/ayd2_p1_frontend:latest
+                            """
                         }
                     }
                 }
