@@ -15,20 +15,21 @@ pipeline {
                 image: jenkins/inbound-agent:alpine
                 args: ['\$(JENKINS_SECRET)', '\$(JENKINS_NAME)']
               - name: docker
-                image: docker:20.10.7
+                image: docker:20.10.7-dind
                 command:
                 - cat
                 tty: true
                 securityContext:
                   privileged: true
+                env:
+                  - name: DOCKER_TLS_CERTDIR
+                    value: ""
                 volumeMounts:
-                - name: docker-sock
-                  mountPath: /var/run/docker.sock
+                - name: docker-graph-storage
+                  mountPath: /var/lib/docker
               volumes:
-              - name: docker-sock
-                hostPath:
-                  path: /var/run/docker.sock
-                  type: File
+              - name: docker-graph-storage
+                emptyDir: {}
             """
         }
     }
