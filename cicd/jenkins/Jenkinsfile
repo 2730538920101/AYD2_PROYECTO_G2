@@ -11,6 +11,7 @@ pipeline{
             steps{
                 echo "GIT CHECKOUT STAGE"
                 git branch: 'develop', url: "https://github.com/2730538920101/AYD2_PROYECTO_G2.git"
+                credentialsId: 'Github-credentials'
             }
         }
         stage("Test Backend"){
