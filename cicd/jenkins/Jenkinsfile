@@ -1,75 +1,41 @@
 pipeline {
     agent {
         kubernetes {
-            label 'jenkins-slave'
-            defaultContainer 'jnlp'
+            // Definir el template del pod
+            label 'docker-pod'
+            defaultContainer 'docker'
             yaml """
-apiVersion: v1
-kind: Pod
-metadata:
-  labels:
-    component: ci
-spec:
-  # Use service account that can deploy to all namespaces
-  serviceAccountName: jenkins-admin
-  containers:
-  - name: docker
-    image: docker:latest
-    command:
-    - cat
-    tty: true
-    volumeMounts:
-    - mountPath: /var/run/docker.sock
-      name: docker-sock
-  volumes:
-  - name: docker-sock
-    hostPath:
-      path: /var/run/docker.sock
-  - name: m2
-    persistentVolumeClaim:
-      claimName: m2
-"""
+            apiVersion: v1
+            kind: Pod
+            metadata:
+              labels:
+                some-label: my-value
+            spec:
+              containers:
+              - name: docker
+                image: docker:latest
+                command:
+                - cat
+                tty: true
+              """
         }
     }
-    environment {
-        DOCKER_HUB_CREDENTIALS = credentials('Dockerhub-credentials')
-        GIT_CREDENTIALS = credentials('Github-credentials')
-    }
-
+    
     stages {
-        stage("Checkout") {
+        stage('Execute Docker Command') {
             steps {
-                script {
-                    echo "GIT CHECKOUT STAGE"
-                    git url: "https://github.com/2730538920101/AYD2_PROYECTO_G2.git", branch: 'develop', credentialsId: 'Github-credentials'
+                // Ejecutar el comando 'docker ps' dentro del contenedor
+                container('docker') {
+                    sh 'docker ps'
                 }
             }
         }
-
-        stage("Docker build and push") {
-            steps {
-                container('docker') {
-                    script {
-                        echo "Building and pushing Docker images"
-                        
-                        sh """
-                        docker build -t carlosmz87/ayd2_p1_app_service:latest backend/app_service
-                        docker build -t carlosmz87/ayd2_p1_notification_producer:latest backend/notification_service/producer
-                        docker build -t carlosmz87/ayd2_p1_notification_consumer:latest backend/notification_service/consumer
-                        docker build -t carlosmz87/ayd2_p1_frontend:latest frontend
-                        """
-                        
-                        docker.withRegistry('', 'Dockerhub-credentials') {
-                            sh """
-                            docker push carlosmz87/ayd2_p1_app_service:latest
-                            docker push carlosmz87/ayd2_p1_notification_producer:latest
-                            docker push carlosmz87/ayd2_p1_notification_consumer:latest
-                            docker push carlosmz87/ayd2_p1_frontend:latest
-                            """
-                        }
-                    }
-                }
-            }
+    }
+    
+    post {
+        always {
+            // Limpiar los recursos del pod
+            cleanWs()
         }
     }
 }
