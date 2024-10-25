@@ -1,26 +1,30 @@
-pipeline{
+pipeline {
     agent {
         kubernetes {
             label 'jenkins-slave'  // El label que asignaste a tu agente en Jenkins
             defaultContainer 'jenkins-slave'  // Nombre del contenedor que ejecutará la tarea
         }
     }
-    
-    stages{
-        stage("Checkout"){
-            steps{
-                echo "GIT CHECKOUT STAGE"
-                git branch: 'develop', url: "https://github.com/2730538920101/AYD2_PROYECTO_G2.git"
+
+    stages {
+        stage("Checkout") {
+            steps {
+                script {
+                    echo "GIT CHECKOUT STAGE"
+                    withCredentials([usernamePassword(credentialsId: 'Github-credentials', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASSWORD')]) {
+                        git url: "https://${GIT_USER}:${GIT_PASSWORD}@github.com/2730538920101/AYD2_PROYECTO_G2.git", branch: 'develop'
+                    }
+                }
             }
         }
-        stage("Test Backend"){
-            steps{
+        stage("Test Backend") {
+            steps {
                 echo "TEST"
                 echo "BACKEND TEST"
             }
         }
-        stage("Docker Backend"){
-            steps{
+        stage("Docker Backend") {
+            steps {
                 echo "BACKEND BUILD DOCKER IMAGE"
                 // dir('backend'){ 
                 //     script{
@@ -29,8 +33,8 @@ pipeline{
                 // }
             }
         }
-        stage("Build Front"){
-            steps{
+        stage("Build Front") {
+            steps {
                 echo 'FRONTEND BUILD'
                 echo 'FRONTEND BUILD PROYECT'
                 // dir('frontend'){
@@ -39,8 +43,8 @@ pipeline{
                 // }
             }
         }
-        stage("Docker Frontend"){
-            steps{
+        stage("Docker Frontend") {
+            steps {
                 echo "FRONTEND BUILD DOCKER IMAGE"
                 // dir('frontend'){
                 //     script{
@@ -49,11 +53,11 @@ pipeline{
                 // }
             }
         }
-        stage("Deliver App"){
-            steps{
+        stage("Deliver App") {
+            steps {
                 echo "DELIVER"
-                script{
-                    docker.withRegistry('', 'docker-hub'){
+                script {
+                    docker.withRegistry('', 'docker-hub') {
                         echo "DELIVER BACKEND"
                         dockerImageB.push('$BUILD_NUMBER')
                         dockerImageB.push('latest')
@@ -61,7 +65,7 @@ pipeline{
                         dockerImageF.push('$BUILD_NUMBER')
                         dockerImageF.push('latest')
                     }
-                }               
+                }
             }
         }
     }
