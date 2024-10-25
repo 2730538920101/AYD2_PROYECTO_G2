@@ -17,40 +17,50 @@ pipeline {
                 }
             }
         }
-        stage("Test Backend") {
+        stage("Test app_service") {
             steps {
                 echo "TEST"
-                echo "BACKEND TEST"
+                echo "APP_SERVICE TEST"
             }
         }
-        stage("Docker Backend") {
+        stage("Docker build App service") {
             steps {
-                echo "BACKEND BUILD DOCKER IMAGE"
-                // dir('backend'){ 
-                //     script{
-                //         dockerImageB = docker.build "carlosmz87/springcrudback"
-                //     }
-                // }
+                echo "APP_SERVICE BUILD DOCKER IMAGE"
+                dir('../backend/app_service'){ 
+                    script{
+                        dockerImageA = docker.build "carlosmz87/ayd2_p1_app_service:latest"
+                    }
+                }
             }
         }
-        stage("Build Front") {
+        stage("Docker build notification producer service") {
             steps {
-                echo 'FRONTEND BUILD'
-                echo 'FRONTEND BUILD PROYECT'
-                // dir('frontend'){
-                //     sh 'npm install'
-                //     sh 'npm run ng build --prod'
-                // }
+                echo "NOTIFICATION PRODUCER BUILD DOCKER IMAGE"
+                dir('../backend/notification_service/producer'){ 
+                    script{
+                        dockerImageB = docker.build "carlosmz87/ayd2_p1_notification_producer:latest"
+                    }
+                }
             }
         }
-        stage("Docker Frontend") {
+        stage("Docker build notification consumer service") {
+            steps {
+                echo "NOTIFICATION CONSUMER BUILD DOCKER IMAGE"
+                dir('../backend/notification_service/consumer'){ 
+                    script{
+                        dockerImageC = docker.build "carlosmz87/ayd2_p1_notification_consumer:latest"
+                    }
+                }
+            }
+        }
+        stage("Docker build Frontend") {
             steps {
                 echo "FRONTEND BUILD DOCKER IMAGE"
-                // dir('frontend'){
-                //     script{
-                //         dockerImageF = docker.build "carlosmz87/springcrudfront"
-                //     }
-                // }
+                dir('../frontend'){
+                    script{
+                        dockerImageF = docker.build "carlosmz87/ayd2_p1_frontend:latest"
+                    }
+                }
             }
         }
         stage("Deliver App") {
@@ -58,9 +68,15 @@ pipeline {
                 echo "DELIVER"
                 script {
                     docker.withRegistry('', 'docker-hub') {
-                        echo "DELIVER BACKEND"
+                        echo "DELIVER APP_SERVICE"
+                        dockerImageA.push('$BUILD_NUMBER')
+                        dockerImageA.push('latest')
+                        echo "DELIVER NOTIFICATION PRODUCER"
                         dockerImageB.push('$BUILD_NUMBER')
                         dockerImageB.push('latest')
+                        echo "DELIVER NOTIFICATION CONSUMER"
+                        dockerImageC.push('$BUILD_NUMBER')
+                        dockerImageC.push('latest')
                         echo "DELIVER FRONTEND"
                         dockerImageF.push('$BUILD_NUMBER')
                         dockerImageF.push('latest')
