@@ -4,49 +4,48 @@ pipeline {
             label 'dind'
             defaultContainer 'docker'
             yaml """
-                ---
                 apiVersion: v1
                 kind: Pod
                 metadata:
-                labels:
+                  labels:
                     app: jenkins
                 spec:
-                containers:
+                  containers:
                     - name: docker
-                    image: docker:latest
-                    command:
+                      image: docker:latest
+                      command:
                         - /bin/cat
-                    tty: true
-                    volumeMounts:
+                      tty: true
+                      volumeMounts:
                         - name: dind-certs
-                        mountPath: /certs
-                    env:
+                          mountPath: /certs
+                      env:
                         - name: DOCKER_TLS_CERTDIR
-                        value: /certs
+                          value: /certs
                         - name: DOCKER_CERT_PATH
-                        value: /certs
+                          value: /certs
                         - name: DOCKER_TLS_VERIFY
-                        value: 1
+                          value: "1"
                         - name: DOCKER_HOST
-                        value: tcp://localhost:2376
+                          value: tcp://localhost:2376
                     - name: dind
-                    image: docker:dind
-                    securityContext:
+                      image: docker:dind
+                      securityContext:
                         privileged: true
-                    env:
+                      env:
                         - name: DOCKER_TLS_CERTDIR
-                        value: /certs
-                    volumeMounts:
+                          value: /certs
+                      volumeMounts:
                         - name: dind-storage
-                        mountPath: /var/lib/docker
+                          mountPath: /var/lib/docker
                         - name: dind-certs
-                        mountPath: /certs
-                volumes:
+                          mountPath: /certs
+                  volumes:
                     - name: dind-storage
-                    emptyDir: {}
+                      emptyDir: {}
                     - name: dind-certs
-                    emptyDir: {}
-                """
+                      emptyDir: {}
+            """
         }
     }
     environment {
