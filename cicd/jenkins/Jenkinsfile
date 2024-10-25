@@ -57,6 +57,8 @@ pipeline {
                         echo "Building and pushing Docker images"
                         
                         sh """
+                        mkdir -p /home/jenkins/agent/.docker
+                        export DOCKER_CONFIG=/home/jenkins/agent/.docker
                         docker build -t carlosmz87/ayd2_p1_app_service:latest backend/app_service
                         docker build -t carlosmz87/ayd2_p1_notification_producer:latest backend/notification_service/producer
                         docker build -t carlosmz87/ayd2_p1_notification_consumer:latest backend/notification_service/consumer
