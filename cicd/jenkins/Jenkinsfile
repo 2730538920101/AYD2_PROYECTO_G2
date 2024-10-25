@@ -10,6 +10,7 @@ pipeline {
               labels:
                 agent: jenkins-slave
             spec:
+              serviceAccountName: jenkins-admin  # Asegúrate de utilizar el ServiceAccount correcto
               containers:
               - name: jnlp
                 image: jenkins/inbound-agent:alpine
@@ -23,7 +24,9 @@ pipeline {
                 - name: docker-sock
                   mountPath: /var/run/docker.sock
               securityContext:
-                fsGroup: 1000
+                runAsUser: 1000  # Ajusta esto según sea necesario
+                runAsGroup: 1000  # Ajusta esto según sea necesario
+                fsGroup: 1000  # Debe coincidir con el grupo que tiene acceso al socket de Docker
               volumes:
               - name: docker-sock
                 hostPath:
