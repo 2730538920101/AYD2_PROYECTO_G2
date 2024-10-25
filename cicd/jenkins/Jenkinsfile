@@ -1,53 +1,76 @@
 pipeline {
     agent {
         kubernetes {
-            label 'docker-pod'
-            defaultContainer 'docker'
+            label 'jenkins-slave'
+            defaultContainer 'jnlp'
             yaml """
             apiVersion: v1
             kind: Pod
             metadata:
               labels:
-                some-label: my-value
+                agent: jenkins-slave
             spec:
               containers:
+              - name: jnlp
+                image: jenkins/inbound-agent:alpine
+                args: ['\$(JENKINS_SECRET)', '\$(JENKINS_NAME)']
               - name: docker
-                image: docker:20.10.16  # Specify a version for stability
+                image: docker:latest
                 command:
                 - cat
                 tty: true
                 volumeMounts:
-                - name: docker-socket
+                - name: docker-sock
                   mountPath: /var/run/docker.sock
-                resources:                     # Optional: Define resources
-                  requests:
-                    memory: "512Mi"
-                    cpu: "500m"
-                  limits:
-                    memory: "1Gi"
-                    cpu: "1"
-              - name: jnlp
-                image: jenkins/inbound-agent:latest
-                args: ['-url', '${JENKINS_URL}', '${JENKINS_SECRET}', '${JENKINS_AGENT_NAME}']
-                volumeMounts:
-                - name: docker-socket
-                  mountPath: /var/run/docker.sock
+              securityContext:
+                fsGroup: 1000
               volumes:
-              - name: docker-socket
+              - name: docker-sock
                 hostPath:
                   path: /var/run/docker.sock
             """
         }
     }
 
+    environment {
+        DOCKER_HUB_CREDENTIALS = credentials('Dockerhub-credentials')
+        GIT_CREDENTIALS = credentials('Github-credentials')
+    }
+
     stages {
-        stage('Execute Docker Command') {
+        stage("Checkout") {
+            steps {
+                script {
+                    echo "GIT CHECKOUT STAGE"
+                    git url: "https://github.com/2730538920101/AYD2_PROYECTO_G2.git", branch: 'develop', credentialsId: 'Github-credentials'
+                }
+            }
+        }
+
+        stage("Docker build and push") {
             steps {
                 container('docker') {
-                    sh 'docker ps || exit 1'  // Add error handling
+                    script {
+                        echo "Building and pushing Docker images"
+                        
+                        sh """
+                        docker build -t carlosmz87/ayd2_p1_app_service:latest backend/app_service
+                        docker build -t carlosmz87/ayd2_p1_notification_producer:latest backend/notification_service/producer
+                        docker build -t carlosmz87/ayd2_p1_notification_consumer:latest backend/notification_service/consumer
+                        docker build -t carlosmz87/ayd2_p1_frontend:latest frontend
+                        """
+                        
+                        docker.withRegistry('', 'Dockerhub-credentials') {
+                            sh """
+                            docker push carlosmz87/ayd2_p1_app_service:latest
+                            docker push carlosmz87/ayd2_p1_notification_producer:latest
+                            docker push carlosmz87/ayd2_p1_notification_consumer:latest
+                            docker push carlosmz87/ayd2_p1_frontend:latest
+                            """
+                        }
+                    }
                 }
             }
         }
     }
-
 }
