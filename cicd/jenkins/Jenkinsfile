@@ -10,7 +10,7 @@ pipeline {
               labels:
                 agent: jenkins-slave
             spec:
-              serviceAccountName: jenkins-admin  # Asegúrate de utilizar el ServiceAccount correcto
+              serviceAccountName: jenkins-admin
               containers:
               - name: jnlp
                 image: jenkins/inbound-agent:alpine
@@ -20,21 +20,18 @@ pipeline {
                 command:
                 - cat
                 tty: true
+                workingDir: /home/jenkins/agent  # Establecer el directorio de trabajo
                 volumeMounts:
                 - name: docker-sock
                   mountPath: /var/run/docker.sock
-                - name: workspace-volume
-                  mountPath: /home/jenkins/agent
               securityContext:
-                runAsUser: 1000  # Ajusta esto según sea necesario
-                runAsGroup: 1000  # Ajusta esto según sea necesario
-                fsGroup: 1000  # Debe coincidir con el grupo que tiene acceso al socket de Docker
+                runAsUser: 1000
+                runAsGroup: 1000
+                fsGroup: 1000
               volumes:
               - name: docker-sock
                 hostPath:
                   path: /var/run/docker.sock
-              - name: workspace-volume
-                emptyDir: {}
             """
         }
     }
@@ -59,16 +56,14 @@ pipeline {
                 container('docker') {
                     script {
                         echo "Building and pushing Docker images"
-                        
-                        // Construcción de imágenes Docker
+
                         sh """
                         docker build -t carlosmz87/ayd2_p1_app_service:latest backend/app_service
                         docker build -t carlosmz87/ayd2_p1_notification_producer:latest backend/notification_service/producer
                         docker build -t carlosmz87/ayd2_p1_notification_consumer:latest backend/notification_service/consumer
                         docker build -t carlosmz87/ayd2_p1_frontend:latest frontend
                         """
-                        
-                        // Autenticación y subida de imágenes a Docker Hub
+
                         docker.withRegistry('', 'Dockerhub-credentials') {
                             sh """
                             docker push carlosmz87/ayd2_p1_app_service:latest
