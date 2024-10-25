@@ -1,7 +1,6 @@
 pipeline {
     agent {
         kubernetes {
-            // Definir el template del pod
             label 'docker-pod'
             defaultContainer 'docker'
             yaml """
@@ -17,24 +16,35 @@ pipeline {
                 command:
                 - cat
                 tty: true
-              """
+                volumeMounts:
+                - name: docker-socket
+                  mountPath: /var/run/docker.sock
+              - name: jnlp
+                image: jenkins/inbound-agent:latest
+                args: ['-url', '${JENKINS_URL}', '${JENKINS_SECRET}', '${JENKINS_AGENT_NAME}']
+                volumeMounts:
+                - name: docker-socket
+                  mountPath: /var/run/docker.sock
+              volumes:
+              - name: docker-socket
+                hostPath:
+                  path: /var/run/docker.sock
+            """
         }
     }
-    
+
     stages {
         stage('Execute Docker Command') {
             steps {
-                // Ejecutar el comando 'docker ps' dentro del contenedor
                 container('docker') {
                     sh 'docker ps'
                 }
             }
         }
     }
-    
+
     post {
         always {
-            // Limpiar los recursos del pod
             cleanWs()
         }
     }
