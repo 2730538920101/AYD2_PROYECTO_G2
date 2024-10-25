@@ -1,8 +1,10 @@
 from ..models.singleton.singleton import MySQLSingleton
+from ..utils.funciones import BadRequestError
 from mysql.connector import Error
 from datetime import datetime
 
 class ViajeController:
+
     def __init__(self):
         # Conectar a la base de datos usando el singleton
         self.db = MySQLSingleton()
@@ -39,7 +41,6 @@ class ViajeController:
 
         except Error as e:
             raise Exception(f"Error al obtener viajes: {e}")
-
 
     # Método para crear un nuevo viaje
     def create_viaje(self, viaje_data):
@@ -103,7 +104,6 @@ class ViajeController:
         except Error as e:
             raise Exception(f"Error al verificar historial de viajes del cliente: {e}")
 
-
     #* Método para obtener los viajes pendientes (sin conductor asignado)
     def get_viajes_pendientes(self):
         try:
@@ -144,7 +144,6 @@ class ViajeController:
 
         except Error as e:
             raise Exception(f"Error al obtener viajes pendientes: {e}")
-
 
     #* Método para obtener los viajes frecuentes de un cliente
     def get_historial_viajes_frecuentes(self, cli_id, num_viajes):
@@ -257,7 +256,6 @@ class ViajeController:
         except Error as e:
             raise Exception(f"Error al aceptar viaje: {e}")
 
-
     #* Método para cancelar un viaje (cliente)
     def cancelar_viaje(self, viaje_id, razon_cancelacion):
         try:
@@ -292,6 +290,50 @@ class ViajeController:
             #TODO: 6. El viaje es enviado a la lista de espera para ser reasignado a un nuevo conductor.
             self.db.execute_query(query_update, (viaje_id,))
 
+            # Se obtiene el credito actual que tiene el cliente que hizo el viaje
+            query_oferta = """SELECT o.OFERTA_ID, IFNULL(o.CREDITO, 0) AS CREDITO
+                        FROM Oferta o
+                        WHERE o.CLI_ID = (SELECT v.CLI_ID FROM Viaje v WHERE v.VIA_ID = %s) AND o.FECHA_VENCIMIENTO > CURDATE() AND o.CREDITO > 0
+                        """
+            credito_cliente = self.db.fetch_one(query_oferta, (viaje_id,))
+
+            if credito_cliente is not None:
+
+                # Se obtiene el id de la oferta y el credito
+                oferta_id = credito_cliente[0]
+                credito = credito_cliente[1]
+
+                # Se obtiene el total del viaje
+                query_total = "SELECT TOTAL FROM Viaje WHERE VIA_ID = %s"
+                total_viaje = self.db.fetch_one(query_total, (viaje_id,))
+                total = total_viaje[0]
+
+                # Se calcula el credito y el total final
+                credito_final = 0
+                total_final = 0
+                if credito >= total:
+                    credito_final = credito - total
+                    total_final = 0
+                else:
+                    total_final = total - credito
+                    credito_final = 0
+
+                # Se actualiza el credito del cliente
+                query_update = """
+                UPDATE Oferta
+                SET CREDITO = %s
+                WHERE OFERTA_ID = %s
+                """
+                self.db.execute_query(query_update, (credito_final, oferta_id))
+
+                # Se actualiza el total del viaje
+                query_update_total = """
+                UPDATE Viaje
+                SET TOTAL = %s
+                WHERE VIA_ID = %s
+                """
+                self.db.execute_query(query_update_total, (total_final, viaje_id))
+
         except Error as e:
             raise Exception(f"Error al cancelar viaje: {e}")
 
@@ -310,7 +352,6 @@ class ViajeController:
         except Error as e:
             raise Exception(f"Error al iniciar viaje: {e}")
 
-
     #* Método para finalizar un viaje (conductor)
     def finalizar_viaje(self, viaje_id):
         try:
@@ -323,9 +364,52 @@ class ViajeController:
             # Ejecutar la consulta usando el singleton
             self.db.execute_query(query, (datetime.now(), viaje_id))
 
+            # Se obtiene el credito actual que tiene el cliente que hizo el viaje
+            query_oferta = """SELECT o.OFERTA_ID, IFNULL(o.CREDITO, 0) AS CREDITO
+                        FROM Oferta o
+                        WHERE o.CLI_ID = (SELECT v.CLI_ID FROM Viaje v WHERE v.VIA_ID = %s) AND o.FECHA_VENCIMIENTO > CURDATE() AND o.CREDITO > 0
+                        """
+            credito_cliente = self.db.fetch_one(query_oferta, (viaje_id,))
+
+            if credito_cliente is not None:
+
+                # Se obtiene el id de la oferta y el credito
+                oferta_id = credito_cliente[0]
+                credito = credito_cliente[1]
+
+                # Se obtiene el total del viaje
+                query_total = "SELECT TOTAL FROM Viaje WHERE VIA_ID = %s"
+                total_viaje = self.db.fetch_one(query_total, (viaje_id,))
+                total = total_viaje[0]
+
+                # Se calcula el credito y el total final
+                credito_final = 0
+                total_final = 0
+                if credito >= total:
+                    credito_final = credito - total
+                    total_final = 0
+                else:
+                    total_final = total - credito
+                    credito_final = 0
+
+                # Se actualiza el credito del cliente
+                query_update = """
+                UPDATE Oferta
+                SET CREDITO = %s
+                WHERE OFERTA_ID = %s
+                """
+                self.db.execute_query(query_update, (credito_final, oferta_id))
+
+                # Se actualiza el total del viaje
+                query_update_total = """
+                UPDATE Viaje
+                SET TOTAL = %s
+                WHERE VIA_ID = %s
+                """
+                self.db.execute_query(query_update_total, (total_final, viaje_id))
+
         except Error as e:
             raise Exception(f"Error al finalizar viaje: {e}")
-
 
     #* Método para obtener los viajes de un conductor
     def get_viajes_conductor(self, conductor_id):
