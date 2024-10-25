@@ -15,7 +15,7 @@ pipeline {
                 image: jenkins/inbound-agent:alpine
                 args: ['\$(JENKINS_SECRET)', '\$(JENKINS_NAME)']
               - name: docker
-                image: docker:20.10.7 # Usa una imagen de Docker que incluya el CLI de Docker
+                image: docker:20.10.7 # Imagen con Docker CLI
                 command:
                 - cat
                 tty: true
@@ -32,7 +32,7 @@ pipeline {
         }
     }
     environment {
-        DOCKER_HUB_CREDENTIALS = credentials('docker-hub') // Configura tus credenciales de Docker Hub en Jenkins
+        DOCKER_HUB_CREDENTIALS = credentials('Dockerhub-credentials') // Credenciales de Docker Hub
     }
 
     stages {
@@ -46,78 +46,26 @@ pipeline {
                 }
             }
         }
-        stage("Test app_service") {
-            steps {
-                echo "TEST"
-                echo "APP_SERVICE TEST"
-            }
-        }
-        stage("Docker build App service") {
+        stage("Docker build and push") {
             steps {
                 container('docker') {
-                    echo "APP_SERVICE BUILD DOCKER IMAGE"
-                    dir('backend/app_service') { 
-                        script {
-                            dockerImageA = docker.build "carlosmz87/ayd2_p1_app_service:latest"
-                        }
-                    }
-                }
-            }
-        }
-        stage("Docker build notification producer service") {
-            steps {
-                container('docker') {
-                    echo "NOTIFICATION PRODUCER BUILD DOCKER IMAGE"
-                    dir('backend/notification_service/producer') { 
-                        script {
-                            dockerImageB = docker.build "carlosmz87/ayd2_p1_notification_producer:latest"
-                        }
-                    }
-                }
-            }
-        }
-        stage("Docker build notification consumer service") {
-            steps {
-                container('docker') {
-                    echo "NOTIFICATION CONSUMER BUILD DOCKER IMAGE"
-                    dir('backend/notification_service/consumer') { 
-                        script {
-                            dockerImageC = docker.build "carlosmz87/ayd2_p1_notification_consumer:latest"
-                        }
-                    }
-                }
-            }
-        }
-        stage("Docker build Frontend") {
-            steps {
-                container('docker') {
-                    echo "FRONTEND BUILD DOCKER IMAGE"
-                    dir('frontend') {
-                        script {
-                            dockerImageF = docker.build "carlosmz87/ayd2_p1_frontend:latest"
-                        }
-                    }
-                }
-            }
-        }
-        stage("Deliver App") {
-            steps {
-                container('docker') {
-                    echo "DELIVER"
                     script {
+                        echo "Building and pushing Docker images"
+                        
+                        sh """
+                        docker build -t carlosmz87/ayd2_p1_app_service:latest backend/app_service
+                        docker build -t carlosmz87/ayd2_p1_notification_producer:latest backend/notification_service/producer
+                        docker build -t carlosmz87/ayd2_p1_notification_consumer:latest backend/notification_service/consumer
+                        docker build -t carlosmz87/ayd2_p1_frontend:latest frontend
+                        """
+                        
                         docker.withRegistry('', 'Dockerhub-credentials') {
-                            echo "DELIVER APP_SERVICE"
-                            dockerImageA.push('$BUILD_NUMBER')
-                            dockerImageA.push('latest')
-                            echo "DELIVER NOTIFICATION PRODUCER"
-                            dockerImageB.push('$BUILD_NUMBER')
-                            dockerImageB.push('latest')
-                            echo "DELIVER NOTIFICATION CONSUMER"
-                            dockerImageC.push('$BUILD_NUMBER')
-                            dockerImageC.push('latest')
-                            echo "DELIVER FRONTEND"
-                            dockerImageF.push('$BUILD_NUMBER')
-                            dockerImageF.push('latest')
+                            sh """
+                            docker push carlosmz87/ayd2_p1_app_service:latest
+                            docker push carlosmz87/ayd2_p1_notification_producer:latest
+                            docker push carlosmz87/ayd2_p1_notification_consumer:latest
+                            docker push carlosmz87/ayd2_p1_frontend:latest
+                            """
                         }
                     }
                 }
