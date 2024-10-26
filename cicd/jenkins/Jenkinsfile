@@ -43,7 +43,7 @@ pipeline {
         }
     }
     stages {
-        stage('Autenticate Repository') {
+        stage('Checkout to develop') {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'Github-credentials', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
@@ -51,21 +51,14 @@ pipeline {
                             sh '''
                             git config --global credential.helper store
                             echo "https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com" > ~/.git-credentials
+                            git checkout develop
                             '''
                         }
                     }
                 }
             }
         }
-        stage('Checkout to Develop') {
-            steps {
-                container('git') {
-                    sh '''
-                    git checkout develop
-                    '''
-                }
-            }
-        }
+
         stage('Build and Push app service Image') {
             steps {
                 container('kaniko') {
