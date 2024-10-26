@@ -21,15 +21,15 @@ pipeline {
                     - sleep
                   args:
                     - "9999999"
-                 - name: terraform
+                  volumeMounts:
+                    - name: jenkins-docker-cfg
+                      mountPath: /kaniko/.docker
+                - name: terraform
                   image: hashicorp/terraform:latest
                   command:
                     - sleep
                   args:
                     - "9999999"
-                  volumeMounts:
-                    - name: jenkins-docker-cfg
-                      mountPath: /kaniko/.docker
               volumes:
                 - name: jenkins-docker-cfg
                   projected:
@@ -46,7 +46,6 @@ pipeline {
         stage('Cloning Repository') {
             steps {
                 script {
-                    // Asegúrate de que 'Github-credentials' es el ID de la credencial que configuraste
                     withCredentials([usernamePassword(credentialsId: 'Github-credentials', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
                         container('git') {
                             sh '''
@@ -97,10 +96,11 @@ pipeline {
                 }
             }
         }
-        stage('Deploy app with terraform'){
+        stage('Deploy app with terraform') {
             steps {
-                container('terraform'){
+                container('terraform') {
                     sh 'terraform --version'
+                    // Agrega aquí otros comandos de Terraform, como init, plan o apply
                 }
             }
         }
