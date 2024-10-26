@@ -43,7 +43,7 @@ pipeline {
         }
     }
     stages {
-        stage('Cloning Repository') {
+        stage('Autenticate Repository') {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'Github-credentials', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
@@ -51,7 +51,6 @@ pipeline {
                             sh '''
                             git config --global credential.helper store
                             echo "https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com" > ~/.git-credentials
-                            git clone https://github.com/2730538920101/AYD2_PROYECTO_G2.git
                             '''
                         }
                     }
@@ -62,7 +61,6 @@ pipeline {
             steps {
                 container('git') {
                     sh '''
-                    cd AYD2_PROYECTO_G2
                     git checkout develop
                     '''
                 }
@@ -71,28 +69,28 @@ pipeline {
         stage('Build and Push app service Image') {
             steps {
                 container('kaniko') {
-                    sh '/kaniko/executor --context AYD2_PROYECTO_G2/backend/app_service/ --dockerfile Dockerfile --destination carlosmz87/ayd2_p1_app_service:latest'
+                    sh '/kaniko/executor --context backend/app_service/ --dockerfile Dockerfile --destination carlosmz87/ayd2_p1_app_service:latest'
                 }
             }
         }
         stage('Build and Push notification producer service Image') {
             steps {
                 container('kaniko') {
-                    sh '/kaniko/executor --context AYD2_PROYECTO_G2/backend/notification_service/producer/ --dockerfile Dockerfile --destination carlosmz87/ayd2_p1_notification_producer:latest'
+                    sh '/kaniko/executor --context backend/notification_service/producer/ --dockerfile Dockerfile --destination carlosmz87/ayd2_p1_notification_producer:latest'
                 }
             }
         }
         stage('Build and Push notification consumer service Image') {
             steps {
                 container('kaniko') {
-                    sh '/kaniko/executor --context AYD2_PROYECTO_G2/backend/notification_service/consumer/ --dockerfile Dockerfile --destination carlosmz87/ayd2_p1_notification_consumer:latest'
+                    sh '/kaniko/executor --context backend/notification_service/consumer/ --dockerfile Dockerfile --destination carlosmz87/ayd2_p1_notification_consumer:latest'
                 }
             }
         }
         stage('Build and Push Frontend Image') {
             steps {
                 container('kaniko') {
-                    sh '/kaniko/executor --context AYD2_PROYECTO_G2/frontend/ --dockerfile Dockerfile --destination carlosmz87/ayd2_p1_frontend:latest'
+                    sh '/kaniko/executor --context frontend/ --dockerfile Dockerfile --destination carlosmz87/ayd2_p1_frontend:latest'
                 }
             }
         }
@@ -100,6 +98,7 @@ pipeline {
             steps {
                 container('terraform') {
                     sh '''
+                    cd infrastructure
                     terraform --version
                     ls
                     '''
