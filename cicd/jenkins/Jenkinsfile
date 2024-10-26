@@ -1,5 +1,35 @@
 pipeline {
-    agent none
+    agent {
+        kubernetes {
+            yaml """
+            apiVersion: v1
+            kind: Pod
+            metadata:
+              labels:
+                agent: multi-stage
+            spec:
+              containers:
+              - name: git
+                image: alpine/git
+                command:
+                - cat
+                tty: true
+              - name: kaniko
+                image: gcr.io/kaniko-project/executor:latest
+                volumeMounts:
+                - name: kaniko-secret
+                  mountPath: /kaniko/.docker
+              restartPolicy: Never
+              volumes:
+              - name: kaniko-secret
+                secret:
+                  secretName: dockerhub-credentials-secret
+                  items:
+                  - key: .dockerconfigjson
+                    path: config.json
+            """
+        }
+    }
 
     environment {
         GIT_CREDENTIALS = credentials('Github-credentials')
@@ -7,72 +37,28 @@ pipeline {
 
     stages {
         stage("Checkout") {
-            agent {
-                kubernetes {
-                    inheritFrom 'git-agent'
-                    defaultContainer 'git'
-                    yaml """
-                    apiVersion: v1
-                    kind: Pod
-                    metadata:
-                      labels:
-                        agent: git-agent
-                    spec:
-                      containers:
-                      - name: git
-                        image: alpine/git
-                        command:
-                        - cat
-                        tty: true
-                    """
-                }
-            }
             steps {
-                script {
-                    echo "GIT CHECKOUT STAGE"
-                    git url: "https://github.com/2730538920101/AYD2_PROYECTO_G2.git", branch: 'develop', credentialsId: 'Github-credentials'
+                container('git') {
+                    script {
+                        echo "GIT CHECKOUT STAGE"
+                        git url: "https://github.com/2730538920101/AYD2_PROYECTO_G2.git", branch: 'develop', credentialsId: 'Github-credentials'
+                    }
                 }
             }
         }
 
         stage("Build and Push Docker Image") {
-            agent {
-                kubernetes {
-                    inheritFrom 'kaniko'
-                    defaultContainer 'kaniko'
-                    yaml """
-                    apiVersion: v1
-                    kind: Pod
-                    metadata:
-                      labels:
-                        agent: kaniko
-                    spec:
-                      containers:
-                      - name: kaniko
-                        image: gcr.io/kaniko-project/executor:latest
-                        args: [
-                            "--dockerfile=backend/app_service/Dockerfile",
-                            "--context=git://https://github.com/2730538920101/AYD2_PROYECTO_G2.git",
-                            "--destination=docker.io/carlosmz87/ayd2-backend:latest",
-                            "--verbosity=debug"
-                        ]
-                        volumeMounts:
-                        - name: kaniko-secret
-                          mountPath: /kaniko/.docker
-                      restartPolicy: Never
-                      volumes:
-                      - name: kaniko-secret
-                        secret:
-                          secretName: dockerhub-credentials-secret
-                          items:
-                          - key: .dockerconfigjson
-                            path: config.json
-                    """
-                }
-            }
             steps {
-                echo "BUILD AND PUSH STAGE"
-                // Kaniko debería ejecutar el comando automáticamente en este punto.
+                container(name: 'kaniko', shell: '/busybox/sh') {
+                    echo "BUILD AND PUSH STAGE"
+                    sh '''#!/busybox/sh
+                        /kaniko/executor \
+                        --dockerfile=backend/app_service/Dockerfile \
+                        --context=git://https://github.com/2730538920101/AYD2_PROYECTO_G2.git \
+                        --destination=docker.io/carlosmz87/ayd2-backend:latest \
+                        --verbosity=debug
+                    '''
+                }
             }
         }
     }
