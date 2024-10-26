@@ -17,9 +17,7 @@ variable "AWS_SECRET_KEY" {
     description = "Llave secreta para acceso AWS"
 }
 
-variable "AWS_ACCESS_TOKEN" {
-    description = "Token de inicio de sesion para acceso AWS"
-}
+
 
 variable "aws_account_id" {
   description = "ID de la cuenta de AWS"
