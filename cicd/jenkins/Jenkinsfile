@@ -16,6 +16,12 @@ pipeline {
                 tty: true
               - name: kaniko
                 image: gcr.io/kaniko-project/executor:latest
+                args: [
+                    "--dockerfile=backend/app_service/Dockerfile",
+                    "--context=git://https://github.com/2730538920101/AYD2_PROYECTO_G2.git#main",
+                    "--destination=docker.io/carlosmz87/ayd2-backend:latest",
+                    "--verbosity=debug"
+                ]
                 volumeMounts:
                 - name: kaniko-secret
                   mountPath: /kaniko/.docker
@@ -41,7 +47,7 @@ pipeline {
                 container('git') {
                     script {
                         echo "GIT CHECKOUT STAGE"
-                        git url: "https://github.com/2730538920101/AYD2_PROYECTO_G2.git", branch: 'develop', credentialsId: 'Github-credentials'
+                        git url: "https://github.com/2730538920101/AYD2_PROYECTO_G2.git", branch: 'main', credentialsId: 'Github-credentials'
                     }
                 }
             }
@@ -52,11 +58,10 @@ pipeline {
                 container(name: 'kaniko', shell: '/busybox/sh') {
                     echo "BUILD AND PUSH STAGE"
                     sh '''#!/busybox/sh
-                        /kaniko/executor \
-                        --dockerfile=backend/app_service/Dockerfile \
-                        --context=git://https://github.com/2730538920101/AYD2_PROYECTO_G2.git \
-                        --destination=docker.io/carlosmz87/ayd2-backend:latest \
-                        --verbosity=debug
+                        /kaniko/executor --dockerfile=backend/app_service/Dockerfile \
+                                         --context=git://https://github.com/2730538920101/AYD2_PROYECTO_G2.git#main \
+                                         --destination=docker.io/carlosmz87/ayd2-backend:latest \
+                                         --verbosity=debug
                     '''
                 }
             }
