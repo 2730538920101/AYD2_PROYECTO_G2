@@ -94,6 +94,7 @@ pipeline {
                     sh '''
                     cd infrastructure
                     terraform --version
+                    ssh-keygen -t rsa -b 4096 -f ayd2_p1_bastion_key
                     ls
                     '''
                     // Agrega aquí otros comandos de Terraform, como init, plan o apply
