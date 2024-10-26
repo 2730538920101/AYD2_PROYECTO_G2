@@ -56,7 +56,7 @@ pipeline {
         stage('Build and Push Image') {
             steps {
                 container('kaniko') {
-                    sh '/kaniko/executor --context . --dockerfile AYD2_PROYECTO_G2/backend/app_service/Dockefile --destination carlosmz87/ayd2_p1_app_service:latest'
+                    sh '/kaniko/executor --context AYD2_PROYECTO_G2/backend/app_service/ --dockerfile Dockerfile --destination carlosmz87/ayd2_p1_app_service:latest'
                 }
             }
         }
