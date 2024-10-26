@@ -9,7 +9,7 @@ pipeline {
         stage("Checkout") {
             agent {
                 kubernetes {
-                    label 'git-agent'
+                    inheritFrom 'git-agent'
                     defaultContainer 'git'
                     yaml """
                     apiVersion: v1
@@ -38,32 +38,33 @@ pipeline {
         stage("Build and Push Docker Image") {
             agent {
                 kubernetes {
-                    label 'kaniko-agent'
+                    inheritFrom 'kaniko'
                     defaultContainer 'kaniko'
                     yaml """
                     apiVersion: v1
                     kind: Pod
                     metadata:
                       labels:
-                        agent: kaniko-agent
+                        agent: kaniko
                     spec:
                       containers:
                       - name: kaniko
-                        image: gcr.io/kaniko-project/executor:latest
+                        image: gcr.io/kaniko-project/executor:debug
                         args:
-                        - --dockerfile=Dockerfile
-                        - --context=dir:https://github.com/2730538920101/AYD2_PROYECTO_G2/tree/main/backend/app_service
+                        - --dockerfile=/backend/app_service/Dockerfile
+                        - --context=git://https://github.com/2730538920101/AYD2_PROYECTO_G2.git
                         - --destination=docker.io/carlosmz87/ayd2_p1_app_service:latest
-                        env:
-                        - name: DOCKER_CONFIG
-                          value: /kaniko/.docker/
                         volumeMounts:
-                          - name: docker-config
-                            mountPath: /kaniko/.docker/
+                        - name: kaniko-secret
+                          mountPath: /kaniko/.docker
+                      restartPolicy: Never
                       volumes:
-                      - name: docker-config
+                      - name: kaniko-secret
                         secret:
                           secretName: dockerhub-credentials-secret
+                          items:
+                          - key: .dockerconfigjson
+                            path: config.json
                     """
                 }
             }
