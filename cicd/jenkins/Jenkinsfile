@@ -16,12 +16,7 @@ pipeline {
                 tty: true
               - name: kaniko
                 image: gcr.io/kaniko-project/executor:latest
-                args: [
-                    "--dockerfile=backend/app_service/Dockerfile",
-                    "--context=git://https://github.com/2730538920101/AYD2_PROYECTO_G2.git#main",
-                    "--destination=docker.io/carlosmz87/ayd2-backend:latest",
-                    "--verbosity=debug"
-                ]
+                args: []
                 volumeMounts:
                 - name: kaniko-secret
                   mountPath: /kaniko/.docker
@@ -47,7 +42,7 @@ pipeline {
                 container('git') {
                     script {
                         echo "GIT CHECKOUT STAGE"
-                        git url: "https://github.com/2730538920101/AYD2_PROYECTO_G2.git", branch: 'main', credentialsId: 'Github-credentials'
+                        git url: "https://github.com/2730538920101/AYD2_PROYECTO_G2.git", branch: 'develop', credentialsId: "${GIT_CREDENTIALS}"
                     }
                 }
             }
@@ -57,12 +52,14 @@ pipeline {
             steps {
                 container(name: 'kaniko', shell: '/busybox/sh') {
                     echo "BUILD AND PUSH STAGE"
-                    sh '''#!/busybox/sh
-                        /kaniko/executor --dockerfile=backend/app_service/Dockerfile \
-                                         --context=git://https://github.com/2730538920101/AYD2_PROYECTO_G2.git#main \
-                                         --destination=docker.io/carlosmz87/ayd2-backend:latest \
-                                         --verbosity=debug
-                    '''
+                    // Navega al directorio del proyecto antes de ejecutar Kaniko
+                    dir('backend/app_service') {
+                        sh '''#!/busybox/sh
+                            /kaniko/executor --dockerfile=Dockerfile \
+                                             --context=`pwd` \
+                                             --destination=docker.io/carlosmz87/ayd2-backend:latest 
+                        '''
+                    }
                 }
             }
         }
