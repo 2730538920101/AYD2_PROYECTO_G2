@@ -53,6 +53,16 @@ pipeline {
                 }
             }
         }
+        stage('Checkout to Develop') {
+            steps {
+                container('git') {
+                    sh '''
+                    cd AYD2_PROYECTO_G2
+                    git checkout develop
+                    '''
+                }
+            }
+        }
         stage('Build and Push app service Image') {
             steps {
                 container('kaniko') {
