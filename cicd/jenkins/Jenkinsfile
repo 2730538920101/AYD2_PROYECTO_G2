@@ -52,7 +52,7 @@ pipeline {
                         image: gcr.io/kaniko-project/executor:debug
                         args:
                         - --dockerfile=/backend/app_service/Dockerfile
-                        - --context=git://https://github.com/2730538920101/AYD2_PROYECTO_G2.git
+                        - --context=https://github.com/2730538920101/AYD2_PROYECTO_G2.git
                         - --destination=docker.io/carlosmz87/ayd2_p1_app_service:latest
                         volumeMounts:
                         - name: kaniko-secret
