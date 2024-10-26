@@ -9,61 +9,45 @@ pipeline {
                 agent: multi-stage
             spec:
               containers:
-              - name: git
-                image: alpine/git
-                command:
-                - cat
-                tty: true
-               - name: kaniko
-                image: gcr.io/kaniko-project/executor:debug
-                imagePullPolicy: Always
-                command:
-                - sleep
-                args:
-                - 9999999
-                volumeMounts:
+                - name: git
+                  image: alpine/git
+                  command:
+                    - cat
+                  tty: true
+                - name: kaniko
+                  image: gcr.io/kaniko-project/executor:debug
+                  imagePullPolicy: Always
+                  command:
+                    - sleep
+                  args:
+                    - "9999999"
+                  volumeMounts:
+                    - name: jenkins-docker-cfg
+                      mountPath: /kaniko/.docker
+              volumes:
                 - name: jenkins-docker-cfg
-                    mountPath: /kaniko/.docker
-            volumes:
-            - name: jenkins-docker-cfg
-                projected:
-                sources:
-                - secret:
-                    name: dockerhub-credentials-secret
-                    items:
-                        - key: .dockerconfigjson
-                        path: config.json
+                  projected:
+                    sources:
+                      - secret:
+                          name: dockerhub-credentials-secret
+                          items:
+                            - key: .dockerconfigjson
+                              path: config.json
             """
         }
     }
-
-    environment {
-        GIT_CREDENTIALS = credentials('Github-credentials')
-    }
-
     stages {
-        stage("Checkout") {
+        stage('Cloning Repository') {
             steps {
                 container('git') {
-                    script {
-                        echo "GIT CHECKOUT STAGE"
-                        git url: "https://github.com/2730538920101/AYD2_PROYECTO_G2.git", branch: 'develop', credentialsId: "${GIT_CREDENTIALS}"
-                    }
+                    sh 'git clone https://github.com/2730538920101/AYD2_PROYECTO_G2.git'
                 }
             }
         }
-
-        stage("Build and Push Docker Image") {
+        stage('Build and Push Image') {
             steps {
-                container(name: 'kaniko', shell: '/busybox/sh') {
-                    echo "BUILD AND PUSH STAGE"
-                    // Navega al directorio del proyecto antes de ejecutar Kaniko
-                    dir('backend/app_service') {
-                        sh '''#!/busybox/sh
-                            echo "FROM jenkins/inbound-agent:latest" > Dockerfile
-                            /kaniko/executor --context `pwd` --destination carlosmz87/ayd2-backend:latest 
-                        '''
-                    }
+                container('kaniko') {
+                    sh '/kaniko/executor --context . --destination carlosmz87/ayd2_p1_app_service:latest'
                 }
             }
         }
