@@ -21,6 +21,12 @@ pipeline {
                     - sleep
                   args:
                     - "9999999"
+                 - name: terraform
+                  image: hashicorp/terraform:latest
+                  command:
+                    - sleep
+                  args:
+                    - "9999999"
                   volumeMounts:
                     - name: jenkins-docker-cfg
                       mountPath: /kaniko/.docker
@@ -88,6 +94,13 @@ pipeline {
             steps {
                 container('kaniko') {
                     sh '/kaniko/executor --context AYD2_PROYECTO_G2/frontend/ --dockerfile Dockerfile --destination carlosmz87/ayd2_p1_frontend:latest'
+                }
+            }
+        }
+        stage('Deploy app with terraform'){
+            steps {
+                container('terraform'){
+                    sh 'terraform --version'
                 }
             }
         }
