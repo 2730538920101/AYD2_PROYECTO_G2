@@ -53,10 +53,31 @@ pipeline {
                 }
             }
         }
-        stage('Build and Push Image') {
+        stage('Build and Push app service Image') {
             steps {
                 container('kaniko') {
                     sh '/kaniko/executor --context AYD2_PROYECTO_G2/backend/app_service/ --dockerfile Dockerfile --destination carlosmz87/ayd2_p1_app_service:latest'
+                }
+            }
+        }
+        stage('Build and Push notification producer service Image') {
+            steps {
+                container('kaniko') {
+                    sh '/kaniko/executor --context AYD2_PROYECTO_G2/backend/notification_service/producer/ --dockerfile Dockerfile --destination carlosmz87/ayd2_p1_notification_producer:latest'
+                }
+            }
+        }
+        stage('Build and Push notification consumer service Image') {
+            steps {
+                container('kaniko') {
+                    sh '/kaniko/executor --context AYD2_PROYECTO_G2/backend/notification_service/consumer/ --dockerfile Dockerfile --destination carlosmz87/ayd2_p1_notification_consumer:latest'
+                }
+            }
+        }
+        stage('Build and Push Frontend Image') {
+            steps {
+                container('kaniko') {
+                    sh '/kaniko/executor --context AYD2_PROYECTO_G2/frontend/ --dockerfile Dockerfile --destination carlosmz87/ayd2_p1_frontend:latest'
                 }
             }
         }
