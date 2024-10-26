@@ -71,3 +71,19 @@
 -   Resultado del JOB de prueba
 
 ![Test result](/cicd/jenkins/jenkins-manual/test-result.png)
+
+
+#   Para contruir imagenes de docker en jenkins corriendo en kubernetes, es necesaria la implementacion de la herramienta KANIKO
+
+-   Primero se debe crear un secret que almacene las credenciales de dockerhub en el entorno de kubernetes donde esta corriendo jenkins
+
+'''
+kubectl create secret docker-registry dockerhub-credentials-secret \
+  --docker-username=yourusername \
+  --docker-password=yourpassword \
+  --docker-email=youremail@example.com
+
+'''
+
+Recuerda que el password debe ser un token app password de dockerhub
+

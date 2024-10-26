@@ -1,48 +1,32 @@
 pipeline {
-    agent {
-        kubernetes {
-            label 'jenkins-slave'
-            defaultContainer 'jnlp'
-            yaml """
-            apiVersion: v1
-            kind: Pod
-            metadata:
-              labels:
-                agent: jenkins-slave
-            spec:
-              serviceAccountName: jenkins-admin
-              containers:
-              - name: jnlp
-                image: jenkins/inbound-agent:alpine
-                args: ['\$(JENKINS_SECRET)', '\$(JENKINS_NAME)']
-              - name: docker
-                image: docker:latest
-                command:
-                - cat
-                tty: true
-                workingDir: /home/jenkins/agent  # Establecer el directorio de trabajo
-                volumeMounts:
-                - name: docker-sock
-                  mountPath: /var/run/docker.sock
-              securityContext:
-                runAsUser: 1000
-                runAsGroup: 1000
-                fsGroup: 1000
-              volumes:
-              - name: docker-sock
-                hostPath:
-                  path: /var/run/docker.sock
-            """
-        }
-    }
+    agent none
 
     environment {
-        DOCKER_HUB_CREDENTIALS = credentials('Dockerhub-credentials')
         GIT_CREDENTIALS = credentials('Github-credentials')
     }
 
     stages {
         stage("Checkout") {
+            agent {
+                kubernetes {
+                    label 'git-agent'
+                    defaultContainer 'git'
+                    yaml """
+                    apiVersion: v1
+                    kind: Pod
+                    metadata:
+                      labels:
+                        agent: git-agent
+                    spec:
+                      containers:
+                      - name: git
+                        image: alpine/git
+                        command:
+                        - cat
+                        tty: true
+                    """
+                }
+            }
             steps {
                 script {
                     echo "GIT CHECKOUT STAGE"
@@ -51,28 +35,42 @@ pipeline {
             }
         }
 
-        stage("Docker build and push") {
+        stage("Build and Push Docker Image") {
+            agent {
+                kubernetes {
+                    label 'kaniko-agent'
+                    defaultContainer 'kaniko'
+                    yaml """
+                    apiVersion: v1
+                    kind: Pod
+                    metadata:
+                      labels:
+                        agent: kaniko-agent
+                    spec:
+                      containers:
+                      - name: kaniko
+                        image: gcr.io/kaniko-project/executor:latest
+                        args:
+                        - --dockerfile=Dockerfile
+                        - --context=dir:https://github.com/2730538920101/AYD2_PROYECTO_G2/tree/main/backend/app_service
+                        - --destination=docker.io/carlosmz87/ayd2_p1_app_service:latest
+                        env:
+                        - name: DOCKER_CONFIG
+                          value: /kaniko/.docker/
+                        volumeMounts:
+                          - name: docker-config
+                            mountPath: /kaniko/.docker/
+                      volumes:
+                      - name: docker-config
+                        secret:
+                          secretName: dockerhub-credentials-secret
+                    """
+                }
+            }
             steps {
-                container('docker') {
-                    script {
-                        echo "Building and pushing Docker images"
-
-                        sh """
-                        docker build -t carlosmz87/ayd2_p1_app_service:latest backend/app_service
-                        docker build -t carlosmz87/ayd2_p1_notification_producer:latest backend/notification_service/producer
-                        docker build -t carlosmz87/ayd2_p1_notification_consumer:latest backend/notification_service/consumer
-                        docker build -t carlosmz87/ayd2_p1_frontend:latest frontend
-                        """
-
-                        docker.withRegistry('', 'Dockerhub-credentials') {
-                            sh """
-                            docker push carlosmz87/ayd2_p1_app_service:latest
-                            docker push carlosmz87/ayd2_p1_notification_producer:latest
-                            docker push carlosmz87/ayd2_p1_notification_consumer:latest
-                            docker push carlosmz87/ayd2_p1_frontend:latest
-                            """
-                        }
-                    }
+                script {
+                    echo "BUILD AND PUSH STAGE"
+                    // Aquí Kaniko construye y sube la imagen a Docker Hub
                 }
             }
         }
