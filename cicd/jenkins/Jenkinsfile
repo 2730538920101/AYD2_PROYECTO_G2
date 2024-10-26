@@ -50,10 +50,13 @@ pipeline {
                       containers:
                       - name: kaniko
                         image: gcr.io/kaniko-project/executor:debug
-                        args:
-                        - --dockerfile=/backend/app_service/Dockerfile
-                        - --context=https://github.com/2730538920101/AYD2_PROYECTO_G2.git
-                        - --destination=docker.io/carlosmz87/ayd2_p1_app_service:latest
+                        args: [
+                            "/kaniko/executor",
+                            "--dockerfile=backend/app_service/Dockerfile",
+                            "--context=git://https://github.com/2730538920101/AYD2_PROYECTO_G2.git",
+                            "--destination=docker.io/carlosmz87/ayd2-backend:latest",
+                            "--verbosity=debug"
+                        ]
                         volumeMounts:
                         - name: kaniko-secret
                           mountPath: /kaniko/.docker
@@ -69,10 +72,8 @@ pipeline {
                 }
             }
             steps {
-                script {
-                    echo "BUILD AND PUSH STAGE"
-                    // Aquí Kaniko construye y sube la imagen a Docker Hub
-                }
+                echo "BUILD AND PUSH STAGE"
+                // Aquí Kaniko construye y sube la imagen a Docker Hub
             }
         }
     }
