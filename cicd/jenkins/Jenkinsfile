@@ -1,88 +1,93 @@
 pipeline {
     agent {
         kubernetes {
-            label 'jenkins-slave'  // El label que asignaste a tu agente en Jenkins
-            defaultContainer 'jenkins-slave'  // Nombre del contenedor que ejecutará la tarea
+            yaml """
+            apiVersion: v1
+            kind: Pod
+            metadata:
+              labels:
+                agent: multi-stage
+            spec:
+              containers:
+                - name: git
+                  image: alpine/git
+                  command:
+                    - cat
+                  tty: true
+                - name: kaniko
+                  image: gcr.io/kaniko-project/executor:debug
+                  imagePullPolicy: Always
+                  command:
+                    - sleep
+                  args:
+                    - "9999999"
+                  volumeMounts:
+                    - name: jenkins-docker-cfg
+                      mountPath: /kaniko/.docker
+              volumes:
+                - name: jenkins-docker-cfg
+                  projected:
+                    sources:
+                      - secret:
+                          name: dockerhub-credentials-secret
+                          items:
+                            - key: .dockerconfigjson
+                              path: config.json
+            """
         }
     }
-
     stages {
-        stage("Checkout") {
+        stage('Cloning Repository') {
             steps {
                 script {
-                    echo "GIT CHECKOUT STAGE"
-                    withCredentials([usernamePassword(credentialsId: 'Github-credentials', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASSWORD')]) {
-                        git url: "https://${GIT_USER}:${GIT_PASSWORD}@github.com/2730538920101/AYD2_PROYECTO_G2.git", branch: 'develop'
-                    }
-                }
-            }
-        }
-        stage("Test app_service") {
-            steps {
-                echo "TEST"
-                echo "APP_SERVICE TEST"
-            }
-        }
-        stage("Docker build App service") {
-            steps {
-                container('docker'){
-                    echo "APP_SERVICE BUILD DOCKER IMAGE"
-                    dir('../backend/app_service'){ 
-                        script{
-                            dockerImageA = docker.build "carlosmz87/ayd2_p1_app_service:latest"
+                    // Asegúrate de que 'Github-credentials' es el ID de la credencial que configuraste
+                    withCredentials([usernamePassword(credentialsId: 'Github-credentials', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+                        container('git') {
+                            sh '''
+                            git config --global credential.helper store
+                            echo "https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com" > ~/.git-credentials
+                            git clone https://github.com/2730538920101/AYD2_PROYECTO_G2.git
+                            '''
                         }
                     }
                 }
             }
         }
-        stage("Docker build notification producer service") {
+        stage('Checkout to Develop') {
             steps {
-                echo "NOTIFICATION PRODUCER BUILD DOCKER IMAGE"
-                dir('../backend/notification_service/producer'){ 
-                    script{
-                        dockerImageB = docker.build "carlosmz87/ayd2_p1_notification_producer:latest"
-                    }
+                container('git') {
+                    sh '''
+                    cd AYD2_PROYECTO_G2
+                    git checkout develop
+                    '''
                 }
             }
         }
-        stage("Docker build notification consumer service") {
+        stage('Build and Push app service Image') {
             steps {
-                echo "NOTIFICATION CONSUMER BUILD DOCKER IMAGE"
-                dir('../backend/notification_service/consumer'){ 
-                    script{
-                        dockerImageC = docker.build "carlosmz87/ayd2_p1_notification_consumer:latest"
-                    }
+                container('kaniko') {
+                    sh '/kaniko/executor --context AYD2_PROYECTO_G2/backend/app_service/ --dockerfile Dockerfile --destination carlosmz87/ayd2_p1_app_service:latest'
                 }
             }
         }
-        stage("Docker build Frontend") {
+        stage('Build and Push notification producer service Image') {
             steps {
-                echo "FRONTEND BUILD DOCKER IMAGE"
-                dir('../frontend'){
-                    script{
-                        dockerImageF = docker.build "carlosmz87/ayd2_p1_frontend:latest"
-                    }
+                container('kaniko') {
+                    sh '/kaniko/executor --context AYD2_PROYECTO_G2/backend/notification_service/producer/ --dockerfile Dockerfile --destination carlosmz87/ayd2_p1_notification_producer:latest'
                 }
             }
         }
-        stage("Deliver App") {
+        stage('Build and Push notification consumer service Image') {
             steps {
-                echo "DELIVER"
-                script {
-                    docker.withRegistry('', 'docker-hub') {
-                        echo "DELIVER APP_SERVICE"
-                        dockerImageA.push('$BUILD_NUMBER')
-                        dockerImageA.push('latest')
-                        echo "DELIVER NOTIFICATION PRODUCER"
-                        dockerImageB.push('$BUILD_NUMBER')
-                        dockerImageB.push('latest')
-                        echo "DELIVER NOTIFICATION CONSUMER"
-                        dockerImageC.push('$BUILD_NUMBER')
-                        dockerImageC.push('latest')
-                        echo "DELIVER FRONTEND"
-                        dockerImageF.push('$BUILD_NUMBER')
-                        dockerImageF.push('latest')
-                    }
+                container('kaniko') {
+                    sh '/kaniko/executor --context AYD2_PROYECTO_G2/backend/notification_service/consumer/ --dockerfile Dockerfile --destination carlosmz87/ayd2_p1_notification_consumer:latest'
+                }
+            }
+        }
+        stage('Build and Push Frontend Image') {
+            steps {
+                container('kaniko') {
+                    sh '/kaniko/executor --context AYD2_PROYECTO_G2/frontend/ --dockerfile Dockerfile --destination carlosmz87/ayd2_p1_frontend:latest'
                 }
             }
         }
