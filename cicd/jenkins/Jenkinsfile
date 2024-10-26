@@ -49,7 +49,7 @@ pipeline {
                     spec:
                       containers:
                       - name: kaniko
-                        image: gcr.io/kaniko-project/executor:debug
+                        image: gcr.io/kaniko-project/executor:latest
                         args: [
                             "--dockerfile=backend/app_service/Dockerfile",
                             "--context=git://https://github.com/2730538920101/AYD2_PROYECTO_G2.git",
