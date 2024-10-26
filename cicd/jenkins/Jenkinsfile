@@ -43,27 +43,13 @@ pipeline {
         }
     }
     stages {
-        stage('Cloning Repository') {
-            steps {
-                script {
-                    withCredentials([usernamePassword(credentialsId: 'Github-credentials', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
-                        container('git') {
-                            sh '''
-                            git config --global credential.helper store
-                            echo "https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com" > ~/.git-credentials
-                            git clone https://github.com/2730538920101/AYD2_PROYECTO_G2.git
-                            '''
-                        }
-                    }
-                }
-            }
-        }
+        
         stage('Checkout to Develop') {
             steps {
                 container('git') {
                     sh '''
-                    cd AYD2_PROYECTO_G2
                     git checkout develop
+                    ls
                     '''
                 }
             }
