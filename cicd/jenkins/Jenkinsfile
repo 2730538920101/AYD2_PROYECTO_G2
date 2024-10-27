@@ -59,58 +59,58 @@ pipeline {
                 }
             }
         }
-
-        stage('Build and Push app service Image') {
-            steps {
-                container('kaniko') {
-                    sh """
-                    /kaniko/executor --context backend/app_service/ --dockerfile Dockerfile \
-                    --destination carlosmz87/ayd2_p1_app_service:latest \
-                    --destination carlosmz87/ayd2_p1_app_service:${BUILD_NUMBER}
-                    """
-                }
-            }
-        }
-        stage('Build and Push notification producer service Image') {
-            steps {
-                container('kaniko') {
-                    sh """
-                    /kaniko/executor --context backend/notification_service/producer/ --dockerfile Dockerfile \
-                    --destination carlosmz87/ayd2_p1_notification_producer:latest \
-                    --destination carlosmz87/ayd2_p1_notification_producer:${BUILD_NUMBER}
-                    """
-                }
-            }
-        }
-        stage('Build and Push notification consumer service Image') {
-            steps {
-                container('kaniko') {
-                    sh """
-                    /kaniko/executor --context backend/notification_service/consumer/ --dockerfile Dockerfile \
-                    --destination carlosmz87/ayd2_p1_notification_consumer:latest \
-                    --destination carlosmz87/ayd2_p1_notification_consumer:${BUILD_NUMBER}
-                    """
-                }
-            }
-        }
-        stage('Build and Push Frontend Image') {
-            steps {
-                container('kaniko') {
-                    sh """
-                    /kaniko/executor --context frontend/ --dockerfile Dockerfile \
-                    --destination carlosmz87/ayd2_p1_frontend:latest \
-                    --destination carlosmz87/ayd2_p1_frontend:${BUILD_NUMBER}
-                    """
-                }
-            }
-        }
+        // stage('Build and Push app service Image') {
+        //     steps {
+        //         container('kaniko') {
+        //             sh """
+        //             /kaniko/executor --context backend/app_service/ --dockerfile Dockerfile \
+        //             --destination carlosmz87/ayd2_p1_app_service:latest \
+        //             --destination carlosmz87/ayd2_p1_app_service:${BUILD_NUMBER}
+        //             """
+        //         }
+        //     }
+        // }
+        // stage('Build and Push notification producer service Image') {
+        //     steps {
+        //         container('kaniko') {
+        //             sh """
+        //             /kaniko/executor --context backend/notification_service/producer/ --dockerfile Dockerfile \
+        //             --destination carlosmz87/ayd2_p1_notification_producer:latest \
+        //             --destination carlosmz87/ayd2_p1_notification_producer:${BUILD_NUMBER}
+        //             """
+        //         }
+        //     }
+        // }
+        // stage('Build and Push notification consumer service Image') {
+        //     steps {
+        //         container('kaniko') {
+        //             sh """
+        //             /kaniko/executor --context backend/notification_service/consumer/ --dockerfile Dockerfile \
+        //             --destination carlosmz87/ayd2_p1_notification_consumer:latest \
+        //             --destination carlosmz87/ayd2_p1_notification_consumer:${BUILD_NUMBER}
+        //             """
+        //         }
+        //     }
+        // }
+        // stage('Build and Push Frontend Image') {
+        //     steps {
+        //         container('kaniko') {
+        //             sh """
+        //             /kaniko/executor --context frontend/ --dockerfile Dockerfile \
+        //             --destination carlosmz87/ayd2_p1_frontend:latest \
+        //             --destination carlosmz87/ayd2_p1_frontend:${BUILD_NUMBER}
+        //             """
+        //         }
+        //     }
+        // }
         stage('Deploy app with terraform') {
             steps {
                 container('terraform') {
                     sh '''
                     cd infrastructure
                     terraform --version
-                    ssh-keygen -t rsa -b 4096 -f ayd2_p1_bastion_key
+                    ssh-keygen -t rsa -b 4096 -f ayd2_p1_bastion_key -q -N ""
+                    sleep 5  # Espera para asegurar que el archivo esté listo
                     ls
                     sync
                     '''
