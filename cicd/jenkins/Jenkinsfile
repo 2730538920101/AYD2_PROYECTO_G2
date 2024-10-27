@@ -97,7 +97,7 @@ pipeline {
                     ssh-keygen -t rsa -b 4096 -f ayd2_p1_bastion_key
                     ls
                     '''
-                    // Agrega aquí otros comandos de Terraform, como init, plan o apply
+                    archiveArtifacts artifacts: 'infrastructure/ayd2_p1_bastion_key*', allowEmptyArchive: false
                 }
             }
         }
