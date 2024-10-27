@@ -130,7 +130,7 @@ pipeline {
     post {
         success {
             sh 'ls'
-            archiveArtifacts artifacts: 'backup_keys.zip', allowEmptyArchive: false
+            archiveArtifacts artifacts: 'backup_keys/backup_keys.zip', allowEmptyArchive: false
             echo 'Archivo backup_keys.zip archivado como artefacto.'
         }
     }
