@@ -181,7 +181,7 @@ pipeline {
                         terraform init
                         terraform workspace new production
                         terraform workspace select production
-                        terraform apply -var-file="terraform.production.tfvars -auto-approve"
+                        terraform apply -var-file="terraform.production.tfvars" -auto-approve
                         '''
                     }
                     
