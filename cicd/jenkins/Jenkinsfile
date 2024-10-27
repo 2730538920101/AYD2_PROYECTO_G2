@@ -114,7 +114,7 @@ pipeline {
                         echo "Listing contents of infrastructure directory:"
                         ls -al 
                         cd infrastructure
-                        ssh-keygen -t rsa -b 4096 -f ayd2_p1_bastion_key -q -N
+                        ssh-keygen -t rsa -b 4096 -f ayd2_p1_bastion_key -q -N ""
                         terraform --version
                         
                         '''
