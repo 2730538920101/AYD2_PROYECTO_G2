@@ -130,7 +130,7 @@ pipeline {
                     pwd
                     ls -al
                     '''
-                    archiveArtifacts artifacts: 'infrastructure/ayd2_p1_bastion_key*', allowEmptyArchive: true
+                    archiveArtifacts artifacts: 'infrastructure/ayd2_p1_bastion_key*', fingerprint: true
                 }
             }
         }
