@@ -14,6 +14,9 @@ pipeline {
                   command:
                     - cat
                   tty: true
+                  volumeMounts:
+                    - name: shared-volume
+                      mountPath: /workspace  # Punto de montaje del volumen compartido
                 - name: kaniko
                   image: gcr.io/kaniko-project/executor:debug
                   imagePullPolicy: Always
@@ -24,12 +27,17 @@ pipeline {
                   volumeMounts:
                     - name: jenkins-docker-cfg
                       mountPath: /kaniko/.docker
+                    - name: shared-volume
+                      mountPath: /workspace  # Punto de montaje del volumen compartido
                 - name: terraform
                   image: hashicorp/terraform:latest
                   command:
                     - sleep
                   args:
                     - "9999999"
+                  volumeMounts:
+                    - name: shared-volume
+                      mountPath: /workspace  # Punto de montaje del volumen compartido
               volumes:
                 - name: jenkins-docker-cfg
                   projected:
@@ -39,6 +47,8 @@ pipeline {
                           items:
                             - key: .dockerconfigjson
                               path: config.json
+                - name: shared-volume
+                  emptyDir: {}  # Define un volumen compartido
             """
         }
     }
@@ -51,7 +61,7 @@ pipeline {
                             sh '''
                             git config --global credential.helper store
                             echo "https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com" > ~/.git-credentials
-                            git config --global --add safe.directory /home/jenkins/agent/workspace/ayd2-proyecto/ayd2-proyecto-pipeline
+                            git config --global --add safe.directory /workspace/ayd2-proyecto/ayd2-proyecto-pipeline
                             git checkout develop
                             '''
                         }
@@ -107,13 +117,13 @@ pipeline {
             steps {
                 container('terraform') {
                     sh '''
-                    cd infrastructure
+                    cd /workspace/infrastructure  # Cambiar al directorio compartido
                     terraform --version
                     ssh-keygen -t rsa -b 4096 -f ayd2_p1_bastion_key -q -N ""
                     sleep 5  # Espera para asegurar que el archivo esté listo
-                    ls -l infrastructure/
+                    ls -l  # Listar archivos en el directorio actual
                     '''
-                    archiveArtifacts artifacts: 'infrastructure/ayd2_p1_bastion_key*', allowEmptyArchive: false
+                    archiveArtifacts artifacts: '/workspace/infrastructure/ayd2_p1_bastion_key*', allowEmptyArchive: false
                 }
             }
         }
