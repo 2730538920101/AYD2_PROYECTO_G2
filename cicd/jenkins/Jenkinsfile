@@ -116,13 +116,17 @@ pipeline {
         stage('Deploy app with terraform') {
             steps {
                 container('terraform') {
-                    sh '''
-                    cd /workspace/infrastructure  # Cambiar al directorio compartido
-                    terraform --version
-                    ssh-keygen -t rsa -b 4096 -f ayd2_p1_bastion_key -q -N ""
-                    sleep 5  # Espera para asegurar que el archivo esté listo
-                    ls -l  # Listar archivos en el directorio actual
-                    '''
+                    script {
+                        sh '''
+                        echo "Current working directory:"
+                        pwd
+                        echo "Listing contents of workspace:"
+                        ls -al /workspace
+                        
+                        terraform --version
+                        
+                        '''
+                    }
                     archiveArtifacts artifacts: '/workspace/infrastructure/ayd2_p1_bastion_key*', allowEmptyArchive: false
                 }
             }
