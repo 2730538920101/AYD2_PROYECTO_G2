@@ -126,7 +126,11 @@ pipeline {
             steps {
                 // Archivar los archivos generados como artefactos
                 container('terraform') {
-                    archiveArtifacts artifacts: 'infrastructure/ayd2_p1_bastion_key, infrastructure/ayd2_p1_bastion_key.pub', allowEmptyArchive: true
+                    sh '''
+                    pwd
+                    ls -al
+                    '''
+                    archiveArtifacts artifacts: 'infrastructure/ayd2_p1_bastion_key*', allowEmptyArchive: true
                 }
             }
         }
