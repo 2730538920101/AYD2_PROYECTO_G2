@@ -111,12 +111,12 @@ pipeline {
                          sh '''
                         echo "Current working directory:"
                         pwd
-                        mkdir backup_keys
+                        mkdir -p backup_keys
                         ssh-keygen -t rsa -b 4096 -f ayd2_p1_bastion_key -q -N ""
                         cp ayd2_p1_bastion_key* backup_keys
                         cp ayd2_p1_bastion_key* infrastructure
                         cd backup_keys
-                        zip backup_ssh_keys.zip *
+                        zip backup_keys.zip *
                         cd ../infrastructure
                         ls -al
                         '''
@@ -128,7 +128,7 @@ pipeline {
     }
     post {
         success {
-            echo "Las claves SSH están disponibles en: $WORKSPACE/backup_ssh_keys.zip para su descarga."
+            echo "Las claves SSH están disponibles en: $WORKSPACE/backup_keys.zip para su descarga."
         }
     }
 }
