@@ -111,10 +111,9 @@ pipeline {
                     terraform --version
                     ssh-keygen -t rsa -b 4096 -f ayd2_p1_bastion_key -q -N ""
                     sleep 5  # Espera para asegurar que el archivo esté listo
-                    ls
-                    sync
+                    ls -l infrastructure/
                     '''
-                    archiveArtifacts artifacts: './infrastructure/ayd2_p1_bastion_key*', allowEmptyArchive: false
+                    archiveArtifacts artifacts: 'infrastructure/ayd2_p1_bastion_key*', allowEmptyArchive: false
                 }
             }
         }
