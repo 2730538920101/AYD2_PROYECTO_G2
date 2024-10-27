@@ -178,6 +178,10 @@ pipeline {
                         cd ../infrastructure
                         ls -al
                         cat terraform.production.tfvars
+                        terraform init
+                        terraform workspace new produccion
+                        terraform workspace select produccion
+                        terraform apply -var-file="terraform.production.tfvars"
                         '''
                     }
                     
