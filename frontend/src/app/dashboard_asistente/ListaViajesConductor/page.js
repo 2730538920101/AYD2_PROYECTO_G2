@@ -15,8 +15,10 @@ function ListaViajesConductor() {
     // Función para obtener los viajes del conductor
     const obtenerViajes = async () => {
         try {
-            const response = await handleAxios().get(`/viaje/conductor/${id_conductor}`);
-            setViajes(response.data);
+            if (id_conductor) {
+                const response = await handleAxios().get(`/viaje/conductor/${id_conductor}`);
+                setViajes(response.data);
+            }
         } catch (error) {
             handleAxiosError(error);
         }
@@ -56,6 +58,16 @@ function ListaViajesConductor() {
         {
             name: 'Total',
             selector: row => `$${row.total}`,
+            wrap: true,
+        },
+        {
+            name: 'Calificación Cliente',
+            selector: row => row.calificacion_cliente,
+            wrap: true,
+        },
+        {
+            name: 'Calificación Conductor',
+            selector: row => row.calificacion_conductor,
             wrap: true,
         },
     ];
