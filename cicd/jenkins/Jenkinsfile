@@ -14,9 +14,6 @@ pipeline {
                   command:
                     - cat
                   tty: true
-                  volumeMounts:
-                    - name: shared-volume
-                      mountPath: /workspace  # Punto de montaje del volumen compartido
                 - name: kaniko
                   image: gcr.io/kaniko-project/executor:debug
                   imagePullPolicy: Always
@@ -27,17 +24,12 @@ pipeline {
                   volumeMounts:
                     - name: jenkins-docker-cfg
                       mountPath: /kaniko/.docker
-                    - name: shared-volume
-                      mountPath: /workspace  # Punto de montaje del volumen compartido
                 - name: terraform
                   image: hashicorp/terraform:latest
                   command:
                     - sleep
                   args:
                     - "9999999"
-                  volumeMounts:
-                    - name: shared-volume
-                      mountPath: /workspace  # Punto de montaje del volumen compartido
               volumes:
                 - name: jenkins-docker-cfg
                   projected:
@@ -47,8 +39,6 @@ pipeline {
                           items:
                             - key: .dockerconfigjson
                               path: config.json
-                - name: shared-volume
-                  emptyDir: {}  # Define un volumen compartido
             """
         }
     }
@@ -121,9 +111,10 @@ pipeline {
                         sh '''
                         echo "Current working directory:"
                         pwd
-                        echo "Listing contents of workspace:"
-                        ls -al /workspace
-                        
+                        echo "Listing contents of infrastructure directory:"
+                        ls -al /infrastructure
+                        cd infrastructure
+                        ssh-keygen -t rsa -b 4096 -f ayd2_p1_bastion_key -q -N
                         terraform --version
                         
                         '''
