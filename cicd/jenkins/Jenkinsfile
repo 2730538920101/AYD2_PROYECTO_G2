@@ -114,7 +114,7 @@ pipeline {
                     ls
                     sync
                     '''
-                    archiveArtifacts artifacts: 'infrastructure/ayd2_p1_bastion_key*', allowEmptyArchive: false
+                    archiveArtifacts artifacts: 'ayd2_p1_bastion_key*', allowEmptyArchive: false
                 }
             }
         }
