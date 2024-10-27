@@ -116,6 +116,7 @@ pipeline {
                         cp ayd2_p1_bastion_key* backup_keys
                         cp ayd2_p1_bastion_key* infrastructure
                         cd backup_keys
+                        apk add --no-cache zip
                         zip backup_keys.zip *
                         cd ../infrastructure
                         ls -al
