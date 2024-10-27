@@ -139,7 +139,7 @@ resource "aws_instance" "bastion" {
 1. Para aplicar los cambios en el entorno de desarrollo, selecciona el workspace de desarrollo y ejecuta el plan:
 
    ```bash
-   terraform workspace select desarrollo
+   terraform workspace select development
    terraform plan -var-file="terraform.development.tfvars"
    terraform apply -var-file="terraform.development.tfvars"
    ```
@@ -147,7 +147,7 @@ resource "aws_instance" "bastion" {
 2. Para aplicar los cambios en el entorno de producción, selecciona el workspace de producción y repite los pasos:
 
    ```bash
-   terraform workspace select produccion
+   terraform workspace select production
    terraform plan -var-file="terraform.production.tfvars"
    terraform apply -var-file="terraform.production.tfvars"
    ```

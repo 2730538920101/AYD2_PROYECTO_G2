@@ -179,8 +179,8 @@ pipeline {
                         ls -al
                         cat terraform.production.tfvars
                         terraform init
-                        terraform workspace new produccion
-                        terraform workspace select produccion
+                        terraform workspace new production
+                        terraform workspace select production
                         terraform apply -var-file="terraform.production.tfvars -auto-approve"
                         '''
                     }
