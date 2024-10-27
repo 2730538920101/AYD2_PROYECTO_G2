@@ -61,7 +61,7 @@ pipeline {
                             sh '''
                             git config --global credential.helper store
                             echo "https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com" > ~/.git-credentials
-                            git config --global --add safe.directory /workspace/ayd2-proyecto/ayd2-proyecto-pipeline
+                            git config --global --add safe.directory /home/jenkins/agent/workspace/ayd2-proyecto/ayd2-proyecto-pipeline
                             git checkout develop
                             '''
                         }
