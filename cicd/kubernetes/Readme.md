@@ -29,7 +29,7 @@ Para desplegar estos recursos, puedes ejecutar los siguientes comandos en la ter
 ##  Dar de baja a los recursos del cluster
 Para eliminar estos recursos del cluster, puedes ejecutar los siguientes comandos en la terminal, desde la carpeta cicd/kubernetes/:
 
--   kubectl delete -f services/service.yml
+
 -   kubectl delete -f deployments/deployment.yml
 -   kubectl delete -f config/volume.yml
 -   kubectl delete -f config/secret.yml

@@ -18,6 +18,7 @@ const Viajes = () => {
     const [Tarifas, setTarifas] = useState(null);
     const [Cliente, setCliente] = useState(null);
     const [tarifa, setTarifa] = useState(null);
+    const [Creditos,setCreditos] = useState(0);
     const [origenSeleccionado, setOrigenSeleccionado] = useState('');
     const [destinoSeleccionado, setDestinoSeleccionado] = useState('');
     useEffect(() => {
@@ -36,6 +37,13 @@ const Viajes = () => {
                 mapa[origen][destino] = monto;
             });
             setTarifas(mapa);
+            try {
+                const creditosRes = await handleAxios().get(`/ofertas/${Cliente.cli_id}`);
+                setCreditos(creditosRes.data.credito || 0); // Establecemos los créditos obtenidos
+            } catch (error) {
+                console.error("Error al obtener créditos", error);
+                setCreditos(0); // Si falla, se asignan 0 créditos
+            }
         }
         fetchData()
     }, [])
@@ -77,6 +85,8 @@ const Viajes = () => {
             handleAxiosError(error);
         }
     }
+
+    const montoFinal = tarifa !== null ? Math.max(tarifa - Creditos, 0).toFixed(2) : null;
 
     return (
 <main>
@@ -132,6 +142,7 @@ const Viajes = () => {
                             </InputGroup>
                         </Form.Group>
                         {tarifa && (
+                            <>
                             <Form.Group className="mb-4">
                                 <Form.Label>Tarifa</Form.Label>
                                 <InputGroup>
@@ -141,6 +152,25 @@ const Viajes = () => {
                                     <Form.Control id="total" name="total"  type="text" value={tarifa} readOnly/>
                                 </InputGroup>
                             </Form.Group>
+                            <Form.Group className="mb-4">
+                                <Form.Label>Créditos disponibles</Form.Label>
+                                <InputGroup className="text-muted">
+                                    <InputGroup.Text>
+                                        <FontAwesomeIcon icon={faMoneyBillWave} />
+                                    </InputGroup.Text>
+                                    <Form.Control id="creditos" name="creditos"  type="text" value={Creditos} readOnly className="text-muted"/> {/* Texto en gris */}
+                                </InputGroup>
+                            </Form.Group>
+                            <Form.Group className="mb-4">
+                                <Form.Label>Monto a pagar (después de créditos)</Form.Label>
+                                <InputGroup className="text-muted">
+                                    <InputGroup.Text>
+                                        <FontAwesomeIcon icon={faMoneyBillWave} />
+                                    </InputGroup.Text>
+                                    <Form.Control id="monto_final" name="monto_final"  type="text" value={montoFinal} readOnly className="text-muted"/> {/* Texto en gris */}
+                                </InputGroup>
+                            </Form.Group>
+                            </>
                         )}
                         <Button variant="primary" type="submit" className="w-100">
                             Pedir Viaje

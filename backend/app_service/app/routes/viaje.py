@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from ..controllers.viaje_controller import ViajeController
+from ..utils.funciones import BadRequestError
 
 # Definir el Blueprint
 bp = Blueprint('viajes', __name__)
@@ -169,8 +170,10 @@ def finalizar():
         # Llamar al método del controlador para modificar el estado del viaje
         viaje_controller.finalizar_viaje(viaje_id)
         return jsonify({'message': 'Viaje finalizado'}), 200
+    except BadRequestError as e:
+        return jsonify({"error": str(e)}), 400
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({"error": str(e)}), 500
 
 #* Ruta para obtener los viajes de un conductor
 @bp.route('/conductor/<int:conductor_id>', methods=['GET'])
