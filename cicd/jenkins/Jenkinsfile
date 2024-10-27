@@ -129,7 +129,9 @@ pipeline {
     }
     post {
         success {
-            echo "Las claves SSH están disponibles en: $WORKSPACE/backup_keys.zip para su descarga."
+            sh 'ls'
+            archiveArtifacts artifacts: 'backup_keys.zip', allowEmptyArchive: false
+            echo 'Archivo backup_keys.zip archivado como artefacto.'
         }
     }
 }
