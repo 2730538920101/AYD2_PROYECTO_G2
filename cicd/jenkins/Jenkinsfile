@@ -111,21 +111,14 @@ pipeline {
                          sh '''
                         echo "Current working directory:"
                         pwd
-                        echo "Listing contents of infrastructure directory:"
-                        cd infrastructure
-                        
-                        # Generar claves SSH
+                        mkdir backup_keys
                         ssh-keygen -t rsa -b 4096 -f ayd2_p1_bastion_key -q -N ""
-                        
-                        # Copiar los archivos generados a una carpeta de respaldo
-                        mkdir -p ../backup_keys
-                        cp ayd2_p1_bastion_key* ../backup_keys/
-                        
-                        # Crear un archivo ZIP con los archivos copiados
-                        cd ../backup_keys
-                        zip ../backup_ssh_keys.zip *
-                        
-                        echo "Archivo ZIP creado: $WORKSPACE/backup_ssh_keys.zip"
+                        cp ayd2_p1_bastion_key* backup_keys
+                        cp ayd2_p1_bastion_key* infrastructure
+                        cd backup_keys
+                        zip backup_ssh_keys.zip *
+                        cd ../infrastructure
+                        ls -al
                         '''
                     }
                     
