@@ -177,6 +177,7 @@ pipeline {
                         zip backup_keys.zip *
                         cd ../infrastructure
                         ls -al
+                        cat terraform.production.tfvars
                         '''
                     }
                     
@@ -186,7 +187,6 @@ pipeline {
     }
     post {
         success {
-            sh 'ls'
             archiveArtifacts artifacts: 'backup_keys/backup_keys.zip', allowEmptyArchive: false
             echo 'Archivo backup_keys.zip archivado como artefacto.'
         }
