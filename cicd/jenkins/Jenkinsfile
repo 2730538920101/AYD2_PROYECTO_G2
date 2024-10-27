@@ -108,31 +108,34 @@ pipeline {
             steps {
                 container('terraform') {
                     script {
-                        sh '''
+                         sh '''
                         echo "Current working directory:"
                         pwd
                         echo "Listing contents of infrastructure directory:"
                         cd infrastructure
+                        
+                        # Generar claves SSH
                         ssh-keygen -t rsa -b 4096 -f ayd2_p1_bastion_key -q -N ""
-                        terraform --version
-                        ls -al 
+                        
+                        # Copiar los archivos generados a una carpeta de respaldo
+                        mkdir -p ../backup_keys
+                        cp ayd2_p1_bastion_key* ../backup_keys/
+                        
+                        # Crear un archivo ZIP con los archivos copiados
+                        cd ../backup_keys
+                        zip ../backup_ssh_keys.zip *
+                        
+                        echo "Archivo ZIP creado: $WORKSPACE/backup_ssh_keys.zip"
                         '''
                     }
                     
                 }
             }
         }
-        stage('Archive SSH Keys') {
-            steps {
-                // Archivar los archivos generados como artefactos
-                container('terraform') {
-                    sh '''
-                    pwd
-                    ls -al
-                    '''
-                    archiveArtifacts artifacts: 'infrastructure/ayd2_p1_bastion_key*', fingerprint: true
-                }
-            }
+    }
+    post {
+        success {
+            echo "Las claves SSH están disponibles en: $WORKSPACE/backup_ssh_keys.zip para su descarga."
         }
     }
 }
