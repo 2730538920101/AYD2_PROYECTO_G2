@@ -294,36 +294,100 @@ class ConductoresController:
             raise Exception(f"Error al obtener conductor: {e}")
 
     #* Metodo para actualizar un conductor
-    def update_conductor(self, conductor_data):
+    def create_solicitud_cambio_informacion(self, con_id, request):
+
+        # Se verifica si los campos requeridos estan presentes en el formulario
+        if 'telefono' not in request.form:
+            raise BadRequestError('Falta el teléfono.')
+        if 'estado_civil' not in request.form:
+            raise BadRequestError('Falta el estado civil.')
+        if 'genero' not in request.form:
+            raise BadRequestError('Falta el género.')
+        if 'correo' not in request.form:
+            raise BadRequestError('Falta el correo.')
+        if 'fecha_nacimiento' not in request.form:
+            raise BadRequestError('Falta la fecha de nacimiento.')
+        if 'direccion' not in request.form:
+            raise BadRequestError('Falta la dirección.')
+        if 'numero_dpi' not in request.form:
+            raise BadRequestError('Falta el número de DPI.')
+        if 'numero_cuenta' not in request.form:
+            raise BadRequestError('Falta el número de cuenta.')
+        if 'papeleria' not in request.files:
+            raise BadRequestError('Falta la papelería.')
+        if 'fotografia' not in request.files:
+            raise BadRequestError('Falta la fotografía.')
+        if 'marca_vehiculo' not in request.form:
+            raise BadRequestError('Falta la marca del vehículo.')
+        if 'placa' not in request.form:
+            raise BadRequestError('Falta la placa del vehículo.')
+        if 'anio' not in request.form:
+            raise BadRequestError('Falta el año del vehículo.')
+
+        # Obtener los datos del formulario y los archivos
+        datos = request.form
+        archivo_fotografia = request.files['fotografia']
+        archivo_papeleria = request.files['papeleria']
+
+        # Validar archivos
+        if archivo_fotografia.filename == '':
+            raise BadRequestError('Falta la fotografía.')
+        if archivo_papeleria.filename == '':
+            raise BadRequestError('Falta la papelería.')
+
+        # Subir la fotografía al S3
+        filename_fotografia = secure_filename(archivo_fotografia.filename)
+        file_stream_fotografia = io.BytesIO(archivo_fotografia.read())
+        filename_fotografia = f"fotos_vehiculo_conductores/{str(datetime.now().strftime('%Y%m%d%H%M%S'))}_{filename_fotografia}"
+        object_url_fotografia = self.s3_service.upload_object(file_stream_fotografia, filename_fotografia)
+        if not object_url_fotografia:
+            print(object_url_fotografia)
+            raise Exception('Error al subir la fotografia a S3.')
+
+        # Subir la papelería (CV) a S3
+        filename_papeleria = secure_filename(archivo_papeleria.filename)
+        file_stream_papeleria = io.BytesIO(archivo_papeleria.read())
+        filename_papeleria = f"documento_cv_conductores/{str(datetime.now().strftime('%Y%m%d%H%M%S'))}_{filename_papeleria}"
+        object_url_papeleria = self.s3_service.upload_object(file_stream_papeleria, filename_papeleria)
+        if not object_url_papeleria:
+            raise Exception('Error al subir la papeleria a S3.')
+
         try:
-            # Definir la consulta SQL y los parámetros
+            # Se define el insert con sus parametros
             query = """
-            UPDATE Conductor
-            SET nombre = %s, telefono = %s, estado_civil = %s, genero = %s, correo = %s, fecha_nacimiento = %s, direccion = %s, numero_dpi = %s, numero_cuenta = %s, papeleria = %s, fotografia = %s, marca_vehiculo = %s, placa = %s, anio = %s, estado_informacion = %s
-            WHERE CON_ID = %s
+            INSERT INTO Solicitud_Conductor (CON_ID, TELEFONO, ESTADO_CIVIL, GENERO, CORREO, FECHA_NACIMIENTO, DIRECCION, NUMERO_DPI, NUMERO_CUENTA, PAPELERIA, FOTOGRAFIA, MARCA_VEHICULO, PLACA, ANIO)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             """
+
             values = (
-                conductor_data.nombre,
-                conductor_data.telefono,
-                conductor_data.estado_civil,
-                conductor_data.genero,
-                conductor_data.correo,
-                conductor_data.fecha_nacimiento,
-                conductor_data.direccion,
-                conductor_data.numero_dpi,
-                conductor_data.numero_cuenta,
-                conductor_data.papeleria,
-                conductor_data.fotografia,
-                conductor_data.marca_vehiculo,
-                conductor_data.placa,
-                conductor_data.anio,
-                conductor_data.estado_informacion,
-                conductor_data.con_id
+                con_id,
+                datos.get('telefono'),
+                datos.get('estado_civil'),
+                datos.get('genero'),
+                datos.get('correo'),
+                datos.get('fecha_nacimiento'),
+                datos.get('direccion'),
+                datos.get('numero_dpi'),
+                datos.get('numero_cuenta'),
+                object_url_papeleria,
+                object_url_fotografia,
+                datos.get('marca_vehiculo'),
+                datos.get('placa'),
+                datos.get('anio')
             )
+
             # Ejecutar la consulta usando el singleton
             self.db.execute_query(query, values)
+
+            # Se actualiza el estado del conductor a 'CAMBIO'
+            query = "UPDATE Conductor SET ESTADO_INFORMACION = 'CAMBIO' WHERE CON_ID = %s"
+            self.db.execute_query(query, [con_id])
+
         except Exception as e:
-            raise Exception(f"Error al actualizar conductor: {e}")
+            # Eliminar los archivos del S3 si ocurre un error
+            self.s3_service.delete_object(filename_fotografia)
+            self.s3_service.delete_object(filename_papeleria)
+            raise Exception(f"Error al realizar la solicitud de cambio del conductor: {e}")
 
     #* Metodo para saber si un conductor existe
     def exists_conductor(self, con_id):
