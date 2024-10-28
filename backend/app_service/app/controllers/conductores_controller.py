@@ -389,6 +389,29 @@ class ConductoresController:
             self.s3_service.delete_object(filename_papeleria)
             raise Exception(f"Error al realizar la solicitud de cambio del conductor: {e}")
 
+    # Metodo para denegar la solicitud de cambio de información
+    def deny_solicitud_cambio_informacion(self, solicitud_id):
+        try:
+
+            # Se define la consulta SQL para obtener la informacion de la solicitud
+            query = "SELECT CON_ID, PAPELERIA, FOTOGRAFIA FROM Solicitud_Conductor WHERE SOL_CON_ID = %s"
+            solicitud = self.db.fetch_one(query, [solicitud_id])
+
+            # Se define la consulta SQL para eliminar la solicitud
+            query = "DELETE FROM Solicitud_Conductor WHERE SOL_CON_ID = %s"
+            self.db.execute_query(query, [solicitud_id])
+
+            # Se actualiza el estado del conductor a 'APROBADO'
+            query = "UPDATE Conductor SET ESTADO_INFORMACION = 'APROBADO' WHERE CON_ID = %s"
+            self.db.execute_query(query, [solicitud[0]])
+
+            # Se eliminan los archivos del S3
+            self.s3_service.delete_object(solicitud[1])
+            self.s3_service.delete_object(solicitud[2])
+
+        except Exception as e:
+            raise Exception(f"Error al denegar la solicitud de cambio de información: {e}")
+
     #* Metodo para saber si un conductor existe
     def exists_conductor(self, con_id):
         try:

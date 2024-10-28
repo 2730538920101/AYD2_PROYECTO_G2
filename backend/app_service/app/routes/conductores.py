@@ -78,3 +78,13 @@ def crear_solicitud_cambio_informacion(con_id):
         return jsonify({'error': str(e)}), 400
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+# Ruta para denegar una solicitud de cambio de información
+@bp.route('/denegar-solicitud/<int:con_id>', methods=['PUT'])
+def denegar_solicitud_cambio_informacion(con_id):
+    try:
+        # Llamar al método del controlador para denegar una solicitud de cambio de información
+        conductores_controller.deny_solicitud_cambio_informacion(con_id)
+        return jsonify({'mensaje': 'Solicitud de cambio de información denegada exitosamente'}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
