@@ -140,7 +140,53 @@ pipeline {
                 container('terraform') {
                     script {
                         def tfvarsContent = """
-                        # variables para terraform...
+                        aws_account_id                  = "857738776382"
+                        project_name                    = "ayd2_p1_production"
+                        vpc_cidr                        = "10.0.0.0/16"
+                        public_subnet_cidrs             = ["10.0.1.0/24", "10.0.2.0/24"]
+                        private_subnet_cidrs            = ["10.0.3.0/24", "10.0.4.0/24"]
+                        availability_zones              = ["us-east-1a", "us-east-1b"]
+                        user_pool_name                  = "ayd2-p1-production"
+                        AWS_REGION                      = "us-east-1"
+                        AWS_ACCESS_KEY                  = "${AWS_ACCESS_KEY_ID}"
+                        AWS_SECRET_KEY                  = "${AWS_SECRET_ACCESS_KEY}"
+                        ec2_name                        = "ayd2-p1-production"
+                        queue_name                      = "ayd2-p1-production"
+                        bastion_ami_id                  = "ami-0e86e20dae9224db8"
+                        bastion_key_pair_name           = "ayd2_p1_bastion_key_pair"
+                        bastion_public_key_path         = "ayd2_p1_bastion_key.pub"
+                        bastion_private_key_path        = "ayd2_p1_bastion_key"
+                        rds_username                    = "proyecto1"
+                        rds_password                    = "${RDS_PASSWORD}"
+                        rds_name                        = "ayd2-p1-production"
+                        rds_dbname                      = "PROYECTO_VIAJES"
+                        bucket_name                     = "ayd2-p1-production"
+                        database_init_path              = "database/db_init.sql"
+                        ansible_playbook_path           = "ansible/playbook.yaml"
+                        github_access_token             = "${GITHUB_TOKEN}"
+
+                        # Variables de entorno de conexion a base de datos
+                        database_port                   = 3306
+                        # Variables para las claves secretas
+                        ayd2_aws_access_key_id          = "${AWS_ACCESS_KEY_ID}"
+                        ayd2_aws_secret_access_key      = "${AWS_SECRET_ACCESS_KEY}"
+                        # Variables de entorno para APP_SERVICE
+                        app_port                        = 5000
+                        app_host                        = "0.0.0.0"
+                        admin_email                     = "2730538920101@ingenieria.usac.edu.gt"
+                        admin_password                  = "Adminpassword1234!"  
+                        admin_validation                = "Adminvalidate1234!"
+
+                        # Variables de entorno para PRODUCER
+                        producer_port                   = 4100
+
+                        # Variables de entorno para CONSUMER
+                        consumer_port                   = 4200
+
+                        # Variables de entorno para el frontend
+                        frontend_port                   = 3000
+                        next_public_app_version         = "1.0.0"
+                        environment                     = "production"
                         """
                         writeFile file: 'infrastructure/terraform.production.tfvars', text: tfvarsContent
                         sh '''
@@ -155,10 +201,12 @@ pipeline {
                         apk add --no-cache zip
                         zip backup_keys.zip *
                         cd ../infrastructure
-                        terraform init -reconfigure
-                        terraform workspace list | grep -q production || terraform workspace new production
-                        terraform workspace select production
-                        terraform apply -var-file="terraform.production.tfvars" -auto-approve
+                        ls -al
+                        cat terraform.production.tfvars
+                        terraform init
+                        terraform workspace new produccion
+                        terraform workspace select produccion
+                        terraform apply -var-file="terraform.production.tfvars"
                         '''
                     }
                     
