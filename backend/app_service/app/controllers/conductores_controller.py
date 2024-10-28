@@ -412,6 +412,94 @@ class ConductoresController:
         except Exception as e:
             raise Exception(f"Error al denegar la solicitud de cambio de información: {e}")
 
+    # Metodo para aprobar la solicitud de cambio de información
+    def approve_solicitud_cambio_informacion(self, solicitud_id):
+        try:
+
+            # Se define la consulta SQL para obtener la informacion de la solicitud
+            query = "SELECT CON_ID, TELEFONO, ESTADO_CIVIL, GENERO, CORREO, FECHA_NACIMIENTO, DIRECCION, NUMERO_DPI, NUMERO_CUENTA, PAPELERIA, FOTOGRAFIA, MARCA_VEHICULO, PLACA, ANIO FROM Solicitud_Conductor WHERE SOL_CON_ID = %s"
+            solicitud = self.db.fetch_one(query, [solicitud_id])
+
+            # Se verifica si la solicitud existe
+            if solicitud is None:
+                raise BadRequestError('La solicitud no existe.')
+
+            # # En el caso que TELEFONO sea diferente de null se define la consulta SQL para actualizar unicamente el telefono
+            # if solicitud[1] is not None:
+            #     query = "UPDATE Conductor SET TELEFONO = %s WHERE CON_ID = %s"
+            #     self.db.execute_query(query, [solicitud[1], solicitud[0]])
+
+            # En el caso que ESTADO_CIVIL sea diferente de null se define la consulta SQL para actualizar unicamente el estado civil
+            if solicitud[2] is not None:
+                query = "UPDATE Conductor SET ESTADO_CIVIL = %s WHERE CON_ID = %s"
+                self.db.execute_query(query, [solicitud[2], solicitud[0]])
+
+            # En el caso que GENERO sea diferente de null se define la consulta SQL para actualizar unicamente el genero
+            if solicitud[3] is not None:
+                query = "UPDATE Conductor SET GENERO = %s WHERE CON_ID = %s"
+                self.db.execute_query(query, [solicitud[3], solicitud[0]])
+
+            # # En el caso que CORREO sea diferente de null se define la consulta SQL para actualizar unicamente el correo
+            # if solicitud[4] is not None:
+            #     query = "UPDATE Conductor SET CORREO = %s WHERE CON_ID = %s"
+            #     self.db.execute_query(query, [solicitud[4], solicitud[0]])
+
+            # En el caso que FECHA_NACIMIENTO sea diferente de null se define la consulta SQL para actualizar unicamente la fecha de nacimiento
+            if solicitud[5] is not None:
+                query = "UPDATE Conductor SET FECHA_NACIMIENTO = %s WHERE CON_ID = %s"
+                self.db.execute_query(query, [solicitud[5], solicitud[0]])
+
+            # En el caso que DIRECCION sea diferente de null se define la consulta SQL para actualizar unicamente la direccion
+            if solicitud[6] is not None:
+                query = "UPDATE Conductor SET DIRECCION = %s WHERE CON_ID = %s"
+                self.db.execute_query(query, [solicitud[6], solicitud[0]])
+
+            # # En el caso que NUMERO_DPI sea diferente de null se define la consulta SQL para actualizar unicamente el numero de DPI
+            # if solicitud[7] is not None:
+            #     query = "UPDATE Conductor SET NUMERO_DPI = %s WHERE CON_ID = %s"
+            #     self.db.execute_query(query, [solicitud[7], solicitud[0]])
+
+            # # En el caso que NUMERO_CUENTA sea diferente de null se define la consulta SQL para actualizar unicamente el numero de cuenta
+            # if solicitud[8] is not None:
+            #     query = "UPDATE Conductor SET NUMERO_CUENTA = %s WHERE CON_ID = %s"
+            #     self.db.execute_query(query, [solicitud[8], solicitud[0]])
+
+            # En el caso que PAPELERIA sea diferente de null se define la consulta SQL para actualizar unicamente la papeleria
+            if solicitud[9] is not None:
+                query = "UPDATE Conductor SET PAPELERIA = %s WHERE CON_ID = %s"
+                self.db.execute_query(query, [solicitud[9], solicitud[0]])
+
+            # En el caso que FOTOGRAFIA sea diferente de null se define la consulta SQL para actualizar unicamente la fotografia
+            if solicitud[10] is not None:
+                query = "UPDATE Conductor SET FOTOGRAFIA = %s WHERE CON_ID = %s"
+                self.db.execute_query(query, [solicitud[10], solicitud[0]])
+
+            # En el caso que MARCA_VEHICULO sea diferente de null se define la consulta SQL para actualizar unicamente la marca del vehiculo
+            if solicitud[11] is not None:
+                query = "UPDATE Conductor SET MARCA_VEHICULO = %s WHERE CON_ID = %s"
+                self.db.execute_query(query, [solicitud[11], solicitud[0]])
+
+            # # En el caso que PLACA sea diferente de null se define la consulta SQL para actualizar unicamente la placa
+            # if solicitud[12] is not None:
+            #     query = "UPDATE Conductor SET PLACA = %s WHERE CON_ID = %s"
+            #     self.db.execute_query(query, [solicitud[12], solicitud[0]])
+
+            # En el caso que ANIO sea diferente de null se define la consulta SQL para actualizar unicamente el año
+            if solicitud[13] is not None:
+                query = "UPDATE Conductor SET ANIO = %s WHERE CON_ID = %s"
+                self.db.execute_query(query, [solicitud[13], solicitud[0]])
+
+            # Se define la consulta SQL para eliminar la solicitud
+            query = "DELETE FROM Solicitud_Conductor WHERE SOL_CON_ID = %s"
+            self.db.execute_query(query, [solicitud_id])
+
+            # Se actualiza el estado del conductor a 'APROBADO'
+            query = "UPDATE Conductor SET ESTADO_INFORMACION = 'APROBADO' WHERE CON_ID = %s"
+            self.db.execute_query(query, [solicitud[0]])
+
+        except Exception as e:
+            raise Exception(f"Error al aprobar la solicitud de cambio de información: {e}")
+
     #* Metodo para saber si un conductor existe
     def exists_conductor(self, con_id):
         try:

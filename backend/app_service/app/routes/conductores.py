@@ -88,3 +88,13 @@ def denegar_solicitud_cambio_informacion(con_id):
         return jsonify({'mensaje': 'Solicitud de cambio de información denegada exitosamente'}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+# Ruta para aprobar una solicitud de cambio de información
+@bp.route('/aprobar-solicitud/<int:con_id>', methods=['PUT'])
+def aprobar_solicitud_cambio_informacion(con_id):
+    try:
+        # Llamar al método del controlador para aprobar una solicitud de cambio de información
+        conductores_controller.approve_solicitud_cambio_informacion(con_id)
+        return jsonify({'mensaje': 'Solicitud de cambio de información aprobada exitosamente'}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
