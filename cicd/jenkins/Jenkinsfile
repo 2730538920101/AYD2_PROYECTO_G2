@@ -66,17 +66,17 @@ pipeline {
                 }
             }
         }
-        // stage('Build and Push app service Image') {
-        //     steps {
-        //         container('kaniko') {
-        //             sh """
-        //             /kaniko/executor --context backend/app_service/ --dockerfile Dockerfile \
-        //             --destination carlosmz87/ayd2_p1_app_service:latest \
-        //             --destination carlosmz87/ayd2_p1_app_service:${BUILD_NUMBER}
-        //             """
-        //         }
-        //     }
-        // }
+        stage('Build and Push app service Image') {
+            steps {
+                container('kaniko') {
+                    sh """
+                    /kaniko/executor --context backend/app_service/ --dockerfile Dockerfile \
+                    --destination carlosmz87/ayd2_p1_app_service:latest \
+                    --destination carlosmz87/ayd2_p1_app_service:${BUILD_NUMBER}
+                    """
+                }
+            }
+        }
     //     stage('Build and Push notification producer service Image') {
     //         steps {
     //             container('kaniko') {
@@ -99,17 +99,17 @@ pipeline {
     //             }
     //         }
     //     }
-        stage('Build and Push Frontend Image') {
-            steps {
-                container('kaniko') {
-                    sh """
-                    /kaniko/executor --context frontend/ --dockerfile Dockerfile \
-                    --destination carlosmz87/ayd2_p1_frontend:latest \
-                    --destination carlosmz87/ayd2_p1_frontend:${BUILD_NUMBER}
-                    """
-                }
-            }
-        }
+        // stage('Build and Push Frontend Image') {
+        //     steps {
+        //         container('kaniko') {
+        //             sh """
+        //             /kaniko/executor --context frontend/ --dockerfile Dockerfile \
+        //             --destination carlosmz87/ayd2_p1_frontend:latest \
+        //             --destination carlosmz87/ayd2_p1_frontend:${BUILD_NUMBER}
+        //             """
+        //         }
+        //     }
+        // }
     //     stage('Deploy app with terraform') {
     //         steps {
     //             container('terraform') {

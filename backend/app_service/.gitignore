@@ -2,8 +2,7 @@
 .venv*
 .env
 
-# Archivos de configuración 
-**/config.py
+
 
 # Python bytecode files
 __pycache__/
