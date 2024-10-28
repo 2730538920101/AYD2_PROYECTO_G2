@@ -500,6 +500,48 @@ class ConductoresController:
         except Exception as e:
             raise Exception(f"Error al aprobar la solicitud de cambio de información: {e}")
 
+    # Metodo para obtener las solicitudes de cambio de información
+    def get_solicitudes_cambio_informacion(self):
+        try:
+            # Definir la consulta SQL
+            query = """ SELECT sc.SOL_CON_ID, sc.CON_ID, c.NOMBRE, sc.TELEFONO, sc.ESTADO_CIVIL, sc.GENERO, sc.CORREO, c.CODIGO_EMPLEADO, sc.FECHA_NACIMIENTO,
+                        sc.DIRECCION, sc.NUMERO_DPI, sc.NUMERO_CUENTA, sc.PAPELERIA, sc.FOTOGRAFIA, sc.MARCA_VEHICULO, sc.PLACA, sc.ANIO
+                        FROM Solicitud_Conductor sc
+                        INNER JOIN Conductor c ON sc.CON_ID = c.CON_ID"""
+
+            # Ejecutar la consulta usando el singleton
+            solicitud_rows = self.db.fetch_all(query, [])
+
+            # Convertir los resultados a una lista de diccionarios
+            solicitudes = []
+            for row in solicitud_rows:
+                solicitud = {
+                    "sol_con_id": row[0],
+                    "con_id": row[1],
+                    "nombre": row[2],
+                    "telefono": row[3],
+                    "estado_civil": row[4],
+                    "genero": row[5],
+                    "correo": row[6],
+                    "codigo_empleado": row[7],
+                    "fecha_nacimiento": row[8].strftime("%d/%m/%Y"),
+                    "direccion": row[9],
+                    "numero_dpi": row[10],
+                    "numero_cuenta": row[11],
+                    "papeleria": row[12],
+                    "fotografia": row[13],
+                    "marca_vehiculo": row[14],
+                    "placa": row[15],
+                    "anio": row[16]
+                }
+                solicitudes.append(solicitud)
+
+            # Retornar los resultados
+            return solicitudes
+
+        except Exception as e:
+            raise Exception(f"Error al obtener solicitudes de cambio de información")
+
     #* Metodo para saber si un conductor existe
     def exists_conductor(self, con_id):
         try:

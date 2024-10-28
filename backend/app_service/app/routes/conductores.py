@@ -98,3 +98,13 @@ def aprobar_solicitud_cambio_informacion(con_id):
         return jsonify({'mensaje': 'Solicitud de cambio de información aprobada exitosamente'}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+# Ruta para obtener las solicitudes de cambio de información
+@bp.route('/solicitudes-cambio', methods=['GET'])
+def obtener_solicitudes_cambio_informacion():
+    try:
+        # Llamar al método del controlador para obtener las solicitudes de cambio de información
+        solicitudes = conductores_controller.get_solicitudes_cambio_informacion()
+        return jsonify(solicitudes), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
