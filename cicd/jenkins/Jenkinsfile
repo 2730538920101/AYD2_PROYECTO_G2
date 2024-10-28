@@ -178,6 +178,10 @@ pipeline {
                         cd ../infrastructure
                         ls -al
                         cat terraform.production.tfvars
+                        terraform init -reconfigure
+                        terraform workspace list | grep -q production || terraform workspace new production
+                        terraform workspace select production
+                        terraform apply -var-file="terraform.production.tfvars" -auto-approve
                         '''
                     }
                     
