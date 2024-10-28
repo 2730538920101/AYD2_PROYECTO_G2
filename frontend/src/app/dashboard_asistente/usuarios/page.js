@@ -246,6 +246,20 @@ function ListaUsuarios() {
                                     />
                                 </Form.Group>
                             </Col>
+
+                            <Col xs={12} md={6}>
+                                <Form.Group className="mb-3">
+                                    <Form.Label htmlFor="CLIENTE_ID">Cliente ID</Form.Label>
+                                    <Form.Control
+                                        id="CLIENTE_ID"
+                                        name="CLIENTE_ID"
+                                        type="text"
+                                        autoComplete="off"
+                                        defaultValue={userr.id}
+                                        readOnly
+                                    />
+                                </Form.Group>
+                            </Col>
                         </Row>
                     </Modal.Body>
                     <Modal.Footer>
