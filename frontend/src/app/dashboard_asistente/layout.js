@@ -13,6 +13,7 @@ export default function Layout({ children }) {
         { title: "Usuarios", link: "/dashboard_asistente/usuarios", icon: faUsers },
         { title: "Solicitudes Empleo", link: "/dashboard_asistente/empleo", icon: faCodePullRequest },
         { title: "Ofertas", link: "/dashboard_asistente/ofertas", icon: faCodePullRequest },
+        { title: "Cambios Información", link: "/dashboard_asistente/cambios", icon: faCodePullRequest },
       ]} />
       <main className="content">
         <Navbar />
