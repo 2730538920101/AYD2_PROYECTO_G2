@@ -66,17 +66,17 @@ pipeline {
                 }
             }
         }
-        stage('Build and Push app service Image') {
-            steps {
-                container('kaniko') {
-                    sh """
-                    /kaniko/executor --context backend/app_service/ --dockerfile Dockerfile \
-                    --destination carlosmz87/ayd2_p1_app_service:latest \
-                    --destination carlosmz87/ayd2_p1_app_service:${BUILD_NUMBER}
-                    """
-                }
-            }
-        }
+        // stage('Build and Push app service Image') {
+        //     steps {
+        //         container('kaniko') {
+        //             sh """
+        //             /kaniko/executor --context backend/app_service/ --dockerfile Dockerfile \
+        //             --destination carlosmz87/ayd2_p1_app_service:latest \
+        //             --destination carlosmz87/ayd2_p1_app_service:${BUILD_NUMBER}
+        //             """
+        //         }
+        //     }
+        // }
     //     stage('Build and Push notification producer service Image') {
     //         steps {
     //             container('kaniko') {
@@ -88,17 +88,17 @@ pipeline {
     //             }
     //         }
     //     }
-    //     stage('Build and Push notification consumer service Image') {
-    //         steps {
-    //             container('kaniko') {
-    //                 sh """
-    //                 /kaniko/executor --context backend/notification_service/consumer/ --dockerfile Dockerfile \
-    //                 --destination carlosmz87/ayd2_p1_notification_consumer:latest \
-    //                 --destination carlosmz87/ayd2_p1_notification_consumer:${BUILD_NUMBER}
-    //                 """
-    //             }
-    //         }
-    //     }
+        stage('Build and Push notification consumer service Image') {
+            steps {
+                container('kaniko') {
+                    sh """
+                    /kaniko/executor --context backend/notification_service/consumer/ --dockerfile Dockerfile \
+                    --destination carlosmz87/ayd2_p1_notification_consumer:latest \
+                    --destination carlosmz87/ayd2_p1_notification_consumer:${BUILD_NUMBER}
+                    """
+                }
+            }
+        }
         // stage('Build and Push Frontend Image') {
         //     steps {
         //         container('kaniko') {
