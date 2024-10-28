@@ -227,6 +227,17 @@ function DashboardConductor() {
     obtenerViajes();
   }, []);
 
+  useEffect(() => {
+    if (Conductor) {
+      const intervalId = setInterval(() => {
+        obtenerViajes();
+      }, 3000); // 3 segundos
+
+      // Limpiar el intervalo cuando el componente se desmonte
+      return () => clearInterval(intervalId);
+    }
+  }, [Conductor]); // Solo configurar el intervalo cuando `Cliente` cambia
+
   // Función para aceptar el viaje
   const aceptarViaje = async (viajeId) => {
     try {
@@ -437,7 +448,7 @@ function DashboardConductor() {
           </Button>
         </Modal.Footer>
       </Modal>
-      
+
       {/* Modal que se encarga de mostrar al usuario */}
       <Modal show={showUser} size="lg" onHide={handleCloseUser}>
         <Form>
