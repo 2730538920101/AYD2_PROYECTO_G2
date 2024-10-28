@@ -1,14 +1,17 @@
 import mysql.connector
 from config import Config
 from mysql.connector import Error
+from threading import Lock
 
 class MySQLSingleton:
     _instance = None
+    _lock = Lock()  # Añadimos un lock para asegurar el acceso exclusivo
 
     def __new__(cls):
-        if cls._instance is None:
-            cls._instance = super(MySQLSingleton, cls).__new__(cls)
-            cls._instance._initialize(Config.MYSQL_HOST, Config.MYSQL_USER, Config.MYSQL_PASSWORD, Config.MYSQL_DATABASE)
+        with cls._lock:  # Utilizamos el lock para asegurar que solo un hilo crea la instancia
+            if cls._instance is None:
+                cls._instance = super(MySQLSingleton, cls).__new__(cls)
+                cls._instance._initialize(Config.MYSQL_HOST, Config.MYSQL_USER, Config.MYSQL_PASSWORD, Config.MYSQL_DATABASE)
         return cls._instance
 
     def _initialize(self, host, user, password, database):
@@ -41,7 +44,7 @@ class MySQLSingleton:
             with self.connection.cursor() as cursor:
                 cursor.execute(query, parameters)
                 data = cursor.fetchone()
-                return data # Retorna la primera fila
+                return data  # Retorna la primera fila
         except Error as e:
             print(f"Error fetching data: {e}")
             return None  # Retorna None si ocurre un error
@@ -53,7 +56,7 @@ class MySQLSingleton:
             with self.connection.cursor() as cursor:
                 cursor.execute(query, parameters)
                 data = cursor.fetchall()
-                return data # Retorna todas las filas
+                return data  # Retorna todas las filas
         except Error as e:
             print(f"Error fetching data: {e}")
             return []
