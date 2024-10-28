@@ -181,6 +181,9 @@ pipeline {
                         terraform init -reconfigure
                         terraform workspace new production
                         terraform workspace select production
+                        terraform apply -target=aws_s3_bucket_public_access_block.public_lock -var-file="terraform.production.tfvars" -auto-approve
+                        terraform apply -target=aws_s3_bucket.ayd2_p1_bucket -var-file="terraform.environment.tfvars" -auto-approve
+                        terraform apply -target=aws_s3_bucket_policy.public_policy -var-file="terraform.environment.tfvars" -auto-approve
                         terraform apply -var-file="terraform.production.tfvars" -auto-approve
                         '''
                     }
