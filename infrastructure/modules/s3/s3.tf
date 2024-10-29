@@ -7,6 +7,21 @@ resource "aws_s3_bucket" "ayd2_p1_bucket" {
   }
 }
 
+# Recurso para el bloqueo de acceso público del bucket de S3
+resource "aws_s3_bucket_public_access_block" "public_lock" {
+  bucket = aws_s3_bucket.ayd2_p1_bucket.id
+
+  block_public_acls       = true
+  ignore_public_acls      = true
+  block_public_policy     = false
+  restrict_public_buckets = false
+
+  # Dependencia explícita de la política de S3
+  depends_on = [
+    aws_s3_bucket.ayd2_p1_bucket,
+  ]
+}
+
 # Configuración de la política de acceso para el bucket de S3
 resource "aws_s3_bucket_policy" "public_policy" {
   bucket = aws_s3_bucket.ayd2_p1_bucket.id
@@ -35,23 +50,11 @@ resource "aws_s3_bucket_policy" "public_policy" {
   # Dependencia explícita del bucket de S3
   depends_on = [
     aws_s3_bucket.ayd2_p1_bucket,
+    aws_s3_bucket_public_access_block.public_lock,
   ]
 }
 
-# Recurso para el bloqueo de acceso público del bucket de S3
-resource "aws_s3_bucket_public_access_block" "public_lock" {
-  bucket = aws_s3_bucket.ayd2_p1_bucket.id
 
-  block_public_acls       = true
-  ignore_public_acls      = true
-  block_public_policy     = false
-  restrict_public_buckets = false
-
-  # Dependencia explícita de la política de S3
-  depends_on = [
-    aws_s3_bucket.ayd2_p1_bucket,
-  ]
-}
 
 resource "aws_s3_object" "fotos_vehiculo_conductores" {
   bucket = aws_s3_bucket.ayd2_p1_bucket.bucket
