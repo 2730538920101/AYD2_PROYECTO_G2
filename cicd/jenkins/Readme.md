@@ -1,3 +1,5 @@
+[REGRESAR](../../README.md)
+
 #   Configuracion inicial del Jenkins master
 
 -   Primero se debe ingresar el admin password
@@ -123,3 +125,16 @@ apiVersion: v1
                             - key: .dockerconfigjson
                               path: config.json
 '''
+
+## Como crear un pipeline básico en Jenkins
+
+["Guía para la creación, configuración y ejecución de un pipeline con Jenkins](https://www.jenkins.io/doc/pipeline/tour/hello-world/)
+
+## Como configurar un WebHook
+
+["Video de apoyo para configurar el WebHook de Github](https://www.youtube.com/watch?v=Uu8_cb0WRAw)
+
+
+
+
+[REGRESAR](../../README.md)

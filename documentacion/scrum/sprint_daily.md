@@ -391,4 +391,333 @@
 - **Impedimentos**: Ninguno.
 
 
+# Sprint 3 - Daily Scrum
+
+## Día 1
+
+### Carlos Martinez
+- **Lo que hizo ayer:** Se revisó la estructura de IaC y se planificaron las tareas de despliegue para los entornos de desarrollo y producción.
+- **Lo que hará hoy:** Configurar el entorno inicial en Terraform y automatizar la configuración de la infraestructura básica.
+- **Impedimentos:** Algunos servicios en la infraestructura aún no cuentan con IaC actualizado.
+
+### Carlos Soto
+- **Lo que hizo ayer:** Se trabajó en diseñar los nuevos procedimientos.
+- **Lo que hará hoy:** Se empezó a trabajar con los nuevos procedimientos.
+- **Impedimentos:** No hubo impedimentos.
+
+### Douglas Soch
+- **Lo que hizo ayer:** Se realizaron endpoints para modificar la información de los usuarios.
+- **Lo que hará hoy:** Agregar el manejo de estados en algunas tablas del sistema.
+- **Impedimentos:** No hubo impedimentos.
+
+### Luis Sanchez
+- **Lo que hizo ayer:** Se modificó la funcionalidad de las cookies.
+- **Lo que hará hoy:** Se modificará para poder calificar a un cliente.
+- **Impedimentos:** No hubo impedimentos.
+
+### Jose Lopez
+- **Lo que hizo ayer:** Se ajustaron enlaces del frontend para utilizar `<Link>` en lugar de `<a>`.
+- **Lo que hará hoy:** Se actualizará la funcionalidad para que el usuario cliente pueda cambiar su contraseña.
+- **Impedimentos:** Posibles problemas de manejo de sesiones al cambiar contraseñas.
+
+## Día 2
+
+### Carlos Martinez
+- **Lo que hizo ayer:** Se comenzó la implementación del entorno de desarrollo con Terraform, utilizando SQS y Cognito en una VPC segura.
+- **Lo que hará hoy:** Completar la configuración de VPC en el entorno de producción y asegurar el acceso a RDS.
+- **Impedimentos:** Algunos permisos en IAM no están alineados con los recursos que deben desplegarse.
+
+### Carlos Soto
+- **Lo que hizo ayer:** Se siguió trabajando con los nuevos procedimientos para los conductores.
+- **Lo que hará hoy:** Se encontró un error en uno de los procedimientos.
+- **Impedimentos:** Se estuvo arreglando el error de los procedimientos.
+
+### Douglas Soch
+- **Lo que hizo ayer:** Se agregaron el manejo de estados en algunas tablas de la base de datos.
+- **Lo que hará hoy:** Crear la funcionalidad para registrar asistentes en el sistema.
+- **Impedimentos:** No hubo impedimentos.
+
+### Luis Sanchez
+- **Lo que hizo ayer:** Se modificó para clasificar a un cliente.
+- **Lo que hará hoy:** Se integra la librería de gráficas.
+- **Impedimentos:** No hubo impedimentos.
+
+### Jose Lopez
+- **Lo que hizo ayer:** Se creó una funcionalidad para retornar múltiples viajes con su número de repeticiones.
+- **Lo que hará hoy:** Se implementará el registro de asistentes en el sistema.
+- **Impedimentos:** No hubo impedimentos.
+
+## Día 3
+
+### Carlos Martinez
+- **Lo que hizo ayer:** Se avanzó con la configuración de RDS y EC2 en los entornos definidos, asegurando acceso para el desarrollo.
+- **Lo que hará hoy:** Configurar Ansible para la preparación del entorno y ajustar el playbook para instalación de dependencias.
+- **Impedimentos:** Demoras en la configuración de red entre instancias de desarrollo.
+
+### Carlos Soto
+- **Lo que hizo ayer:** Se terminó de corregir el error que había en los procedimientos.
+- **Lo que hará hoy:** Se estuvo avanzando en el resto de procedimientos faltantes.
+- **Impedimentos:** No hubo inconvenientes.
+
+### Douglas Soch
+- **Lo que hizo ayer:** Se creó la funcionalidad para registrar asistentes en el sistema.
+- **Lo que hará hoy:** Correcciones en algunos endpoints.
+- **Impedimentos:** Ninguno.
+
+### Luis Sanchez
+- **Lo que hizo ayer:** Se integró la librería de gráficas.
+- **Lo que hará hoy:** Se consume la API para obtener las ganancias del conductor.
+- **Impedimentos:** No hubo impedimentos.
+
+### Jose Lopez
+- **Lo que hizo ayer:** Se eliminó un fondo inexistente (404) de formularios del frontend.
+- **Lo que hará hoy:** Se modificará la obtención de cookies y localStorage para permitir la compilación.
+- **Impedimentos:** No hubo impedimentos.
+
+## Día 4
+
+### Carlos Martinez
+- **Lo que hizo ayer:** Se completó la configuración del entorno con Ansible y Docker en el entorno de desarrollo.
+- **Lo que hará hoy:** Desplegar el primer contenedor en el entorno de producción usando Docker Compose.
+- **Impedimentos:** Algunos contenedores tardan en iniciar debido a dependencias.
+
+### Carlos Soto
+- **Lo que hizo ayer:** Se estuvo trabajando en lo último de los nuevos procedimientos.
+- **Lo que hará hoy:** Se estará revisando que todos los procedimientos estén correctos.
+- **Impedimentos:** Sin inconvenientes.
+
+### Douglas Soch
+- **Lo que hizo ayer:** Correcciones en algunos endpoints.
+- **Lo que hará hoy:** Se creó la funcionalidad para actualizar el estado del viaje.
+- **Impedimentos:** Sin inconvenientes.
+
+### Luis Sanchez
+- **Lo que hizo ayer:** Se consumió la API para obtener ganancias del conductor.
+- **Lo que hará hoy:** Se integran los datos de la API a la gráfica.
+- **Impedimentos:** No hubo impedimentos.
+
+### Jose Lopez
+- **Lo que hizo ayer:** Deshabilitación de asistentes en el frontend.
+- **Lo que hará hoy:** Se actualizará el estado del viaje en tiempo real.
+- **Impedimentos:** No hubo impedimentos.
+
+## Día 5
+
+### Carlos Martinez
+- **Lo que hizo ayer:** Configuré el entorno de producción, asegurando la comunicación entre contenedores y servicios.
+- **Lo que hará hoy:** Implementar pruebas iniciales de la aplicación en el entorno de desarrollo.
+- **Impedimentos:** Integración de Docker con algunos servicios externos presenta problemas.
+
+### Carlos Soto
+- **Lo que hizo ayer:** Se terminó de dar revisión a los nuevos procedimientos.
+- **Lo que hará hoy:** Se estará creando el endpoint para cancelar los viajes desde el conductor.
+- **Impedimentos:** Sin problemas.
+
+### Douglas Soch
+- **Lo que hizo ayer:** Se agregó la actualización de estado del viaje.
+- **Lo que hará hoy:** Correcciones a ciertas secciones de bloques de código en el backend.
+- **Impedimentos:** Ninguno.
+
+### Luis Sanchez
+- **Lo que hizo ayer:** Se integraron los datos de la API a la gráfica.
+- **Lo que hará hoy:** Se corrige el error de recarga de página.
+- **Impedimentos:** No hubo impedimentos.
+
+### Jose Lopez
+- **Lo que hizo ayer:** Se inició el desarrollo de las pruebas E2E.
+- **Lo que hará hoy:** Se realizarán ajustes en las pruebas.
+- **Impedimentos:** No hubo impedimentos.
+
+## Día 6
+
+### Carlos Martinez
+- **Lo que hizo ayer:** Automatización del despliegue inicial con Terraform y Docker Compose en el entorno de producción.
+- **Lo que hará hoy:** Revisar la arquitectura para Jenkins y preparar el entorno de CI/CD en el clúster de EKS.
+- **Impedimentos:** La configuración de nodos EKS está en revisión debido a limitaciones de acceso.
+
+### Carlos Soto
+- **Lo que hizo ayer:** Se estaba creando el endpoint para la cancelación de los viajes desde el conductor.
+- **Lo que hará hoy:** Se estuvo creando un nuevo endpoint para la cancelación de los viajes desde el cliente.
+- **Impedimentos:** Sin inconvenientes.
+
+### Douglas Soch
+- **Lo que hizo ayer:** Correcciones a unos errores en el backend.
+- **Lo que hará hoy:** Se realizaron algunas modificaciones en el módulo de conductor.
+- **Impedimentos:** Ningún inconveniente.
+
+### Luis Sanchez
+- **Lo que hizo ayer:** Se corrigió problema de recarga de página.
+- **Lo que hará hoy:** Se trabaja en formulario de cambios de conductor.
+- **Impedimentos:** No hubo impedimentos.
+
+### Jose Lopez
+- **Lo que hizo ayer:** Se desarrollaron pruebas E2E para administrador y cliente en el sistema.
+- **Lo que hará hoy:** Se realizará una arquitectura para realizar las pruebas sin interferir en otros entornos.
+- **Impedimentos:** No hubo impedimentos.
+
+## Día 7
+
+### Carlos Martinez
+- **Lo que hizo ayer:** Implementación de un clúster de EKS con tres nodos para los agentes de CI/CD.
+- **Lo que hará hoy:** Configurar el pod template de Jenkins para agentes de CI/CD en Kubernetes.
+- **Impedimentos:** Algunas limitaciones en el manejo de permisos entre los nodos del clúster.
+
+### Carlos Soto
+- **Lo que hizo ayer:** Se creó un endpoint para la cancelación de los viajes desde el cliente.
+- **Lo que hará hoy:** Se estará trabajando en nuevos endpoints para la generación de reportes.
+- **Impedimentos:** Sin inconvenientes.
+
+### Douglas Soch
+- **Lo que hizo ayer:** Se realizaron algunas modificaciones en el módulo de conductor.
+- **Lo que hará hoy:** Crear la funcionalidad para calificar un viaje finalizado.
+- **Impedimentos:** Ninguno.
+
+### Luis Sanchez
+- **Lo que hizo ayer:** Se trabajó en formulario de cambios de conductor.
+- **Lo que hará hoy:** Se integra la API para ejecutar cambios.
+- **Impedimentos:** No hubo impedimentos.
+
+### Jose Lopez
+- **Lo que hizo ayer:** Se implementó la funcionalidad para calificar un viaje finalizado.
+- **Lo que hará hoy:** Se le dará estilo a la calificación (estrellas).
+- **Impedimentos:** No hubo impedimentos.
+
+## Día 8
+
+### Carlos Martinez
+- **Lo que hizo ayer:** Configuración de los contenedores de Jenkins en Kubernetes, incluyendo Git y Terraform.
+- **Lo que hará hoy:** Continuar con la integración de Kaniko para build y push de imágenes en DockerHub.
+- **Impedimentos:** Errores de red al intentar conectarse a DockerHub desde el contenedor Kaniko.
+
+### Carlos Soto
+- **Lo que hizo ayer:** Se estuvo trabajando en nuevos endpoints para la generación de reportes.
+- **Lo que hará hoy:** Se estará revisando la generación de los reportes.
+- **Impedimentos:** Problemas con la generación de reportes.
+
+### Douglas Soch
+- **Lo que hizo ayer:** Se creó la funcionalidad para calificar un viaje finalizado.
+- **Lo que hará hoy:** Se va a iniciar con la funcionalidad del cambio de información de un conductor.
+- **Impedimentos:** Ninguno.
+
+### Luis Sanchez
+- **Lo que hizo ayer:** Se integró la API para realizar cambios.
+- **Lo que hará hoy:** Se realiza visita para consultar cambios.
+- **Impedimentos:** No hubo impedimentos.
+
+### Jose Lopez
+- **Lo que hizo ayer:** Se ajustaron consultas para mejorar su uso en el frontend.
+- **Lo que hará hoy:** Se revisará el frontend en conjunto con las consultas ajustadas para verificar que las modificaciones mejoren la experiencia del usuario.
+- **Impedimentos:** No hubo impedimentos.
+
+## Día 9
+
+### Carlos Martinez
+- **Lo que hizo ayer:** Configuración y prueba de contenedores de Kaniko para el build de imágenes y su envío a DockerHub.
+- **Lo que hará hoy:** Añadir contenedor de Node en el pod template para realizar pruebas unitarias.
+- **Impedimentos:** Problemas menores en la ejecución de pruebas debido a conflictos de versiones en Node.
+
+### Carlos Soto
+- **Lo que hizo ayer:** Se estuvo revisando el problema con la generación de reportes.
+- **Lo que hará hoy:** Se estará terminando de dar solución al problema con la generación de reportes.
+- **Impedimentos:** Sin inconvenientes.
+
+### Douglas Soch
+- **Lo que hizo ayer:** Se inició la funcionalidad del cambio de información de un conductor.
+- **Lo que hará hoy:** Se finalizará la funcionalidad del cambio de información de un conductor.
+- **Impedimentos:** Ninguno.
+
+### Luis Sanchez
+- **Lo que hizo ayer:** Se realizó visita para cambio de información.
+- **Lo que hará hoy:** Se integra con la API para los cambios.
+- **Impedimentos:** No hubo impedimentos.
+
+### Jose Lopez
+- **Lo que hizo ayer:** Se desarrolló un reporte de origen y destino de viajes usando un gráfico de tipo Sankey en el frontend.
+- **Lo que hará hoy:** Se ajustarán consultas en el backend para facilitar su integración en el frontend.
+- **Impedimentos:** No hubo impedimentos.
+
+## Día 10
+
+### Carlos Martinez
+- **Lo que hizo ayer:** Configuración del contenedor Node en el pipeline CI/CD para ejecutar pruebas unitarias.
+- **Lo que hará hoy:** Configurar pipeline completo para desarrollo y producción, con despliegue automatizado.
+- **Impedimentos:** Tiempo de respuesta lento en algunos pipelines debido a dependencias externas.
+
+### Carlos Soto
+- **Lo que hizo ayer:** Se terminó de revisar el problema con la generación de reportes.
+- **Lo que hará hoy:** Se estará implementando la generación de reportes.
+- **Impedimentos:** Sin inconvenientes.
+
+### Douglas Soch
+- **Lo que hizo ayer:** Se creó la funcionalidad para modificar la información de un conductor.
+- **Lo que hará hoy:** Se va a crear la funcionalidad para agregar ofertas.
+- **Impedimentos:** Sin inconvenientes.
+
+### Luis Sanchez
+- **Lo que hizo ayer:** Se integra con la API para los cambios.
+- **Lo que hará hoy:** Se corrige error de singleton de base de datos.
+- **Impedimentos:** No hubo impedimentos.
+
+### Jose Lopez
+- **Lo que hizo ayer:** Se validará la correcta visualización de los créditos y su comportamiento durante la interacción del usuario en la interfaz de solicitud de viajes.
+- **Lo que hará hoy:** Se revisará la integración y el funcionamiento del archivo recién agregado en el proceso de build del contenedor.
+- **Impedimentos:** No hubo impedimentos.
+
+## Día 11
+
+### Carlos Martinez
+- **Lo que hizo ayer:** Prueba completa del pipeline CI/CD y ajustes en el entorno de despliegue en EKS.
+- **Lo que hará hoy:** Optimizar tiempos en el pipeline y realizar pruebas finales de automatización en ambos entornos.
+- **Impedimentos:** Ninguno.
+
+### Carlos Soto
+- **Lo que hizo ayer:** Se implementó la generación de reportes.
+- **Lo que hará hoy:** Se estará haciendo la modificación de un procedimiento almacenado.
+- **Impedimentos:** Sin inconvenientes.
+
+### Douglas Soch
+- **Lo que hizo ayer:** Se creó la funcionalidad para crear una oferta.
+- **Lo que hará hoy:** Se va a realizar la funcionalidad de mostrar oferta.
+- **Impedimentos:** Ninguno.
+
+### Luis Sanchez
+- **Lo que hizo ayer:** Se corrigió error de singleton de base de datos.
+- **Lo que hará hoy:** Se realizan pruebas unitarias.
+- **Impedimentos:** No hubo impedimentos.
+
+### Jose Lopez
+- **Lo que hizo ayer:** Se creó un reporte de ganancia en el frontend.
+- **Lo que hará hoy:** Se agregarán funcionalidades para los reportes de calificaciones y estadísticas de uso y registro en la aplicación.
+- **Impedimentos:** No hubo impedimentos.
+
+## Día 12
+
+### Carlos Martinez
+- **Lo que hizo ayer:** Validación del pipeline CI/CD completo en entornos de desarrollo y producción.
+- **Lo que hará hoy:** Documentar el proceso de despliegue automatizado y CI/CD para referencia del equipo.
+- **Impedimentos:** Ninguno.
+
+### Carlos Soto
+- **Lo que hizo ayer:** Se terminó de hacer la modificación de un procedimiento almacenado.
+- **Lo que hará hoy:** Se revisará el resto de endpoints para que estén correctos.
+- **Impedimentos:** Sin inconvenientes.
+
+### Douglas Soch
+- **Lo que hizo ayer:** Se realizó la funcionalidad para mostrar los créditos de oferta.
+- **Lo que hará hoy:** Se realizará la corrección de una funcionalidad.
+- **Impedimentos:** No hubo impedimentos.
+
+### Luis Sanchez
+- **Lo que hizo ayer:** Se realizaron pruebas unitarias.
+- **Lo que hará hoy:** Se realizan pruebas de aceptación.
+- **Impedimentos:** No hubo impedimentos.
+
+### Jose Lopez
+- **Lo que hizo ayer:** Se añadió una funcionalidad para mostrar créditos de oferta en la solicitud de viajes.
+- **Lo que hará hoy:** Se validará la correcta visualización de los créditos y su comportamiento durante la interacción del usuario en la interfaz de solicitud de viajes.
+- **Impedimentos:** No hubo impedimentos.
+
+
+
+
 [REGRESAR](../../README.md)
