@@ -218,7 +218,7 @@ pipeline {
     post {
         success {
             archiveArtifacts artifacts: 'backup_keys/backup_keys.zip', allowEmptyArchive: false
-            echo 'Archivo backup_keys.zip archivado como artefacto.'
+            echo 'Archivo backup_keys.zip archivado como artefacto. Buscalo en Jenkins'
         }
         failure {
             echo 'Pipeline falló en algún paso. Revisa los logs para más detalles.'
