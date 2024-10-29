@@ -136,7 +136,9 @@ apiVersion: v1
 
 ##  Resultados de la ejecución del pipeline
 
-["Jenkins pipeline output"](jenkins-manual/pipeline_run.jpg)
+!["Terraform logs del pipeline"](jenkins-manual/deploy.jpg)
+
+!["Jenkins pipeline output"](jenkins-manual/pipeline.jpg)
 
 
 [REGRESAR](../../README.md)
