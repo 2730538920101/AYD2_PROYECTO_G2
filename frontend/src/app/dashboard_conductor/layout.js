@@ -11,6 +11,8 @@ export default function Layout({ children }) {
       <Sidebar routes={[
         { title: "Viajes", link: "/dashboard_conductor", icon: faEdit },
         { title: "Historial", link: "/dashboard_conductor/historial", icon: faEdit },
+        { title: "Ganancias", link: "/dashboard_conductor/ganancias", icon: faEdit },
+        { title: "Modificar Datos", link: "/dashboard_conductor/modificar", icon: faEdit },
       ]} />
       <main className="content">
         <Navbar />

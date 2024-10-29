@@ -3,7 +3,7 @@
 // React
 import { useState, useEffect } from "react";
 // Axios
-import { handleAxios, handleSwal, handleAxiosError,handleAxiosMultipart } from '@/helpers/axiosConfig';
+import { handleAxios, handleSwal, handleAxiosError, handleAxiosMultipart } from '@/helpers/axiosConfig';
 // Bootstrap
 import { Col, Row, Form, Modal, Button } from 'react-bootstrap';
 // Font Awesome
@@ -22,7 +22,11 @@ function DashboardConductor() {
   const [showUser, setShowUser] = useState(false);
   const [showCancel, setShowCancel] = useState(false);
   const [userr, setUser] = useState({});
+  const [calificacionCliente, setCalificacionCliente] = useState(null);
   const [Conductor, setConductor] = useState(null);
+  const [showRatingModal, setShowRatingModal] = useState(false);
+  const [selectedViajeForRating, setSelectedViajeForRating] = useState(null); // Para almacenar el viaje seleccionado
+  const [rating, setRating] = useState(0); // Estado para la calificación
 
   // Función para obtener los viajes pendientes desde la API
   const obtenerViajes = async () => {
@@ -69,9 +73,20 @@ function DashboardConductor() {
     }
   };
 
+  // Función para obtener la calificación del cliente
+  const obtenerCalificacionCliente = async (cliId) => {
+    try {
+      const response = await handleAxios().get(`clientes?cli_id=${cliId}`);
+      const clienteData = response.data[0]; // Suponiendo que la respuesta es un array con un solo elemento
+      setCalificacionCliente(clienteData.calificacion); // Guardar la calificación en el estado
+    } catch (error) {
+      handleAxiosError(error);
+    }
+  };
+
   // Función para cambiar el estado del viaje
   const cambiarEstadoViaje = async (viajeId, estadoActual) => {
-    const nuevoEstado = estadoActual === 'ACEPTADO' ? 'EN CURSO' : 'FINALIZADO'; // Cambiar entre "EN CURSO" y "FINALIZADO"
+    const nuevoEstado = estadoActual === 'ACEPTADO' ? 'EN CURSO' : 'FINALIZADO';
     if (nuevoEstado === 'EN CURSO') {
       try {
         const response = await handleAxios().put(`viaje/en_curso`, {
@@ -84,12 +99,11 @@ function DashboardConductor() {
           icon: "success",
         });
 
-        // Refrescar los datos después de cambiar el estado
         obtenerViajesAceptados(Conductor.con_id);
       } catch (error) {
         handleAxiosError(error);
       }
-    } else {
+    } else if (nuevoEstado === 'FINALIZADO') {
       try {
         const response = await handleAxios().put(`viaje/finalizar`, {
           viaje_id: viajeId,
@@ -101,13 +115,13 @@ function DashboardConductor() {
           icon: "success",
         });
 
-        // Refrescar los datos después de cambiar el estado
-        obtenerViajesAceptados(Conductor.con_id);
+        // Mostrar modal de calificación
+        setSelectedViajeForRating(viajeId);
+        setShowRatingModal(true);
       } catch (error) {
         handleAxiosError(error);
       }
     }
-
   };
 
   // Estado para capturar la razón de cancelación
@@ -149,7 +163,7 @@ function DashboardConductor() {
     setShowCancel(true);
   };
 
-  
+
 
   const [showModalReport, setShowModalReport] = useState(false);
 
@@ -213,6 +227,17 @@ function DashboardConductor() {
     obtenerViajes();
   }, []);
 
+  useEffect(() => {
+    if (Conductor) {
+      const intervalId = setInterval(() => {
+        obtenerViajes();
+      }, 3000); // 3 segundos
+
+      // Limpiar el intervalo cuando el componente se desmonte
+      return () => clearInterval(intervalId);
+    }
+  }, [Conductor]); // Solo configurar el intervalo cuando `Cliente` cambia
+
   // Función para aceptar el viaje
   const aceptarViaje = async (viajeId) => {
     try {
@@ -245,8 +270,9 @@ function DashboardConductor() {
     setShowCancel(false);
   };
 
-  const handleShowUser = (rowUser) => {
+  const handleShowUser = async (rowUser) => {
     setUser(rowUser.cliente);
+    await obtenerCalificacionCliente(rowUser.cliente.cli_id);
     setShowUser(true);
   };
 
@@ -376,6 +402,53 @@ function DashboardConductor() {
         />
       </Row>
 
+      <Modal show={showRatingModal} onHide={() => setShowRatingModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Calificar al Cliente</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-4">
+              <Form.Label>Selecciona una calificación (0 a 10 estrellas):</Form.Label>
+              <Form.Control
+                as="select"
+                value={rating}
+                onChange={(e) => setRating(Number(e.target.value))} // Actualiza la calificación seleccionada
+              >
+                {Array.from({ length: 11 }, (_, i) => (
+                  <option key={i} value={i}>{i} ★</option>
+                ))}
+              </Form.Control>
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={async () => {
+            try {
+              // Enviar la calificación al servidor
+              await handleAxios().put('viaje/calificar-cliente', {
+                viaje_id: selectedViajeForRating,
+                calificacion: rating
+              });
+              MySwal.fire({
+                title: "Calificación enviada",
+                text: `Has calificado al cliente con ${rating} estrellas`,
+                icon: "success",
+              });
+              setShowRatingModal(false); // Cierra el modal
+              obtenerViajesAceptados(Conductor.con_id);
+            } catch (error) {
+              handleAxiosError(error);
+            }
+          }}>
+            Enviar Calificación
+          </Button>
+          <Button variant="secondary" onClick={() => setShowRatingModal(false)}>
+            Cerrar
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
       {/* Modal que se encarga de mostrar al usuario */}
       <Modal show={showUser} size="lg" onHide={handleCloseUser}>
         <Form>
@@ -423,6 +496,19 @@ function DashboardConductor() {
                     type="text"
                     autoComplete='off'
                     defaultValue={userr.genero}
+                    readOnly
+                  />
+                </Form.Group>
+              </Col>
+              <Col xs={12} md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label htmlFor="CLIENTE_CALIFICACION">Calificación</Form.Label>
+                  <Form.Control
+                    id="CLIENTE_CALIFICACION"
+                    name="CLIENTE_CALIFICACION"
+                    type="text"
+                    autoComplete='off'
+                    defaultValue={calificacionCliente !== null ? calificacionCliente : "Sin calificación"}
                     readOnly
                   />
                 </Form.Group>

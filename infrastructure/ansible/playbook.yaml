@@ -82,7 +82,7 @@
       git:
         repo: https://{{ lookup('env', 'GITHUB_TOKEN') }}@github.com/2730538920101/AYD2_PROYECTO_G2.git
         dest: /home/ubuntu/AYD2_PROYECTO_G2
-        version: "develop"
+        version: "main"
         force: yes
 
     # --- Mover el archivo .env a la carpeta del proyecto ---

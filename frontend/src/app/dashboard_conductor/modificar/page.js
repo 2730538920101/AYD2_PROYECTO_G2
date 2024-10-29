@@ -3,9 +3,9 @@
 import { useRouter } from 'next/navigation';
 import { crearSession } from '@/helpers/session';
 import { Row, Col, Button, Form, InputGroup, Container } from 'react-bootstrap';
-import { faEnvelope, faUnlockAlt, faPhone, faIdCard, faFilePdf, faCamera, faCar, faAddressCard } from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope, faUnlockAlt, faPhone, faIdCard, faFilePdf, faCamera, faCalendar, faAddressCard } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { handleAxiosError, handleSwal, handleAxios } from '@/helpers/axiosConfig';
+import { handleAxiosError, handleSwal, handleAxiosMultipart } from '@/helpers/axiosConfig';
 
 const MySwal = handleSwal();
 
@@ -18,20 +18,15 @@ const Modificar = () => {
     const formData = new FormData(e.currentTarget);
 
     try {
-      // Aquí harías la llamada a tu API para registrar al usuario
-      // const res = await handleAxios().post('/registro', formData);
-      // MySwal.fire({
-      //   title: 'Registro Completo',
-      //   text: "¡Registro exitoso!",
-      //   icon: 'success'
-      // }).then(() => {
-      //   if (res.status === 200) {
-      //     crearSession(res.data);
-      //     router.push("/dashboard");
-      //   }
-      // });
-      router.push("/");
+      const res = await handleAxiosMultipart().put('conductores/solicitud-cambio/1', formData);
+            console.log(res)
+            MySwal.fire({
+                title: "Solicitud",
+                text: "Exitosa",
+                icon: "success",
+            });
     } catch (error) {
+      console.log(error)
       handleAxiosError(error);
     }
   };
@@ -51,14 +46,15 @@ const Modificar = () => {
                   <h3 className="mb-0">Solicitud Conductor</h3>
                 </div>
                 <Form className="mt-4" onSubmit={handleRegistro}>
-                  {/* Nombre Completo */}
+
+                  {/* Fecha de Nacimiento */}
                   <Form.Group className="mb-4">
-                    <Form.Label>Nombre Completo</Form.Label>
+                    <Form.Label>Fecha de Nacimiento</Form.Label>
                     <InputGroup>
                       <InputGroup.Text>
-                        <FontAwesomeIcon icon={faIdCard} />
+                        <FontAwesomeIcon icon={faCalendar} />
                       </InputGroup.Text>
-                      <Form.Control id="nombreCompleto" name="nombreCompleto" required type="text" placeholder="Nombre Completo" />
+                      <Form.Control id="fecha_nacimiento" name="fecha_nacimiento" required type="date" />
                     </InputGroup>
                   </Form.Group>
 
@@ -69,20 +65,14 @@ const Modificar = () => {
                       <InputGroup.Text>
                         <FontAwesomeIcon icon={faPhone} />
                       </InputGroup.Text>
-                      <Form.Control id="celular" name="celular" required type="text" placeholder="Número de Celular" />
+                      <Form.Control id="telefono" name="telefono" required type="text" placeholder="Número de Celular" />
                     </InputGroup>
-                  </Form.Group>
-
-                  {/* Edad */}
-                  <Form.Group className="mb-4">
-                    <Form.Label>Edad</Form.Label>
-                    <Form.Control id="edad" name="edad" required type="number" placeholder="Edad" />
                   </Form.Group>
 
                   {/* DPI */}
                   <Form.Group className="mb-4">
                     <Form.Label>DPI</Form.Label>
-                    <Form.Control id="dpi" name="dpi" required type="text" placeholder="Número de DPI" />
+                    <Form.Control id="numero_dpi" name="numero_dpi" required type="text" placeholder="Número de DPI" />
                   </Form.Group>
 
                   {/* Correo */}
@@ -103,7 +93,7 @@ const Modificar = () => {
                       <InputGroup.Text>
                         <FontAwesomeIcon icon={faFilePdf} />
                       </InputGroup.Text>
-                      <Form.Control id="cv" name="cv" required type="file" accept="application/pdf" />
+                      <Form.Control id="papeleria" name="papeleria" required type="file" accept="application/pdf" />
                     </InputGroup>
                   </Form.Group>
 
@@ -118,17 +108,6 @@ const Modificar = () => {
                     </InputGroup>
                   </Form.Group>
 
-                  {/* Fotografía del Vehículo */}
-                  <Form.Group className="mb-4">
-                    <Form.Label>Fotografía del Vehículo</Form.Label>
-                    <InputGroup>
-                      <InputGroup.Text>
-                        <FontAwesomeIcon icon={faCar} />
-                      </InputGroup.Text>
-                      <Form.Control id="fotoVehiculo" name="fotoVehiculo" required type="file" accept="image/*" />
-                    </InputGroup>
-                  </Form.Group>
-
                   {/* Número de Placa */}
                   <Form.Group className="mb-4">
                     <Form.Label>Número de Placa</Form.Label>
@@ -138,13 +117,13 @@ const Modificar = () => {
                   {/* Marca de Vehículo */}
                   <Form.Group className="mb-4">
                     <Form.Label>Marca del Vehículo</Form.Label>
-                    <Form.Control id="marcaVehiculo" name="marcaVehiculo" required type="text" placeholder="Marca del Vehículo" />
+                    <Form.Control id="marca_vehiculo" name="marca_vehiculo" required type="text" placeholder="Marca del Vehículo" />
                   </Form.Group>
 
                   {/* Año del Vehículo */}
                   <Form.Group className="mb-4">
                     <Form.Label>Año del Vehículo</Form.Label>
-                    <Form.Control id="anioVehiculo" name="anioVehiculo" required type="number" placeholder="Año del Vehículo" />
+                    <Form.Control id="anio" name="anio" required type="number" placeholder="Año del Vehículo" />
                   </Form.Group>
 
                   {/* Género */}
@@ -152,8 +131,8 @@ const Modificar = () => {
                     <Form.Label>Género</Form.Label>
                     <Form.Select id="genero" name="genero" required>
                       <option value="">Seleccionar Género</option>
-                      <option value="masculino">Masculino</option>
-                      <option value="femenino">Femenino</option>
+                      <option value="M">Masculino</option>
+                      <option value="F">Femenino</option>
                       <option value="otro">Otro</option>
                     </Form.Select>
                   </Form.Group>
@@ -161,7 +140,7 @@ const Modificar = () => {
                   {/* Estado Civil */}
                   <Form.Group className="mb-4">
                     <Form.Label>Estado Civil</Form.Label>
-                    <Form.Select id="estadoCivil" name="estadoCivil" required>
+                    <Form.Select id="estado_civil" name="estado_civil" required>
                       <option value="">Seleccionar Estado Civil</option>
                       <option value="soltero">Soltero</option>
                       <option value="casado">Casado</option>
@@ -178,6 +157,16 @@ const Modificar = () => {
                         <FontAwesomeIcon icon={faAddressCard} />
                       </InputGroup.Text>
                       <Form.Control id="direccion" name="direccion" required type="text" placeholder="Dirección de Domicilio" />
+                    </InputGroup>
+                  </Form.Group>
+
+                  <Form.Group className="mb-4">
+                    <Form.Label>Número de Cuenta</Form.Label>
+                    <InputGroup>
+                      <InputGroup.Text>
+                        <FontAwesomeIcon icon={faAddressCard} />
+                      </InputGroup.Text>
+                      <Form.Control id="numero_cuenta" name="numero_cuenta" required type="text" placeholder="000000" />
                     </InputGroup>
                   </Form.Group>
 

@@ -17,4 +17,9 @@
 ## Tablero Final
 ![Tablero Final](./sprint2_final.jpg)
 
+# Tableros del Sprint 3
+
+##  Tablero Inicial
+![Tablero Inicial](./sprint3.jpg)
+
 [REGRESAR](../../README.md)

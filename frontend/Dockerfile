@@ -42,7 +42,7 @@ RUN apk add --no-cache bash
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
-COPY --from=builder /app/.env.production ./.env.production
+COPY --from=builder /app/env-replace ./.env.production
 COPY --from=builder /app/scripts/entrypoint.sh ./scripts/entrypoint.sh
 # Change ownership of the /app/.next directory and entrypoint script to the "nextjs" user
 USER root

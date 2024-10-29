@@ -42,4 +42,20 @@
 ## Video del Sprint Planning
 [Enlace a la grabación del Sprint Planning](https://drive.google.com/file/d/1URRXiabGhft5Xn1ATgIp0AihxzhscEn-/view?usp=sharing)
 
+# Sprint 2 Planning
+
+## Objetivos del Sprint
+
+-   Terminar el desarrollo completo de todas las  funcionalidades requeridas
+-   Automatizar el despliegue de la apligacion usando IaC
+-   Automatizar la entrega y despliegue continuo de la aplicación utilizando un pipeline 
+-   Realizar las diferentes pruebas del software (unitarias, integracion, aceptacion del sistema y E2E)
+
+## Duración del Sprint
+- **Fecha de inicio:** 12/10/2024
+- **Fecha de finalización:** 28/10/2024
+
+## Video del Sprint Planning
+[Enlace a la grabación del Sprint Planning](https://drive.google.com/file/d/1CgKHWsQS6qX7pvyl6bttR-Ru_hYVo_Ig/view?usp=sharing)
+
 [REGRESAR](../../README.md)

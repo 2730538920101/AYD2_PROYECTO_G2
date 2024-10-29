@@ -2,7 +2,7 @@
 
 import Sidebar from '@/components/Sidebar';
 import Navbar from '@/components/Navbar';
-import { faTag, faHandshakeAngle } from "@fortawesome/free-solid-svg-icons";
+import { faTag, faHandshakeAngle, faHeadset, faChartLine } from "@fortawesome/free-solid-svg-icons";
 
 export default function Layout({ children }) {
 
@@ -13,6 +13,8 @@ export default function Layout({ children }) {
         { title: "Actualizar Tarifas", link: "/dashboard_administrador/tarifas", icon: faTag },
         { title: "Registrar Asistente", link: "/dashboard_administrador/registrar_asistente", icon: faHandshakeAngle },
         // { title: "Expedientes", link: "/dashboard_usuario/expediente", icon: faBook },
+        { title: "Asistentes", link: "/dashboard_administrador/asistentes", icon: faHeadset },
+        { title: "Reportes", link:"/dashboard_administrador/reportes", icon: faChartLine}
       ]} />
       <main className="content">
         <Navbar />

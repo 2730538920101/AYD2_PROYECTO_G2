@@ -40,7 +40,8 @@ function ListaUsuarios() {
                 fecha_nac: conductor.fecha_nacimiento,
                 genero: conductor.genero,
                 telefono: conductor.telefono,
-                foto_dpi: conductor.foto_dpi // Añadir foto DPI
+                foto_dpi: conductor.foto_dpi, // Añadir foto DPI
+                calificacion: conductor.calificacion
             }));
 
             setConductores(conductoresFormateados);
@@ -227,6 +228,34 @@ function ListaUsuarios() {
                                         type="text"
                                         autoComplete="off"
                                         defaultValue={userr.telefono}
+                                        readOnly
+                                    />
+                                </Form.Group>
+                            </Col>
+
+                            <Col xs={12} md={6}>
+                                <Form.Group className="mb-3">
+                                    <Form.Label htmlFor="CLIENTE_CALIFICACION">Calificación</Form.Label>
+                                    <Form.Control
+                                        id="CLIENTE_CALIFICACION"
+                                        name="CLIENTE_CALIFICACION"
+                                        type="text"
+                                        autoComplete="off"
+                                        defaultValue={userr.calificacion}
+                                        readOnly
+                                    />
+                                </Form.Group>
+                            </Col>
+
+                            <Col xs={12} md={6}>
+                                <Form.Group className="mb-3">
+                                    <Form.Label htmlFor="CLIENTE_ID">Cliente ID</Form.Label>
+                                    <Form.Control
+                                        id="CLIENTE_ID"
+                                        name="CLIENTE_ID"
+                                        type="text"
+                                        autoComplete="off"
+                                        defaultValue={userr.id}
                                         readOnly
                                     />
                                 </Form.Group>

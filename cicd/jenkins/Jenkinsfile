@@ -1,0 +1,226 @@
+pipeline {
+    agent {
+        kubernetes {
+            yaml """
+            apiVersion: v1
+            kind: Pod
+            metadata:
+              labels:
+                agent: multi-stage
+            spec:
+              containers:
+                - name: git
+                  image: alpine/git
+                  command:
+                    - cat
+                  tty: true
+                - name: kaniko
+                  image: gcr.io/kaniko-project/executor:v1.9.1-debug
+                  imagePullPolicy: Always
+                  command:
+                    - sleep
+                  args:
+                    - "9999999"
+                  volumeMounts:
+                    - name: jenkins-docker-cfg
+                      mountPath: /kaniko/.docker
+                - name: terraform
+                  image: hashicorp/terraform:latest
+                  command:
+                    - sleep
+                  args:
+                    - "9999999"
+                - name: node
+                  image: node:latest
+                  command:
+                    - sleep
+                  args:
+                    - "9999999"
+              volumes:
+                - name: jenkins-docker-cfg
+                  projected:
+                    sources:
+                      - secret:
+                          name: dockerhub-credentials-secret
+                          items:
+                            - key: .dockerconfigjson
+                              path: config.json
+            """
+        }
+    }
+    environment {
+        AWS_ACCESS_KEY_ID     = credentials('jenkins-aws-access-key')
+        AWS_SECRET_ACCESS_KEY = credentials('jenkins-aws-secret-key')
+        RDS_PASSWORD          = credentials('jenkins-rds-password')
+        GITHUB_TOKEN          = credentials('jenkins-github-token')
+    }
+    stages {
+        stage('Checkout to develop') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'Github-credentials', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+                        container('git') {
+                            sh '''
+                            git config --global credential.helper store
+                            echo "https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com" > ~/.git-credentials
+                            git config --global --add safe.directory /home/jenkins/agent/workspace/ayd2-proyecto/ayd2-proyecto-pipeline
+                            ls
+                            git checkout develop
+                            '''
+                        }
+                    }
+                }
+            }
+        }
+        stage('Run Frontend Tests') {
+            steps {
+                catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                    container('node') {
+                        script {
+                            try {
+                                sh '''
+                                cd frontend
+                                npm install
+                                npm test
+                                '''
+                            } catch (Exception e) {
+                                error("Frontend tests failed. Stopping pipeline.")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        stage('Build and Push app service Image') {
+            steps {
+                container('kaniko') {
+                    sh """
+                    /kaniko/executor --context backend/app_service/ --dockerfile Dockerfile \
+                    --destination carlosmz87/ayd2_p1_app_service:latest \
+                    --destination carlosmz87/ayd2_p1_app_service:${BUILD_NUMBER}
+                    """
+                }
+            }
+        }
+        stage('Build and Push notification producer service Image') {
+            steps {
+                container('kaniko') {
+                    sh """
+                    /kaniko/executor --context backend/notification_service/producer/ --dockerfile Dockerfile \
+                    --destination carlosmz87/ayd2_p1_notification_producer:latest \
+                    --destination carlosmz87/ayd2_p1_notification_producer:${BUILD_NUMBER}
+                    """
+                }
+            }
+        }
+        stage('Build and Push notification consumer service Image') {
+            steps {
+                container('kaniko') {
+                    sh """
+                    /kaniko/executor --context backend/notification_service/consumer/ --dockerfile Dockerfile \
+                    --destination carlosmz87/ayd2_p1_notification_consumer:latest \
+                    --destination carlosmz87/ayd2_p1_notification_consumer:${BUILD_NUMBER}
+                    """
+                }
+            }
+        }
+        // stage('Build and Push Frontend Image') {
+        //     steps {
+        //         container('kaniko') {
+        //             sh """
+        //             /kaniko/executor --context frontend/ --dockerfile Dockerfile \
+        //             --destination carlosmz87/ayd2_p1_frontend:latest \
+        //             --destination carlosmz87/ayd2_p1_frontend:${BUILD_NUMBER}
+        //             """
+        //         }
+        //     }
+        // }
+        stage('Deploy app with terraform') {
+            steps {
+                container('terraform') {
+                    script {
+                        def tfvarsContent = """
+                        aws_account_id                  = "857738776382"
+                        project_name                    = "ayd2_p1_production"
+                        vpc_cidr                        = "10.0.0.0/16"
+                        public_subnet_cidrs             = ["10.0.1.0/24", "10.0.2.0/24"]
+                        private_subnet_cidrs            = ["10.0.3.0/24", "10.0.4.0/24"]
+                        availability_zones              = ["us-east-1a", "us-east-1b"]
+                        user_pool_name                  = "ayd2-p1-production"
+                        AWS_REGION                      = "us-east-1"
+                        AWS_ACCESS_KEY                  = "${AWS_ACCESS_KEY_ID}"
+                        AWS_SECRET_KEY                  = "${AWS_SECRET_ACCESS_KEY}"
+                        ec2_name                        = "ayd2-p1-production"
+                        queue_name                      = "ayd2-p1-production"
+                        bastion_ami_id                  = "ami-0e86e20dae9224db8"
+                        bastion_key_pair_name           = "ayd2_p1_bastion_key_pair"
+                        bastion_public_key_path         = "ayd2_p1_bastion_key.pub"
+                        bastion_private_key_path        = "ayd2_p1_bastion_key"
+                        rds_username                    = "proyecto1"
+                        rds_password                    = "${RDS_PASSWORD}"
+                        rds_name                        = "ayd2-p1-production"
+                        rds_dbname                      = "PROYECTO_VIAJES"
+                        bucket_name                     = "ayd2-p1-production"
+                        database_init_path              = "database/db_init.sql"
+                        ansible_playbook_path           = "ansible/playbook.yaml"
+                        github_access_token             = "${GITHUB_TOKEN}"
+
+                        # Variables de entorno de conexion a base de datos
+                        database_port                   = 3306
+                        # Variables para las claves secretas
+                        ayd2_aws_access_key_id          = "${AWS_ACCESS_KEY_ID}"
+                        ayd2_aws_secret_access_key      = "${AWS_SECRET_ACCESS_KEY}"
+                        # Variables de entorno para APP_SERVICE
+                        app_port                        = 5000
+                        app_host                        = "0.0.0.0"
+                        admin_email                     = "2730538920101@ingenieria.usac.edu.gt"
+                        admin_password                  = "Adminpassword1234!"  
+                        admin_validation                = "Adminvalidate1234!"
+
+                        # Variables de entorno para PRODUCER
+                        producer_port                   = 4100
+
+                        # Variables de entorno para CONSUMER
+                        consumer_port                   = 4200
+
+                        # Variables de entorno para el frontend
+                        frontend_port                   = 3000
+                        next_public_app_version         = "1.0.0"
+                        environment                     = "production"
+                        """
+                        writeFile file: 'infrastructure/terraform.production.tfvars', text: tfvarsContent
+                        sh '''
+                        echo "Current working directory:"
+                        pwd
+                        mkdir -p backup_keys
+                        ssh-keygen -t rsa -b 4096 -f ayd2_p1_bastion_key -q -N ""
+                        chmod 400 ayd2_p1_bastion_key
+                        cp ayd2_p1_bastion_key* backup_keys
+                        cp ayd2_p1_bastion_key* infrastructure
+                        cd backup_keys
+                        apk add --no-cache zip
+                        zip backup_keys.zip *
+                        cd ../infrastructure
+                        ls -al
+                        cat terraform.production.tfvars
+                        terraform init
+                        terraform workspace new produccion
+                        terraform workspace select produccion
+                        terraform apply -var-file="terraform.production.tfvars"
+                        '''
+                    }
+                    
+                }
+            }
+        }
+    }
+    post {
+        success {
+            archiveArtifacts artifacts: 'backup_keys/backup_keys.zip', allowEmptyArchive: false
+            echo 'Archivo backup_keys.zip archivado como artefacto.'
+        }
+        failure {
+            echo 'Pipeline falló en algún paso. Revisa los logs para más detalles.'
+        }
+    }
+}

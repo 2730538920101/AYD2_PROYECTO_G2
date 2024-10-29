@@ -1,4 +1,6 @@
 
+[REGRESAR](./Readme.md)
+
 # Manual: Implementación de Múltiples Entornos en Terraform con Workspaces
 
 ## Introducción
@@ -139,7 +141,7 @@ resource "aws_instance" "bastion" {
 1. Para aplicar los cambios en el entorno de desarrollo, selecciona el workspace de desarrollo y ejecuta el plan:
 
    ```bash
-   terraform workspace select desarrollo
+   terraform workspace select development
    terraform plan -var-file="terraform.development.tfvars"
    terraform apply -var-file="terraform.development.tfvars"
    ```
@@ -147,7 +149,7 @@ resource "aws_instance" "bastion" {
 2. Para aplicar los cambios en el entorno de producción, selecciona el workspace de producción y repite los pasos:
 
    ```bash
-   terraform workspace select produccion
+   terraform workspace select production
    terraform plan -var-file="terraform.production.tfvars"
    terraform apply -var-file="terraform.production.tfvars"
    ```
@@ -176,4 +178,4 @@ Si deseas destruir la infraestructura de uno de los entornos, primero selecciona
 
 Usar workspaces en Terraform facilita la administración de múltiples entornos sin duplicar código. Esta configuración te permite desplegar, gestionar y destruir infraestructura de forma eficiente para distintos entornos, asegurando que los recursos se mantengan separados y organizados.
 
-¡Ahora estás listo para manejar tus entornos de desarrollo y producción con Terraform!
+[REGRESAR](./Readme.md)

@@ -51,6 +51,7 @@ function ListaConductores() {
                 papeleria: conductor.papeleria,
                 fechaNacimiento: conductor.fecha_nacimiento,  // Fecha de nacimiento
                 codigoEmpleado: conductor.codigo_empleado,    // Código de empleado
+                calificacion: conductor.calificacion,
             }));
 
             setConductores(conductoresFormateados);
@@ -297,6 +298,20 @@ function ListaConductores() {
                                     />
                                 </Form.Group>
                             </Col>
+                            <Col xs={12} md={6}>
+                                <Form.Group className="mb-3">
+                                    <Form.Label htmlFor="CLIENTE_CALIFICACION">CALIFICACIÓN</Form.Label>
+                                    <Form.Control
+                                        id="CLIENTE_CALIFICACION"
+                                        name="CLIENTE_CALIFICACION"
+                                        type="text"
+                                        autoComplete="off"
+                                        defaultValue={userr.calificacion}
+                                        readOnly
+                                    />
+                                </Form.Group>
+                            </Col>
+
                             <Col xs={12}>
                                 <Form.Group className="mb-3">
                                     <Form.Label htmlFor="CLIENTE_DIRECCION">Dirección</Form.Label>

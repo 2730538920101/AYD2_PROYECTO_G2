@@ -27,7 +27,7 @@
 12. [Matriz de requerimientos VS Casos de uso](documentacion/matrices/requerimientos-cdu.md)
 13. [Matriz de requerimientos VS Stakeholders](documentacion/matrices/requerimientos-stakeholders.md)
 14. [Matriz de Stakeholders VS Casos de uso](documentacion/matrices/stakeholders-cdu.md)
-15. [Gestión del proyecto](https://ayd1.atlassian.net/jira/software/projects/AYD2PRO/boards/5?atlOrigin=eyJpIjoiNDM3NjBlZTU1MDdhNGU5ZGEzZDA2OWNjN2M4Y2JiMjAiLCJwIjoiaiJ9)
+
 
 ## Documentacion de metodologías ágiles implementadas
 1.  [Sprint Planning review](documentacion/scrum/sprint_planning.md)
@@ -38,11 +38,37 @@
 
 ## Documentacion del backend
 
-
+["Backend publicado en postman"](https://documenter.getpostman.com/view/14490412/2sAY4uCiiJ)
 
 **SOLO PARA LOS MIEMBROS DEL GRUPO**
 
 [<img src="https://run.pstmn.io/button.svg" alt="Run In Postman" style="width: 128px; height: 32px;">](https://ayd288.postman.co/collection/14490412-f157c578-a165-4b9f-95c9-86a2b0ad295a?source=rip_markdown)
+
+## Documentacion pruebas de aceptación del sistema
+
+["Pruebas publicadas en postman"](https://documenter.getpostman.com/view/37531219/2sAY4uD3ji)
+
+## Documentacion DevOps
+
+### Base de datos para desarrollo
+
+["Manual para levantar base de datos de entorno de desarrollo"](database/README.md)
+
+### Infraestructura del proyecto con IaC en Terraform y Ansible
+
+["Manual para separacion de entornos (development y production) y ejecucion de IaC con Terraform"](infrastructure/Readme.md)
+
+### Infraestructura del cluster EKS para el CICD de Jenkins
+
+["Manual para contrucción y ejecución de un cluster de EKS para CICD con Jenkins"](cicd/infrastructure/Readme.md)
+
+### Infraestructura de kubernetes para Nodo master y configuracion de esclavos (agentes) de Jenkins
+
+["Manual para contruir y ejecutar la instancia de Jenkins en kubernetes y configuración de los esclavos"](cicd/kubernetes/Readme.md)
+
+### Configuracion de Jenkins
+
+["Manual para configurar correctamente Jenkins para contruir y ejecutar el pipeline"](cicd/jenkins/Readme.md)
 
 ## Propuesta de interfaz de usuario
 
