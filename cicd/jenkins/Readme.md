@@ -134,7 +134,11 @@ apiVersion: v1
 
 ["Video de apoyo para configurar el WebHook de Github](https://www.youtube.com/watch?v=Uu8_cb0WRAw)
 
+##  Resultados de la ejecución del pipeline
 
+!["Terraform logs del pipeline"](jenkins-manual/deploy.jpg)
+
+!["Jenkins pipeline output"](jenkins-manual/pipeline.jpg)
 
 
 [REGRESAR](../../README.md)

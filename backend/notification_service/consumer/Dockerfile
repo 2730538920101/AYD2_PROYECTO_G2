@@ -1,14 +1,18 @@
-FROM node:latest
+# Usa la versión LTS para evitar problemas de compatibilidad
+FROM node:20
 
-# Create app directory
+# Establece el directorio de trabajo en el contenedor
 WORKDIR /usr/src/app
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
-COPY . .
-RUN npm install express
-RUN npm install
-# If you are building your code for production
-# RUN npm ci --only=production
 
-CMD [ "node", "index.js" ]
+# Copia los archivos de dependencias para optimizar el uso de la caché de Docker
+COPY package*.json ./
+
+# Instala todas las dependencias listadas en el package.json
+RUN npm install
+
+# Copia el resto del código de la aplicación
+COPY . .
+
+
+# Comando para ejecutar la aplicación
+CMD ["node", "index.js"]

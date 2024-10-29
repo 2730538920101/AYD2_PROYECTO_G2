@@ -204,9 +204,10 @@ pipeline {
                         ls -al
                         cat terraform.production.tfvars
                         terraform init
-                        terraform workspace new produccion
-                        terraform workspace select produccion
-                        terraform apply -var-file="terraform.production.tfvars"
+                        terraform workspace list | grep -q production || terraform workspace new production
+                        terraform workspace select production
+                        terraform plan -var-file="terraform.production.tfvars" 
+                        terraform apply -var-file="terraform.production.tfvars" -auto-approve
                         '''
                     }
                     
@@ -217,7 +218,7 @@ pipeline {
     post {
         success {
             archiveArtifacts artifacts: 'backup_keys/backup_keys.zip', allowEmptyArchive: false
-            echo 'Archivo backup_keys.zip archivado como artefacto.'
+            echo 'Archivo backup_keys.zip archivado como artefacto. Buscalo en Jenkins'
         }
         failure {
             echo 'Pipeline falló en algún paso. Revisa los logs para más detalles.'
