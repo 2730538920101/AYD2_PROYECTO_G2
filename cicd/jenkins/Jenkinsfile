@@ -206,7 +206,7 @@ pipeline {
                         terraform init
                         terraform workspace list | grep -q production || terraform workspace new production
                         terraform workspace select production
-                        terraform apply -var-file="terraform.production.tfvars"
+                        terraform apply -var-file="terraform.production.tfvars" -auto-approve
                         '''
                     }
                     
