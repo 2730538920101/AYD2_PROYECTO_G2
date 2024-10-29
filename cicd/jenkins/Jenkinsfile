@@ -204,7 +204,7 @@ pipeline {
                         ls -al
                         cat terraform.production.tfvars
                         terraform init
-                        terraform workspace new production
+                        terraform workspace list | grep -q production || terraform workspace new production
                         terraform workspace select production
                         terraform apply -var-file="terraform.production.tfvars"
                         '''
