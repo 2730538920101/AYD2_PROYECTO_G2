@@ -59,29 +59,53 @@ resource "aws_s3_bucket_policy" "public_policy" {
 resource "aws_s3_object" "fotos_vehiculo_conductores" {
   bucket = aws_s3_bucket.ayd2_p1_bucket.bucket
   key    = "fotos_vehiculo_conductores/"
+  depends_on = [
+    aws_s3_bucket_policy.public_policy,
+    aws_s3_bucket_public_access_block.public_lock
+  ]
 }
 
 resource "aws_s3_object" "documento_cv_conductores" {
   bucket = aws_s3_bucket.ayd2_p1_bucket.bucket
   key    = "documento_cv_conductores/"
+  depends_on = [
+    aws_s3_bucket_policy.public_policy,
+    aws_s3_bucket_public_access_block.public_lock
+  ]
 }
 
 resource "aws_s3_object" "documento_cv_asistentes" {
   bucket = aws_s3_bucket.ayd2_p1_bucket.bucket
   key    = "documento_cv_asistentes/"
+  depends_on = [
+    aws_s3_bucket_policy.public_policy,
+    aws_s3_bucket_public_access_block.public_lock
+  ]
 }
 
 resource "aws_s3_object" "fotos_dpi_clientes" {
   bucket = aws_s3_bucket.ayd2_p1_bucket.bucket
   key    = "fotos_dpi_clientes/"
+  depends_on = [
+    aws_s3_bucket_policy.public_policy,
+    aws_s3_bucket_public_access_block.public_lock
+  ]
 }
 
 resource "aws_s3_object" "fotos_alertas_clientes" {
   bucket = aws_s3_bucket.ayd2_p1_bucket.bucket
   key    = "fotos_alertas_clientes/"
+  depends_on = [
+    aws_s3_bucket_policy.public_policy,
+    aws_s3_bucket_public_access_block.public_lock
+  ]
 }
 
 resource "aws_s3_object" "fotos_alertas_conductores" {
   bucket = aws_s3_bucket.ayd2_p1_bucket.bucket
   key    = "fotos_alertas_conductores/"
+  depends_on = [
+    aws_s3_bucket_policy.public_policy,
+    aws_s3_bucket_public_access_block.public_lock
+  ]
 }
