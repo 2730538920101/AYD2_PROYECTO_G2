@@ -136,7 +136,7 @@ apiVersion: v1
 
 ##  Resultados de la ejecución del pipeline
 
-["Jenkins pipeline output"]()
+["Jenkins pipeline output"](jenkins-manual/pipeline_run.jpg)
 
 
 [REGRESAR](../../README.md)
