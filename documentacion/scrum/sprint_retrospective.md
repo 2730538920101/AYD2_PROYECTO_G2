@@ -110,4 +110,68 @@
 ## Video de la Retrospectiva del segundo sprint
 [Enlace a la grabación de la Retrospectiva](https://drive.google.com/file/d/1Xnw6K6tSI0eEced8Zhmiqu67SAIqcnqJ/view?usp=sharing)
 
+
+# Sprint 3 Retrospective
+
+## Preguntas de Retrospectiva
+
+### Carlos Martinez
+- **¿Qué se hizo bien durante el Sprint?**
+  - Se terminaron las funcionalidades y requerimientos más importantes de la aplicación
+
+- **¿Qué se hizo mal durante el Sprint?**
+  - Lastimosamente se venció la cuenta de JIRA para terminar de llevar el control del flujo de tareas que debería realizar cada integrante.
+
+- **¿Qué mejoras se deben implementar para el próximo sprint?**
+  - Utilizar un documento de respaldo con las tareas asignadas y el flujo de trabajo, ya que carecemos de una cuenta profesional de JIRA o cualquier otro gestor de metodologías ágiles.  
+
+### Carlos Soto
+
+- **¿Qué se hizo bien durante el Sprint?**
+  - Se logró completar de manera exitosa la mayoría de las tareas pendientes
+
+- **¿Qué se hizo mal durante el Sprint?**
+  - Se tuvo un problema con la cuenta de jira ya que expiró la prueba gratuita
+
+- **¿Qué mejoras se deben implementar para el próximo sprint?**
+  - Tener un respaldo de todas las tareas que se tenían en jira, o utilizar alguna otra herramienta gratuita
+
+### Douglas Soch
+
+- **¿Qué se hizo bien durante el Sprint?**
+  - Se desarrollaron algunas funcionalidades y requerimientos faltantes de la aplicación, las cuales eran algunas ciertas funcionalidades del conductor y las ofertas.
+
+- **¿Qué se hizo mal durante el Sprint?**
+  - Ya no se realizó un correcto seguimiento de las tareas faltantes debido a que el tablero de JIRA se bloqueó, esto fue debido a que se expiró la prueba gratuita.
+
+- **¿Qué mejoras se deben implementar para el próximo sprint?**
+  - Utilizar otra plataforma que nos permita definir y dar seguimiento a las tareas pendientes del proyecto.
+
+### Luis Sanchez
+
+- **¿Qué se hizo bien durante el Sprint?**
+  - Se desarrollaron con éxito las vistas para las funcionalidades del conductor y asistente como generar ofertas y calificar clientes. 
+
+- **¿Qué se hizo mal durante el Sprint?**
+  - Se tuvo problema con la asignación de tareas, lo que involucró a un retrabajo.
+
+- **¿Qué mejoras se deben implementar para el próximo sprint?**
+  - Respaldar la información de las tareas o respaldo de las mismas.
+
+
+### Jose Lopez
+
+- **¿Qué se hizo bien durante el Sprint?**
+  - Se lograron completar las tareas más relevantes dentro del tiempo estipulado para tener el sistema listo con las calificaciones de usuarios, reportes y ofertas.
+
+- **¿Qué se hizo mal durante el Sprint?**
+  - Se presentaron ligeras complicaciones con la gestión de las tareas por la pérdida del tablero de JIRA, dificultando el seguimiento de las tareas faltas, pero las tareas estaban documentadas por otros medios así que logramos seguir adelante.
+
+- **¿Qué mejoras se deben implementar para el próximo sprint?**
+  - Podríamos intentar no depender completamente de la plataforma y tener o alguna forma de tener los tableros del sprint en un backup o en alguna alternativa.
+
+
+## Video de la Retrospectiva del segundo sprint
+[Enlace a la grabación de la Retrospectiva](https://drive.google.com/file/d/1dfGYyXEj2BnwnF_mRW_ZZ6bMPsoex3Ry/view?usp=sharing)
+
 [REGRESAR](../../README.md)
